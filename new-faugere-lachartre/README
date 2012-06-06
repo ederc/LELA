@@ -18,8 +18,7 @@ A new implementation of Faugere-Lachartre method for LELA.
   
 # Test programs:
 1. test-faugere-lachartre: 
-  This file contains the new implementation of Faugere-Lachartre method along with helpers to validate 
-  the results and to compare to the current implementation of LELA.
+  This file contains the new implementation of Faugere-Lachartre method along with helpers to validate the results and to compare against the current implementation of LELA.
   
   Parameters:
    -f 	/path/to/matrix/file		(you can download sample matrices from here http://sdrv.ms/LamfM3)
