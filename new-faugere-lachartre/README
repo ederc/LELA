@@ -49,14 +49,14 @@ A new implementation of Faugere-Lachartre method for LELA.
 Some timings (on an intel core i3 / No BLAS / Over F(65521)):
 
 [Faugere-Lachartre reduced row echelon form computation]
-Matrix (rows x columns)		Density		New Faugere-Lachartre			LELA's Faugere-Lachartre
-2297 x 3015			6.75947		1.218s					30.35s
-3321 x 4507			5.67165		3.156s					96.08s
-7757 x 9161			5.38004		21s					MT
+Matrix (rows x cols)	Density		New Faugere-Lachartre	LELA's Faugere-Lachartre
+2297 x 3015		6.75947		1.218s			30.35s
+3321 x 4507		5.67165		3.156s			96.08s
+7757 x 9161		5.38004		21s			--
 
 
 [Splicer performance]
-Matrix (rows x columns)		Density		New Splicer			LELA's Splicer
-2297 x 3015			6.75947		0.01s				0.156s
-4929 x 5703			6.15027		0.035s				0.507s
-10014 x 14110			2.97443		0.085s				3.099s
+Matrix (rows x cols)	Density		New Splicer	LELA's Splicer
+2297 x 3015		6.75947		0.01s		0.156s
+4929 x 5703		6.15027		0.035s		0.507s
+10014 x 14110		2.97443		0.085s		3.099s
