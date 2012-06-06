@@ -2,7 +2,7 @@ A new implementation of Faugere-Lachartre method for LELA.
 
 # Compile and run:
 
-- Clone repository from github
+- Clone (this) repository from github
 - Run:
   ./autogen
   ./configure
