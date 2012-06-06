@@ -479,6 +479,18 @@ public:
 	inline bool            empty     () const      { return _idx.empty (); }
 	inline size_type       max_size  () const      { return std::min (_idx.max_size (), _elt.max_size ());  }
 
+	inline void		reserve	 (size_t sz)   { _idx.reserve (sz); _elt.reserve (sz); }
+	inline void		free		 ()
+	{
+		_idx.clear ();
+		_elt.clear ();
+
+		IndexVector _idx_tmp;
+		ElementVector _elt_tmp;
+		_idx_tmp.swap(_idx);
+		_elt_tmp.swap(_elt);
+	}
+	
 	inline bool operator == (const SparseVector &v) const
 		{ return (_idx == v._idx) && (_elt == v._elt); }
 

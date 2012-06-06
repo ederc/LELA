@@ -135,7 +135,7 @@ void parseArguments (int argc, char **argv, Argument *args, const char *freeArgs
 				std::cout << "Writing report data to cout" << std::endl << std::endl;
 				std::cout.flush ();
 			}
-			if (argv[i][1] == 'v') {
+			else if (argv[i][1] == 'v') {
 				commentator.setBriefReportStream (std::cout);
 				commentator.setBriefReportParameters (Commentator::OUTPUT_CONSOLE, true, true, true);
 				commentator.getMessageClass (BRIEF_REPORT).setMaxDepth (4);
