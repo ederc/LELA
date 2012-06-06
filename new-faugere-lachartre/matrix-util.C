@@ -2,7 +2,7 @@
 #define MATRIX_UTIL_C_
 
 #include <assert.h>
-#include <boost/functional/hash.hpp>
+//#include <boost/functional/hash.hpp>
 #include <sys/resource.h>
 
 #include "matrix-util.h"
