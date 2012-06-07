@@ -3,6 +3,7 @@
 
 #include <assert.h>
 //#include <boost/functional/hash.hpp>
+ #include <unistd.h>
 #include <sys/resource.h>
 
 #include "matrix-util.h"
