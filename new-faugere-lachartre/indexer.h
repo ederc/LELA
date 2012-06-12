@@ -59,16 +59,36 @@ public:
 	//the number of pivots
 	uint32 Npiv;
 
-	Indexer () {}
+	Indexer ()
+	{
+		pivot_columns_map = NULL;
+		non_pivot_columns_map = NULL;
+		pivot_columns_rev_map = NULL;
+		non_pivot_columns_rev_map = NULL;
+		non_pivot_rows_idxs = NULL;
+		pivot_rows_idxs_by_entry = NULL;
+
+	}
 
 	~Indexer ()
 	{
-		delete [] pivot_columns_map;
-		delete [] non_pivot_columns_map;
-		delete [] pivot_columns_rev_map;
-		delete [] non_pivot_columns_rev_map;
-		delete [] non_pivot_rows_idxs;
-		delete [] pivot_rows_idxs_by_entry;
+		if(pivot_columns_map != NULL)
+			delete [] pivot_columns_map;
+
+		if(non_pivot_columns_map != NULL)
+			delete [] non_pivot_columns_map;
+
+		if(pivot_columns_rev_map != NULL)
+			delete [] pivot_columns_rev_map;
+
+		if(non_pivot_columns_rev_map != NULL)
+			delete [] non_pivot_columns_rev_map;
+
+		if(non_pivot_rows_idxs != NULL)
+			delete [] non_pivot_rows_idxs;
+
+		if(pivot_rows_idxs_by_entry != NULL)
+			delete [] pivot_rows_idxs_by_entry;
 	}
 
 	//constructs the maps of indexes from original matrix to submatrices
