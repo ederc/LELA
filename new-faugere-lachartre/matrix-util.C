@@ -32,7 +32,7 @@ void MatrixUtil::show_mem_usage(std::string msg)
 	}
 
 	commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION)
-			<< "\t[[[ " << msg << " ]]]\t\t" << " Memory (RSS: " << rss << unit << "; VM: " << vm << unit << ")" << std::endl;
+			<< "[[[" << msg << "]]]\t\t" << " Memory (RSS: " << rss << unit << "; VM: " << vm << unit << ")" << std::endl;
 }
 
 uint32 MatrixUtil::loadF4Modulus(const char *fileName)
@@ -49,7 +49,12 @@ uint32 MatrixUtil::loadF4Modulus(const char *fileName)
 	}
 
 	fseek(f, 2 * sizeof(uint32), SEEK_SET);
-	assert(fread(&mod, sizeof(uint32),     1,f) == 1);
+	if(fread(&mod, sizeof(uint32),     1,f) != 1)
+	{
+		report << "Error while reading file " << fileName << std::endl;
+		throw "Error while reading file";
+	}
+
 	assert(mod >= 2);
 
 	fclose(f);
@@ -79,10 +84,14 @@ SparseMatrix<typename Ring::Element> MatrixUtil::loadF4Matrix(const Ring &R, con
 	uint32  mod;
 	uint64  nb;
 
-	assert(fread(&n, sizeof(uint32),       1,f) == 1);
-	assert(fread(&m, sizeof(uint32),       1,f) == 1);
-	assert(fread(&mod, sizeof(uint32),     1,f) == 1);
-	assert(fread(&nb, sizeof(uint64),1,f) == 1);
+	if(fread(&n, sizeof(uint32),       1,f) != 1)
+		throw "Error while reading file";
+	if(fread(&m, sizeof(uint32),       1,f) != 1)
+		throw "Error while reading file";
+	if(fread(&mod, sizeof(uint32),     1,f) != 1)
+		throw "Error while reading file";
+	if(fread(&nb, sizeof(uint64),1,f) != 1)
+		throw "Error while reading file";
 
 	report << n << " x " << m << " matrix" << std::endl;
 	report << "mod " << mod << std::endl;
@@ -115,19 +124,25 @@ SparseMatrix<typename Ring::Element> MatrixUtil::loadF4Matrix(const Ring &R, con
 	for(i_A = A.rowBegin (), i=0; i<n; i++, ++i_A){
 		//get the size of the current row
 		fseek(f, row_sizes_offset, SEEK_SET);
-		assert(fread(&sz, sizeof(uint32), 1, f) == 1 );
+		if(fread(&sz, sizeof(uint32), 1, f) != 1 )
+			throw "Error while reading file";
+
 		row_sizes_offset += sizeof(uint32);
                                 
 		assert(sz <= m);		//number of elements in a row at max equal to the size of a row in the matrix
 
 		//read sz elements from the values part of the file
 		fseek(f, row_values_offset, SEEK_SET);
-		assert(fread(nz, sizeof(uint16), sz, f) == sz );
+		if(fread(nz, sizeof(uint16), sz, f) != sz )
+			throw "Error while reading file";
+
 		row_values_offset += sz*sizeof(uint16);
 
 		//read sz elements from the posistions part of the file
 		fseek(f, row_positions_offset, SEEK_SET);
-		assert(fread(pos, sizeof(uint32), sz, f) == sz );
+		if(fread(pos, sizeof(uint32), sz, f) != sz )
+			throw "Error while reading file";
+
 		row_positions_offset += sz*sizeof(uint32);
 
 		i_A->reserve (sz);
@@ -145,6 +160,7 @@ SparseMatrix<typename Ring::Element> MatrixUtil::loadF4Matrix(const Ring &R, con
 	return A;
 }
 
+//Expects a SparseMatrix
 template <class Ring, typename Matrix>
 void MatrixUtil::writeF4MatrixToFile(const Ring &R, const char *fileName, const Matrix& A)
 {
@@ -394,7 +410,9 @@ void MatrixUtil::makeRowsUnitary(const Ring& R, Matrix& A)
 			continue;
 
 		it = i_A->begin ();
-		assert(R.inv(inv, it->second) == true);		//should be invertible
+		if(R.inv(inv, it->second) != true)		//should be invertible
+			throw "Non invertible value";
+
 		BLAS1::scal(ctx, inv, *i_A);
 	}
 }

@@ -21,10 +21,10 @@ using namespace LELA;
 #  define TIMER_DECLARE_(part) LELA::UserTimer part##_timer; double part##_time = 0.0;
 #  define TIMER_START_(part) part##_timer.start ()
 #  define TIMER_STOP_(part) part##_timer.stop (); part##_time += part##_timer.time ()
-/*#  define TIMER_REPORT_(part) \
+#  define TIMER_REPORT_(part) \
 		commentator.report (Commentator::LEVEL_ALWAYS, TIMING_MEASURE)		\
-		<< "Total " #part " time: " << part##_time << "s" << std::endl;*/
-#  define TIMER_REPORT_(part)
+		<< "Total " #part " time: " << part##_time << "s" << std::endl;
+//#  define TIMER_REPORT_(part)
 #else
 #  define TIMER_DECLARE(part)
 #  define TIMER_START(part)
@@ -35,7 +35,7 @@ using namespace LELA;
 class MatrixUtil {
 
 public:
-        static void show_mem_usage(std::string msg);
+    static void show_mem_usage(std::string msg);
 
 	static uint32 loadF4Modulus(const char *fileName);
 

@@ -155,13 +155,13 @@ void Splicer::attach_block_specialised (const Ring &F, Vector1 &out, const Vecto
 	Subvector2 v1 (in, src_idx, src_idx + size);
 
 	typename Subvector2::const_iterator i;
+	typename Vector2::word_type w;
 
 	for (i = v1.begin (); i != v1.end (); ++i) {
-		typename Subvector2::word_type t;
 		size_t idx = (i->first << WordTraits<typename Subvector2::word_type>::logof_size) + dest_idx;
 
-		for (t = Subvector2::Endianness::e_0; t != 0; t = Subvector2::Endianness::shift_right (t, 1), ++idx)
-			if (i->second & t)
+		for (w = i->second; w != 0; w = Subvector2::Endianness::shift_left (w, 1), ++idx)
+			if (w & Subvector2::Endianness::e_0 != 0)
 				out.push_back (idx);
 	}
 }
@@ -212,17 +212,20 @@ template <class Ring, class Vector1, class Vector2>
 void Splicer::attach_block_specialised (const Ring &F, Vector1 &out, const Vector2 &in, size_t src_idx, size_t dest_idx, size_t size,
 					VectorRepresentationTypes::Hybrid01, VectorRepresentationTypes::Sparse01)
 {
-	SparseSubvector<const Vector2, typename VectorTraits<Ring, Vector2>::RepresentationType> v1 (in, src_idx, src_idx + size);
+	typedef WordTraits<typename Vector1::word_type> WT;
 
+	SparseSubvector<const Vector2, typename VectorTraits<Ring, Vector2>::RepresentationType> v1 (in, src_idx, src_idx + size);
 	typename SparseSubvector<const Vector2, typename VectorTraits<Ring, Vector2>::RepresentationType>::const_iterator i_v1;
+	size_t idx;
 
 	for (i_v1 = v1.begin (); i_v1 != v1.end (); ++i_v1) {
-		typename Vector1::word_type m = Vector1::Endianness::e_j (*i_v1 & WordTraits<typename Vector1::word_type>::pos_mask);
+		idx = *i_v1 + dest_idx;
+		typename Vector1::word_type m = Vector1::Endianness::e_j (idx & WT::pos_mask);
 
-		if (*i_v1 >> WordTraits<typename Vector1::word_type>::logof_size == out.back ().first)
+		if (idx >> WT::logof_size == out.back ().first)
 			out.back ().second |= m;
 		else
-			out.push_back (typename Vector1::value_type (*i_v1 >> WordTraits<typename Vector1::word_type>::logof_size, m));
+			out.push_back (typename Vector1::value_type (idx >> WT::logof_size, m));
 	}
 }
 
@@ -288,8 +291,206 @@ void Splicer::copyIdentitySpecialised (const Ring &R, Matrix &dest, const Block 
 			Splicer::attach_e_i (R, *i_A, horiz_block.sourceToDestIndex (idx));
 }
 
+template <class Vector>
+void Splicer::attachWordSpecialised (Vector &out, size_t index, typename Vector::word_type word, VectorRepresentationTypes::Dense01)
+{
+	typedef WordTraits<typename Vector::word_type> WT;
+
+	size_t word_index = index >> WT::logof_size;
+
+	typename Vector::Endianness::word_pair w;
+	w.parts.low = word;
+	w.parts.high = 0ULL;
+	w.full = Vector::Endianness::shift_right (w.full, index & WT::pos_mask);
+
+	if (word_index < out.word_size () - 1)
+		*(out.word_begin () + word_index) |= w.parts.low;
+	else
+		out.back_word () |= w.parts.low;
+
+	if (w.parts.high != 0) {
+		if (word_index + 1 < out.word_size () - 1)
+			*(out.word_begin () + (word_index + 1)) |= w.parts.high;
+		else
+			out.back_word () |= w.parts.high;
+	}
+}
+
+template <class Vector>
+void Splicer::attachWordSpecialised (Vector &out, size_t index, typename Vector::word_type word, VectorRepresentationTypes::Hybrid01)
+{
+	typedef WordTraits<typename Vector::word_type> WT;
+
+	typename Vector::Endianness::word_pair w;
+
+	w.parts.low = word;
+	w.parts.high = 0ULL;
+	w.full = Vector::Endianness::shift_right (w.full, index & WT::pos_mask);
+
+	if (w.parts.low != 0) {
+		if (out.empty () || out.back ().first != index >> WT::logof_size)
+			out.push_back (typename Vector::value_type (index >> WT::logof_size, w.parts.low));
+		else
+			out.back ().second |= w.parts.low;
+	}
+
+	if (w.parts.high != 0)
+		out.push_back (typename Vector::value_type ((index >> WT::logof_size) + 1, w.parts.high));
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Dense, VectorRepresentationTypes::Sparse)
+{
+	Iterator finish = start + size;
+
+	for (; start != finish; ++start, ++src_idx)
+		if (!R.isZero (*start))
+			out.push_back (typename Vector::value_type (src_idx - dest_idx, *start));
+
+	return start;
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Sparse, VectorRepresentationTypes::Dense)
+{
+	size_t end_idx = src_idx + size;
+
+	for (; start != end && start->first < end_idx; ++start)
+		R.copy (out[start->first - src_idx + dest_idx], start->second);
+
+	return start;
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Sparse, VectorRepresentationTypes::Sparse)
+{
+	size_t end_idx = src_idx + size;
+
+	for (; start != end && start->first < end_idx; ++start)
+		out.push_back (typename Vector::value_type (start->first - src_idx + dest_idx, start->second));
+
+	return start;
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Sparse01, VectorRepresentationTypes::Dense01)
+{
+	size_t end_idx = src_idx + size;
+
+	for (; start != end && *start < end_idx; ++start)
+		out[*start - src_idx + dest_idx] = true;
+
+	return start;
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Sparse01, VectorRepresentationTypes::Sparse01)
+{
+	size_t end_idx = src_idx + size;
+
+	for (; start != end && *start < end_idx; ++start)
+		out.push_back (*start - src_idx + dest_idx);
+
+	return start;
+}
+
+template <class Ring, class Vector, class Iterator>
+Iterator Splicer::moveBlockSpecialised (const Ring &R, Vector &out, Iterator start, Iterator end, size_t src_idx, size_t dest_idx, size_t size,
+					VectorRepresentationTypes::Sparse01, VectorRepresentationTypes::Hybrid01)
+{
+	typedef WordTraits<typename Vector::word_type> WT;
+
+	size_t end_idx = src_idx + size;
+	size_t idx;
+
+	for (; start != end && *start < end_idx; ++start) {
+		idx = *start - src_idx + dest_idx;
+		typename Vector::word_type m = Vector::Endianness::e_j (idx & WT::pos_mask);
+
+		if (!out.empty () && idx >> WT::logof_size == out.back ().first)
+			out.back ().second |= m;
+		else
+			out.push_back (typename Vector::value_type (idx >> WT::logof_size, m));
+	}
+
+	return start;
+}
+
+template <class Ring, class Vector1, class Vector2>
+void Splicer::moveBitBlockDenseSpecialised (const Ring &R, Vector1 &out, const Vector2 &in, size_t src_idx, size_t dest_idx, VectorRepresentationTypes::Sparse01)
+{
+	typename Vector2::const_word_iterator i;
+	typename Vector2::word_type w;
+	size_t t_idx;
+
+	for (i = in.word_begin (); i != in.word_end (); ++i, dest_idx += WordTraits<typename Vector2::word_type>::bits) {
+		w = *i;
+
+		for (t_idx = 0; w != 0; w = Vector2::Endianness::shift_left (w, 1), ++t_idx)
+			if (w & Vector2::Endianness::e_0)
+				out.push_back (dest_idx + t_idx);
+	}
+
+	w = in.back_word ();
+
+	for (t_idx = 0; t_idx < WordTraits<typename Vector2::word_type>::bits; w = Vector2::Endianness::shift_left (w, 1), ++t_idx)
+		if (w & Vector2::Endianness::e_0)
+			out.push_back (dest_idx + t_idx);
+}
+
+template <class Ring, class Vector1, class Vector2>
+void Splicer::moveBitBlockDenseSpecialised (const Ring &R, Vector1 &out, const Vector2 &in, size_t src_idx, size_t dest_idx, VectorRepresentationTypes::Hybrid01)
+{
+	typename Vector2::const_word_iterator i;
+	typename Vector2::word_type w;
+
+	for (i = in.word_begin (); i != in.word_end (); ++i, dest_idx += WordTraits<typename Vector1::word_type>::bits)
+		if (*i != 0)
+			attachWord (R, out, dest_idx, *i);
+
+	w = in.back_word ();
+
+	if (w != 0)
+		attachWord (R, out, dest_idx, *i);
+}
+
+template <class Ring, class Vector1, class Vector2>
+typename Vector2::const_iterator Splicer::moveBitBlockHybridSpecialised (const Ring &R, Vector1 &out, const Vector2 &in, size_t dest_idx, VectorRepresentationTypes::Generic)
+{
+	typename Vector2::const_iterator i;
+
+	for (i = in.begin (); i != in.end (); ++i)
+		attachWord (R, out, (static_cast<size_t> (i->first) << WordTraits<typename Vector2::word_type>::logof_size) + dest_idx, i->second);
+
+	return i;
+}
+
+template <class Ring, class Vector1, class Vector2>
+typename Vector2::const_iterator Splicer::moveBitBlockHybridSpecialised (const Ring &R, Vector1 &out, const Vector2 &in, size_t dest_idx, VectorRepresentationTypes::Sparse01)
+{
+	typename Vector2::const_iterator i;
+	typename Vector2::word_type w;
+	size_t idx;
+
+	for (i = in.begin (); i != in.end (); ++i) {
+		w = i->second;
+		idx = (static_cast<size_t> (i->first) << WordTraits<typename Vector2::word_type>::logof_size) + dest_idx;
+
+		for (; w != 0; w = Vector2::Endianness::shift_left (w, 1), ++idx)
+			if (w & Vector2::Endianness::e_0)
+				out.push_back (idx);
+	}
+
+	return i;
+}
+
 template <class Grid>
-void Splicer::splice (Grid grid) const
+void Splicer::spliceSpecialised (Grid grid, GridTypeNormal) const
 {
 	lela_check (check ());
 
@@ -300,6 +501,42 @@ void Splicer::splice (Grid grid) const
 	for (horiz_block = _horiz_blocks.begin (); horiz_block != _horiz_blocks.end (); ++horiz_block)
 		for (vert_block = _vert_blocks.begin (); vert_block != _vert_blocks.end (); ++vert_block)
 			grid (*horiz_block, *vert_block);
+
+	commentator.stop (MSG_DONE);
+}
+
+template <class Grid>
+void Splicer::spliceSpecialised (Grid grid, GridTypeRowOptimised) const
+{
+	int i;
+
+	lela_check (check ());
+
+	commentator.start ("Splicing matrices", __FUNCTION__);
+
+	typename std::vector<Block>::const_iterator horiz_block, vert_block;
+
+	for (horiz_block = _horiz_blocks.begin (); horiz_block != _horiz_blocks.end (); ++horiz_block)
+		for (i = 0; i < horiz_block->size (); ++i)
+			grid.moveRow (*horiz_block, i, _vert_blocks);
+
+	commentator.stop (MSG_DONE);
+}
+
+template <class Grid>
+void Splicer::spliceSpecialised (Grid grid, GridTypeColOptimised) const
+{
+	int i;
+
+	lela_check (check ());
+
+	commentator.start ("Splicing matrices", __FUNCTION__);
+
+	typename std::vector<Block>::const_iterator vert_block;
+
+	for (vert_block = _vert_blocks.begin (); vert_block != _vert_blocks.end (); ++vert_block)
+		for (i = 0; i < vert_block->size (); ++i)
+			grid.moveCol (*vert_block, i, _horiz_blocks);
 
 	commentator.stop (MSG_DONE);
 }

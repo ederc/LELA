@@ -36,7 +36,8 @@ private:
 
 	uint32 coldim, rowdim;
 
-	static const ArrayType MINUS_ONE = 0xFFFFFFFF;	//stable for uint32!! lookout for other types
+	//static const ArrayType MINUS_ONE = 0xFFFFFFFF;	//stable for uint32!! lookout for other types
+	static const ArrayType MINUS_ONE = 0 - 1 ;
 	static const unsigned char MINUS_ONE_8 = 0xFF;
 
 public:
@@ -81,10 +82,6 @@ public:
 		ArrayType curr_row_idx = 0, entry;
 
 		initArrays(this->rowdim, this->coldim);
-
-		for (uint32 i = 0; i < coldim; ++i) {
-			assert(pivot_rows_idxs_by_entry[i] == MINUS_ONE);
-		}
 
 		Npiv = 0;
 		
@@ -450,6 +447,8 @@ public:
 
 		}
 	}
+
+
 };
 
 

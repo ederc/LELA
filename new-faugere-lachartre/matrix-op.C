@@ -81,10 +81,11 @@ inline void copyDenseArrayToSparseVector64(Ring& R, uint64 array[], uint32 array
 	tmp.reserve (nb_elts);
 
 	for (uint32 i = 0; i < arraySize; ++i){
-		ModularTraits<typename Ring::Element>::reduce (e, array[i], R._modulus);
 		
-		if(!R.isZero(e))
+		//if(!R.isZero(e))
+		if(array[i] % R._modulus != 0)
 		{
+			ModularTraits<typename Ring::Element>::reduce (e, array[i], R._modulus);
 			tmp.push_back (typename Vector::value_type (i, e));
 		}
 	}
@@ -104,7 +105,8 @@ void MatrixOp::normalizeRow(const Ring& R, Vector& x)
 	if(x.empty ())
 		return;
 
-	assert(R.inv(inv, i_x->second) == true);		//should be invertible
+	if(R.inv(inv, i_x->second) != true)		//should be invertible
+		throw "Non Invertible Value";
 
 	BLAS1::scal(ctx, inv, x);				//Lela implementation is buggy over non primes P! handle it
 }
@@ -115,8 +117,6 @@ void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 {
 	assert(A.rowdim () == B.rowdim ());
 	assert(A.coldim () == A.rowdim ());
-
-        std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
         
 	typename Matrix::ConstRowIterator i_A;
 	typename Matrix::Row::const_iterator row_it_A, row_it_A_end;
@@ -137,6 +137,7 @@ void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 
 #ifdef SHOW_PROGRESS
 	uint32 i=A.rowdim ();
+	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 #endif
 
 	i_A = A.rowEnd ();
@@ -262,6 +263,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 #ifdef SHOW_PROGRESS
 	uint32 i=A.rowdim ();
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	report << "In spec Modular<uint16>" << std::endl;
 #endif
 	i_A = A.rowEnd ();
 	i_B = B.rowEnd ();
@@ -342,8 +344,6 @@ void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B
 	assert(C.rowdim () == D.rowdim ());
 	assert(C.coldim () == B.rowdim ());
 	assert(B.coldim () == D.coldim ());
-
-        std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
         
 	typename Matrix::ConstRowIterator i_C;
 	typename Matrix::RowIterator i_D;
@@ -357,6 +357,7 @@ void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B
 
 #ifdef SHOW_PROGRESS
 	uint32 i=0;
+	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 #endif
 
 	for(i_C = C.rowBegin (), i_D = D.rowBegin (); i_C != C.rowEnd (); ++i_C, ++i_D){
@@ -455,6 +456,7 @@ void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, cons
 #ifdef SHOW_PROGRESS
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 	uint32 i=0;
+	report << "In spec Modular<uint16>" << std::endl;
 #endif
 
 	for(i_C = C.rowBegin (), i_D = D.rowBegin (); i_C != C.rowEnd (); ++i_C, ++i_D){
@@ -632,6 +634,7 @@ size_t  MatrixOp::echelonize(const Modular<uint16>& R, Matrix& A)
  
 #ifdef SHOW_PROGRESS
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	report << "In spec Modular<uint16>" << std::endl;
 #endif
 	typedef Modular<uint16> Ring;
 	

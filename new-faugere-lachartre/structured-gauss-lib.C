@@ -39,7 +39,9 @@ void StructuredGauss::normalizeRow(const Ring& R, Vector& x)
 	if(x.empty ())
 		return;
 
-	assert(R.inv(inv, i_x->second) == true);		//should be invertible
+	if(R.inv(inv, i_x->second) != true)		//should be invertible
+		throw "Non invertible value";
+
 	BLAS1::scal(ctx, inv, x);
 }
 

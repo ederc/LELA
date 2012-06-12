@@ -28,8 +28,8 @@ void testLELASplicerVsIndexer(const char *file_name)
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
 	commentator.start("Loading matrix");
-		SparseMatrix<typename Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
-                MatrixUtil::invertMatrixRows(A);	//accomodate format to LELA's splicer
+		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
+        MatrixUtil::invertMatrixRows(A);	//accomodate format to LELA's splicer
 	commentator.stop(MSG_DONE);
         
         commentator.start("Constructing submatrices using Splicer", "USING LELA SPLICER");
@@ -42,7 +42,7 @@ void testLELASplicerVsIndexer(const char *file_name)
                         indexer.processMatrix(A);
                 commentator.stop(MSG_DONE);
 
-                SparseMatrix<typename Ring::Element>    sub_A (indexer.Npiv, indexer.Npiv),
+                SparseMatrix<Ring::Element>    sub_A (indexer.Npiv, indexer.Npiv),
                                                         sub_B (indexer.Npiv, A.coldim () - indexer.Npiv),
                                                         sub_C (A.rowdim () - indexer.Npiv, indexer.Npiv),
                                                         sub_D (A.rowdim () - indexer.Npiv, A.coldim () - indexer.Npiv);

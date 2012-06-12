@@ -54,6 +54,35 @@ void randomVectorStartingAtSpec (const Ring &R, Vector &v, size_t col, size_t co
 }
 
 template <class Ring, class Vector>
+void randomVectorStartingAtSpec (const Ring &R, Vector &v, size_t col, size_t coldim, MersenneTwister &MT, VectorRepresentationTypes::Dense01)
+{
+	size_t colend = (coldim + WordTraits<typename Vector::word_type>::bits - 1) & ~WordTraits<typename Vector::word_type>::pos_mask;
+	size_t t = 0, idx;
+
+	typename Vector::word_type w;
+	typename Vector::word_type mask;
+
+	for (idx = col & ~WordTraits<typename Vector::word_type>::pos_mask; idx < colend; idx += t) {
+		w = 0ULL;
+
+		if (idx <= col) {
+			t = col & WordTraits<typename Vector::word_type>::pos_mask;
+			mask = Endianness::e_j (t);
+			w |= mask;  // Force leading entry to be one
+		} else {
+			t = 0;
+			mask = Endianness::e_0;
+		}
+
+		for (; t < WordTraits<typename Vector::word_type>::bits && idx + t < coldim; mask = Endianness::shift_right (mask, 1), ++t)
+			if (MT.randomDoubleRange (0.0, 1.0) < nonzero_density)
+				w |= mask;
+
+		*(v.word_begin () + (idx >> WordTraits<typename Vector::word_type>::logof_size)) = w;
+	}
+}
+
+template <class Ring, class Vector>
 void randomVectorStartingAtSpec (const Ring &R, Vector &v, size_t col, size_t coldim, MersenneTwister &MT, VectorRepresentationTypes::Sparse01)
 {
 	double val;
@@ -147,17 +176,17 @@ void createRandomF4Matrix (const Ring &R, Matrix &A)
 
 // Small version of the test, for debugging
 
-template <class Ring>
-bool testFaugereLachartre (const Ring &R, const char *text, size_t m, size_t n)
+template <class Ring, class Matrix>
+bool testFaugereLachartre (const Ring &R, const char *text, size_t m, size_t n, bool reduced)
 {
 	bool pass = true;
 
 	std::ostringstream str;
-	str << "Testing Faugère-Lachartre implementation over " << text << std::ends;
+	str << "Testing Faugère-Lachartre implementation over " << text << " (" << (reduced ? "reduced" : "non-reduced") << " variant)" << std::ends;
 
 	commentator.start (str.str ().c_str (), __FUNCTION__);
 
-	typename DefaultSparseMatrix<Ring>::Type A (m, n), C (m, n);
+	Matrix A (m, n), C (m, n);
 	DenseMatrix<typename Ring::Element> L (m, m);
 	typename GaussJordan<Ring>::Permutation P;
 
@@ -176,7 +205,7 @@ bool testFaugereLachartre (const Ring &R, const char *text, size_t m, size_t n)
 	report << "Input matrix A:" << std::endl;
 	BLAS3::write (ctx, report, A);
 
-	Solver.echelonize (A, A, rank, det);
+	Solver.echelonize (A, A, rank, det, reduced);
 
 	report << "Output matrix:" << std::endl;
 	BLAS3::write (ctx, report, A);
@@ -185,12 +214,19 @@ bool testFaugereLachartre (const Ring &R, const char *text, size_t m, size_t n)
 	       << "Computed determinant: ";
 	R.write (report, det) << std::endl;
 
+	if (!reduced) {
+		elim.echelonize_reduced (A, L, P, rank, det);
+
+		report << "Output matrix after reduction:" << std::endl;
+		BLAS3::write (ctx, report, A);
+	}
+
 	size_t rank1;
 	typename Ring::Element det1;
 
 	elim.echelonize_reduced (C, L, P, rank1, det1);
 
-	report << "True reduced row-echelon form:" << std::endl;
+	report << "True row-echelon form:" << std::endl;
 	BLAS3::write (ctx, report, C);
 
 	report << "True rank: " << rank1 << std::endl;
@@ -236,13 +272,28 @@ int main (int argc, char **argv)
 
 	Modular<float> R (101);
 
-	pass = testFaugereLachartre (R, "GF(5)", m, n);
+	pass = testFaugereLachartre<Modular<float>, DefaultSparseMatrix<Modular<float> >::Type> (R, "GF(5)", m, n, false);
+	pass = testFaugereLachartre<Modular<float>, DefaultSparseMatrix<Modular<float> >::Type> (R, "GF(5)", m, n, true) && pass;
 
 	GF2 gf2;
 
-	pass = testFaugereLachartre (gf2, "GF(2)", m, n) && pass;
+	typedef SparseMatrix<bool, HybridVector<DefaultEndianness<uint64>, uint16, uint64> > GF2Matrix;
+	// typedef DenseMatrix<bool> GF2Matrix;
+	// typedef SparseMatrix<bool, Vector<GF2>::Sparse> GF2Matrix;
+
+	pass = testFaugereLachartre<GF2, GF2Matrix> (gf2, "GF(2)", m, n, false) && pass;
+	pass = testFaugereLachartre<GF2, GF2Matrix> (gf2, "GF(2)", m, n, true) && pass;
 
 	commentator.stop (MSG_STATUS (pass));
 
 	return pass ? 0 : -1;
 }
+
+// Local Variables:
+// mode: C++
+// tab-width: 8
+// indent-tabs-mode: t
+// c-basic-offset: 8
+// End:
+
+// vim:sts=8:sw=8:ts=8:noet:sr:cino=>s,f0,{0,g0,(0,\:0,t0,+0,=s:syntax=cpp.doxygen:foldmethod=syntax
