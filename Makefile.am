@@ -3,7 +3,7 @@
 # This file is part of LELA, licensed under the GNU General Public
 # License version 3. See COPYING for more information.
 
-SUBDIRS=lela util macros tests doc new-faugere-lachartre bloc-FG
+SUBDIRS=lela util macros tests doc new-faugere-lachartre
 
 ACLOCAL_AMFLAGS = -I macros
 
