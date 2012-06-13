@@ -1,12 +1,16 @@
-#ifndef MATRIX_UTIL_H_
-#define MATRIX_UTIL_H_
-
 /*
  * matrix-util.h
  *
  *  Created on: 30 mai 2012
- *      Author: martani
+ *      Author: martani (LIP6 / UPMC University Paris06)
  */
+
+
+
+#ifndef MATRIX_UTIL_H_
+#define MATRIX_UTIL_H_
+
+
 #include "lela/util/commentator.h"
 #include "lela/ring/modular.h"
 #include "lela/matrix/sparse.h"

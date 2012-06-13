@@ -1,14 +1,17 @@
-#ifndef STRUCTURED_GAUSS_LIB_C_
-#define STRUCTURED_GAUSS_LIB_C_
-
 /*
- * structured-gauss.C
+ * structured-gauss-lib.C
  *
  *  Created on: 24 mai 2012
- *      Author: martani
+ *      Author: martani (LIP6 / UPMC University Paris06)
  *
  *  Inplace Gaussian elimination
  */
+
+
+#ifndef STRUCTURED_GAUSS_LIB_C_
+#define STRUCTURED_GAUSS_LIB_C_
+
+
 
 #include "structured-gauss-lib.h"
 //#include "matrix-util.h"

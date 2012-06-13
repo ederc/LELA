@@ -1,3 +1,11 @@
+/*
+ * matrix-op.C
+ *
+ *  Created on: 30 mai 2012
+ *      Author: martani (LIP6 / UPMC University Paris06)
+ */
+
+
 #ifndef MATRIX_OP_C_
 #define MATRIX_OP_C_
 

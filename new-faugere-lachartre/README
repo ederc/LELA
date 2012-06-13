@@ -21,7 +21,7 @@ A new implementation of Faugere-Lachartre method for LELA.
   This file contains the new implementation of Faugere-Lachartre method along with helpers to validate the results and to compare against the current implementation of LELA.
   
   Parameters:
-   -f 	/path/to/matrix/file		(you can download sample matrices from here http://sdrv.ms/LamfM3)
+   -f 	/path/to/matrix/file
    - 	(just dash with now parameter) show all the log messages
    -v 	show short log messages
    -r 	verify the results with the structured gaussian elimination
@@ -31,7 +31,7 @@ A new implementation of Faugere-Lachartre method for LELA.
   Show performance differences between LELA builtin Splicer and our faster implementation
   
   Parameters:
-  -f 	/path/to/matrix/file		(you can download sample matrices from here http://sdrv.ms/LamfM3)
+  -f 	/path/to/matrix/file
   - 	(just dash with now parameter) show all the log messages
   -v 	show short log messages
   
@@ -40,7 +40,7 @@ A new implementation of Faugere-Lachartre method for LELA.
   Performs a reduced Gaussian elimination over a matrix
   
   Parameters:
-  -f 	/path/to/matrix/file		(you can download sample matrices from here http://sdrv.ms/LamfM3)
+  -f 	/path/to/matrix/file
   - 	(just dash with now parameter) show all the log messages
   -v 	show short log messages
   

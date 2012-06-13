@@ -2,7 +2,7 @@
  * structured-gauss-lib.h
  *
  *  Created on: 30 mai 2012
- *      Author: martani
+ *      Author: martani (LIP6 / UPMC University Paris06)
  * 
  *  An implementation of structured Gaussian elimination
  */

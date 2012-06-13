@@ -40,7 +40,6 @@ private:
 	static const ArrayType MINUS_ONE = 0 - 1 ;
 	static const unsigned char MINUS_ONE_8 = 0xFF;
 
-public:
 	//Array of size of the original matrix M.coldim() that maps a pivot (resp non pivot) column index to 
 	//its index in the sub matrix A (resp B)
 	//If the value at any index i is MINUS_ONE, it means that the i'th column is not a pivot
@@ -55,6 +54,8 @@ public:
 
 	//the indexes of pivot rows sorted by their entry (pivot column)
 	ArrayType *pivot_rows_idxs_by_entry;
+
+public:
 
 	//the number of pivots
 	uint32 Npiv;

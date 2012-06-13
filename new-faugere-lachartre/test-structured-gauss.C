@@ -1,8 +1,8 @@
 /*
- * structured-gauss-exe.C
+ * test-structured-gauss.C
  *
  *  Created on: 24 mai 2012
- *      Author: martani
+ *      Author: martani  (LIP6 / UPMC University Paris06)
  * 
  * Tests the structured Gaussian elmination method
  * run with; ./test-structured-gauss - -f path/to/matrix/file
