@@ -111,7 +111,7 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	commentator.stop(MSG_DONE);
 
 
-	for(uint8 a=8; a < 60; a+=8)
+	for(uint8 a=32; a < 33; a+=8)
 	{
 		BLAS3::copy(ctx, sub_B_orig, sub_B_);
 		report << "<<a = " << (uint32)a << ">>\t";

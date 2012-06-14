@@ -299,6 +299,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 	TIMER_DECLARE_(CopySparseVectorToDenseArrayTimer);
 	TIMER_DECLARE_(CopyDenseArrayToSparseVectorTimer);
 	TIMER_DECLARE_(AxpyTimer);
+	TIMER_DECLARE_(AxpyOuterTimer);
 
 #ifdef SHOW_PROGRESS
 	uint32 i=A.rowdim ();
@@ -336,6 +337,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 		row_it_A_end = i_A->end ();
 		++row_it_A;	//skip first element
 
+		TIMER_START_(AxpyOuterTimer);
 		uint32 Ap;
 		typename Ring::Element Av;
 		//register uint32 Av32;
@@ -350,7 +352,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 			// B[i] <- B[i] - Av * B[Ap]
 			//rowB = &(B[Ap]);
 
-			TIMER_START_(AxpyTimer);			
+			TIMER_START_(AxpyTimer);
 			/*register uint32 x=0, sz = B[Ap].size ();
 			for(x=0; x<sz; ++x)
 				tmpDenseArray[(*rowB)[x].first] += Av32 * (*rowB)[x].second;*/
@@ -361,6 +363,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 
 			++row_it_A;
 		}
+		TIMER_STOP_(AxpyOuterTimer);
 
 		TIMER_START_(CopyDenseArrayToSparseVectorTimer);
 			copyDenseArrayToSparseVector64(R, tmpDenseArray, B_coldim, *i_B);
@@ -376,6 +379,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 	TIMER_REPORT_(CopySparseVectorToDenseArrayTimer);
 	TIMER_REPORT_(CopyDenseArrayToSparseVectorTimer);
 	TIMER_REPORT_(AxpyTimer);
+	TIMER_REPORT_(AxpyOuterTimer);
 }
 
 

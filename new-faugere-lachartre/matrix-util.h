@@ -20,8 +20,7 @@ using namespace LELA;
 
 
 
-#ifndef DETAILED_PROFILE_TIMERS
-#define DETAILED_PROFILE_TIMERS
+#ifdef DETAILED_PROFILE_TIMERS
 #  define TIMER_DECLARE_(part) LELA::UserTimer part##_timer; double part##_time = 0.0;
 #  define TIMER_START_(part) part##_timer.start ()
 #  define TIMER_STOP_(part) part##_timer.stop (); part##_time += part##_timer.time ()
@@ -30,10 +29,10 @@ using namespace LELA;
 		<< "Total " #part " time: " << part##_time << "s" << std::endl;
 //#  define TIMER_REPORT_(part)
 #else
-#  define TIMER_DECLARE(part)
-#  define TIMER_START(part)
-#  define TIMER_STOP(part)
-#  define TIMER_REPORT(part)
+#  define TIMER_DECLARE_(part)
+#  define TIMER_START_(part)
+#  define TIMER_STOP_(part)
+#  define TIMER_REPORT_(part)
 #endif //DETAILED_PROFILE_TIMERS
 
 class MatrixUtil {

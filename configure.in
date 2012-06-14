@@ -189,5 +189,5 @@ tests/data/Makefile
 macros/Makefile
 doc/Makefile
 new-faugere-lachartre/Makefile
-bloc-FG/Makefile
+FG-multiline/Makefile
 ])
