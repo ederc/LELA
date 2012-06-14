@@ -1,0 +1,189 @@
+#include <vector>
+
+#include "lela/vector/sparse.h"
+
+
+using namespace LELA;
+
+namespace BlocTypes {
+	struct Sparse {};
+	struct Dense {};
+};
+
+namespace FG_Types {
+	
+template <typename Element, typename Index = uint32>
+class HybridVector {
+
+	
+private:
+	std::vector<SparseVector<Element, std::vector<Index>, std::vector<Element> > > _sparse;
+	std::vector<Element> _dense;
+};
+
+///A sparse bloc is simply a container vector of sparse vectors.
+///It represents a line of sparse blocs in a matrix
+template <typename Vector>
+class Bloc {
+
+public:
+	
+	typedef Vector Row;
+	typedef const Row ConstRow;
+	typedef std::vector<Row> Rep;
+
+	Bloc () : _data (0), _height (0), _width (0) {}
+	Bloc (size_t n, size_t m) : _data (n), _height (n), _width (m) {}
+
+	~Bloc () {}
+
+	size_t rowdim () const { return _height; }
+	size_t coldim () const { return _width; }
+
+	typedef typename Rep::iterator RowIterator;
+	typedef typename Rep::const_iterator ConstRowIterator;
+
+	RowIterator      rowBegin ()		{ return _data.begin (); }
+	ConstRowIterator rowBegin ()	const	{ return _data.begin (); }
+	ConstRowIterator rowEnd ()	const	{ return _data.end (); }
+	RowIterator      rowEnd ()		{ return _data.end (); }
+
+	Row		&getRow (size_t i) 	{ return _data[i]; }
+	Row		&operator [] (size_t i) { return _data[i]; }
+	ConstRow	&operator [] (size_t i) const { return _data[i]; }
+
+private:
+	Rep		_data;
+	size_t		_width;
+	size_t		_height;
+};
+
+/*///A sparse bloc is simply a container vector of sparse vectors.
+///It represents a line of sparse blocs in a matrix
+template <typename Element, typename Index>
+class SparseBloc {
+	typedef BlocTypes::Sparse BlocType;
+
+	typedef SparseVector<Element, std::vector<Index>, std::vector<Element> > Row;
+	typedef const Row ConstRow;
+	typedef std::vector<Row> Rep;
+	
+
+	
+private:
+	Rep _data;
+
+};
+
+///A hybrid bloc is simply a container vector of hybrid vectors.
+///It represents a columns of hybrid blocs in a matrix
+template <typename Element, typename Index>
+class HybridBloc {
+	typedef BlocTypes::Dense BlocType;
+	
+	
+	
+	
+private:
+	std::vector<HybridVector<Index, Element> > _data;
+};*/
+
+///A SparseBlocMatrix is represented as a vector of vectors of sparse blocs
+///The blocs are arranged horizontally by lines (vector<SparseBloc>)
+///Lines are stored from down to top, and blocs are stored whitin each line
+///from right to left
+template <typename Element, typename Index = uint32>
+class SparseBlocMatrix {
+
+public:
+	typedef LELA::SparseVector<Element, std::vector<Index>, std::vector<Element> > Vector;
+	typedef Bloc<Vector> SparseBloc;
+	typedef std::vector<SparseBloc> Row;
+	typedef const Row ConstRow;
+	typedef std::vector<Row> Rep;
+
+	SparseBlocMatrix () : _m (0), _n (0) {}
+	SparseBlocMatrix (size_t n, size_t m) : _A (m), _m (m), _n (n) {}
+
+	~SparseBlocMatrix () {}
+
+	size_t rowdim () const { return _n; }
+	size_t coldim () const { return _m; }
+
+	typedef typename Rep::iterator RowIterator;
+	typedef typename Rep::const_iterator ConstRowIterator;
+
+	RowIterator      rowBegin ()       { return _A.begin (); }
+	ConstRowIterator rowBegin () const { return _A.begin (); }
+	ConstRowIterator rowEnd () const   { return _A.end (); }
+	RowIterator      rowEnd ()         { return _A.end (); }
+
+	Row &getRow (size_t i) { return _A[i]; }
+	Row &operator [] (size_t i) { return _A[i]; }
+	ConstRow &operator [] (size_t i) const { return _A[i]; }
+	
+private:
+	Rep		_A;
+	size_t		_m;
+	size_t		_n;
+};
+
+
+///A HybridBlocMatrix is represented as a vector of vectors of hybrid blocs
+///The blocs are arranged vertically in columns (vector<HybridBloc>)
+///Columns are stored from left to right, and blocs within the columns are
+///stored from down to top
+template <typename Element, typename Index = uint32>
+class HybridBlocMatrix {
+	
+public:
+	typedef HybridVector<Element, Index> Vector;
+	typedef Bloc<Vector> SparseBloc;
+	typedef const Bloc<Vector> ConstSparseBloc;
+	typedef std::vector<SparseBloc> Rep;
+
+	SparseBlocMatrix () : _m (0), _n (0) {}
+	SparseBlocMatrix (size_t n, size_t m) : _A (m), _m (m), _n (n) {}
+
+	~SparseBlocMatrix () {}
+
+	size_t rowdim () const { return _n; }
+	size_t coldim () const { return _m; }
+
+	typedef typename Rep::iterator RowIterator;
+	typedef typename Rep::const_iterator ConstRowIterator;
+
+	RowIterator      rowBegin ()       { return _A.begin (); }
+	ConstRowIterator rowBegin () const { return _A.begin (); }
+	ConstRowIterator rowEnd () const   { return _A.end (); }
+	RowIterator      rowEnd ()         { return _A.end (); }
+
+	Row &getRow (size_t i) { return _A[i]; }
+	Row &operator [] (size_t i) { return _A[i]; }
+	ConstRow &operator [] (size_t i) const { return _A[i]; }
+
+private:
+	Rep		_A;
+	size_t		_m;
+	size_t		_n;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

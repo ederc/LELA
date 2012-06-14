@@ -1,0 +1,31 @@
+INCLUDES=-I$(top_srcdir) -I$(top_builddir)
+AM_CXXFLAGS = -g -Wall
+
+BENCHMARK_CXXFLAGS = -O2
+
+SUBDIRS = 
+
+AM_CPPFLAGS= $(GMP_CFLAGS) $(PNG_CFLAGS) $(M4RI_CFLAGS)
+LDADD = $(GMP_LIBS)  $(PNG_LIBS) $(M4RI_LIBS) $(BLAS_LIBS) $(top_builddir)/lela/liblela.la
+
+BASIC_TESTS =			\
+		test-bloc-version
+
+EXTRA_PROGRAMS = $(NON_COMPILING_TESTS) $(BENCHMARKS)
+
+TESTS =				\
+		$(BASIC_TESTS)
+
+check_PROGRAMS = $(TESTS)
+
+CLEANFILES = $(TESTS)
+
+test_bloc_version_SOURCES =		\
+		test-bloc-version.C		\
+		matrix-util.h			\
+		indexer.h				\
+		../util/support.h
+
+	
+noinst_HEADERS =	\
+	../util/support.h

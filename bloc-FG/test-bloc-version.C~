@@ -1,0 +1,14 @@
+#include <iostream>
+
+#include "bloc-types.h"
+
+using namespace LELA;
+using namespace std;
+
+int main(int argc, char **argv)
+{
+	HybridBlocMatrix<uint16> A;
+	
+	cout << "TEST" << endl;
+	return 0;
+}
