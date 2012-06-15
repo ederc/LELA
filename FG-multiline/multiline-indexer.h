@@ -57,6 +57,7 @@ private:
 	//the indexes of pivot rows sorted by their entry (pivot column)
 	uint32 *pivot_rows_idxs_by_entry;
 
+	bool _index_maps_constructed;
 public:
 
 	//the number of pivots
@@ -70,6 +71,7 @@ public:
 		non_pivot_columns_rev_map = NULL;
 		non_pivot_rows_idxs = NULL;
 		pivot_rows_idxs_by_entry = NULL;
+		_index_maps_constructed = false;
 
 	}
 
@@ -154,6 +156,8 @@ public:
 				non_piv_col_idx++;
 			}
 		}
+
+		_index_maps_constructed = true;
 	}
 
 	void constructSubMatrices(SparseMatrix<uint16>& M,  SparseMultilineMatrix<uint16>& A,
@@ -166,18 +170,22 @@ public:
 		//Cpiv <- the indexes 0..pivots_size
 		std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
+		if(_index_maps_constructed == false)
+		{
+			report << "Indexes not constructed yet, call Indexer.processMatrix() first" << std::endl;
+			throw "Index maps not constructed, call Indexer.processMatrix() first";
+		}
 
-		typename SparseMatrix<uint16>::ConstRow *row;
-		typename SparseMatrix<uint16>::Row::const_iterator it1, it2;
+		//typename SparseMatrix<uint16>::ConstRow *row;
+		SparseMatrix<uint16>::Row::const_iterator it1, it2;
 		//typename SparseVector<uint16>::const_iterator it1, it2;
 
 		uint32 curr_piv_AB = 0;
-		uint32 nb_elts_A=0, nb_elts_B=0;
+		//uint32 nb_elts_A=0, nb_elts_B=0;
 
-		uint32 nb_lines_per_row = 2;		//A.nb_lines ()
+		//uint32 nb_lines_per_row = 2;		//A.nb_lines ()
 		uint32 row1=-1, row2=-1;
 
-		uint32 ii = 0;
 		for (uint32 i = 0; i < M.coldim (); ++i) {
 			if(pivot_rows_idxs_by_entry[i] == MINUS_ONE)			//non pivot row
 				continue;

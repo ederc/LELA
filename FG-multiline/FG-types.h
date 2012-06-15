@@ -81,6 +81,13 @@ public:
 
 	} ValuesData;
 
+	void swap(MultiLineVector<Element>& other)
+	{
+		this->_bloc_height = other._bloc_height;
+		std::swap(this->IndexData._index_vector, other.IndexData._index_vector);
+		std::swap(this->ValuesData._data, other.ValuesData._data);
+	}
+
 private:
 	uint16					_bloc_height;			//number of lines per bloc
 

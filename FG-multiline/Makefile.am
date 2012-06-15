@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir)
-AM_CXXFLAGS = -g -Wall
+AM_CXXFLAGS = -g -Wall -O3 -DSHOW_PROGRESS
 
 BENCHMARK_CXXFLAGS = -O2
 
@@ -23,6 +23,7 @@ CLEANFILES = $(TESTS)
 test_FG_multiline_SOURCES =						\
 		test-FG-multiline.C						\
 		../new-faugere-lachartre/matrix-util.h	\
+		../new-faugere-lachartre/matrix-op.h	\
 		../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
 		../util/support.C

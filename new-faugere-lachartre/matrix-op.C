@@ -120,7 +120,7 @@ void MatrixOp::normalizeRow(const Ring& R, Vector& x)
 }
 
 template <typename Vector>
-inline void axpy(uint16 a, Vector& v, uint64 *arr, uint8 STEP_)
+inline void axpy(const uint16 a, const Vector& v, uint64 *arr, uint8 STEP_)
 {
 	const uint8 STEP=32;
 	uint32 sz = v.size ();
@@ -217,8 +217,8 @@ void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 		register typename Matrix::Row::const_iterator row_it_B;
 		while(row_it_A != row_it_A_end)
 		{
-			R.copy(Av, row_it_A->second);
 			Ap = row_it_A->first;
+			R.copy(Av, row_it_A->second);
 			R.negin(Av);
 
 			// B[i] <- B[i] - Av * B[Ap]
@@ -290,7 +290,6 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 
 	typename Matrix::RowIterator i_B, B_ap;
 	typename Matrix::Row::const_iterator row_it_B_end;
-	typename Matrix::Row *rowB;
 
 	uint32 B_coldim = B.coldim ();
 	uint64 tmpDenseArray[B_coldim];
@@ -312,6 +311,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 	//skip last row
 	--i_A;
 	--i_B;
+
 	if(A.rowdim () == 1)
 		return;
 
