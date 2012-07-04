@@ -38,10 +38,10 @@ void showMatrixSizeAndDensity(Matrix& A, const char *matrix_name)
 	std::pair<uint64, double> size_density;
 
 	size_density = MatrixUtil::getMatrixSizeAndDensity(A);
-	report << "Nb elements of matrix " << matrix_name << ": "
+	report << matrix_name << "\tNB Elements: "
 		    << size_density.first
-		    << "\tdensity: " << size_density.second
-		    << " size: " << matrixSizeInBytes(size_density.first) << " MB" << endl;
+		    << "\n\tDensity: " << size_density.second
+		    << "\n\tSize: " << matrixSizeInBytes(size_density.first) << " MB" << endl;
 }
 
 bool testFaugereLachartre(const char *file_name, bool validate_results = false)
@@ -50,24 +50,47 @@ bool testFaugereLachartre(const char *file_name, bool validate_results = false)
 	typedef Modular<modulus_type> Ring;
 	
 	modulus_type modulus = MatrixUtil::loadF4Modulus(file_name);
+	modulus = 7;
 	Modular<modulus_type> R (modulus);
 	Context<Ring> ctx (R);
 	
-	Indexer<uint32> indexer;
-	
+	Indexer<uint32> indexer, indexerC;
+	size_t rank;
 
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
 
 	commentator.start("Loading matrix");
-		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
+		//SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("Loading matrix");
 
+	SparseMatrix<Ring::Element> A (4, 5);
+	A[0].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(1,1));
+	A[0].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(3,1));
+	A[0].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(4,2));
+
+	A[1].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(0,1));
+	A[1].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(1,2));
+	A[1].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(3,2));
+	A[1].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(4,3));
+
+	A[2].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(1,3));
+	A[2].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(3,3));
+	A[2].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(4,4));
+
+	A[3].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(1,2));
+	A[3].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(2,5));
+	A[3].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(3,4));
+	A[3].push_back(typename SparseMatrix<Ring::Element>::Row::value_type(4,5));
+
+
 	SparseMatrix<Ring::Element> C (A.rowdim(), A.coldim());
+	SparseMatrix<Ring::Element> M_orig (A.rowdim(), A.coldim());
 	
-	if(validate_results)
-		BLAS3::copy(ctx, A, C);
+	//if(validate_results)
+	BLAS3::copy(ctx, A, C);
+	BLAS3::copy(ctx, A, M_orig);
 
 	report << endl;
 commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
@@ -76,9 +99,7 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	commentator.start("[Indexer] constructing indexes");
 		indexer.processMatrix(A);
 	commentator.stop(MSG_DONE);
-    MatrixUtil::show_mem_usage("[Indexer] constructing indexes");
-
-	report << "Pivots found: " << indexer.Npiv << endl << endl;
+   	report << "Pivots found: " << indexer.Npiv << endl << endl;
 
 	SparseMatrix<Ring::Element>	sub_A (indexer.Npiv, indexer.Npiv),
 					sub_B (indexer.Npiv, A.coldim () - indexer.Npiv),
@@ -88,43 +109,175 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	commentator.start("[Indexer] constructing sub matrices");
 		indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
 	commentator.stop(MSG_DONE);
-	MatrixUtil::show_mem_usage("[Indexer] constructing sub matrices");
-//	showMatrixSizeAndDensity(sub_A, "sub_A");
-//	showMatrixSizeAndDensity(sub_B, "sub_B");
-//	showMatrixSizeAndDensity(sub_C, "sub_C");
-//	showMatrixSizeAndDensity(sub_D, "sub_D");
 
-	//uncomment this to see the structure of the submatrices as pbm image files
-	/*MatrixUtil::dumpMatrixAsPbmImage(sub_A, "sub_A.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");*/
-	
-	commentator.start("B = A^-1 x B");
-		MatrixOp::reducePivotsByPivots(R, sub_A, sub_B, true, 32);
-		//Equivalent to BLAS3::trsm (ctx, ctx.F.one (), sub_A, sub_B, UpperTriangular, false);
+	report << "sub_A (" << indexer.Npiv << ", " << indexer.Npiv << ")" << endl;
+	showMatrixSizeAndDensity(sub_A, "sub_A");
+	report << "sub_B (" << indexer.Npiv << ", " << A.coldim () - indexer.Npiv << ")" << endl;
+	showMatrixSizeAndDensity(sub_B, "sub_B");
+	report << "sub_C (" << A.rowdim () - indexer.Npiv << ", " << indexer.Npiv << ")" << endl;
+	showMatrixSizeAndDensity(sub_C, "sub_C");
+	report << "sub_D (" << A.rowdim () - indexer.Npiv << ", " << A.coldim () - indexer.Npiv << ")" << endl;
+	showMatrixSizeAndDensity(sub_D, "sub_D");
+
+	BLAS3::write(ctx, report, sub_A, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_B, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_C, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_D, FORMAT_SAGE);
+
+
+	commentator.start("Reducing CD", "REDUCE_CD");
+		commentator.start("D <- D - CB [MODIFIED]");
+			MatrixOp::reduceCD(R, sub_A, sub_B, sub_C, sub_D);
+		commentator.stop(MSG_DONE);
+
+		BLAS3::write(ctx, report, sub_D, FORMAT_SAGE);
+
+		commentator.start("Echelonize (D)");
+			rank = MatrixOp::echelonize(R, sub_D);
+			MatrixUtil::makeRowsUnitary(R, sub_D);		//D pivots are not necessarily unitary
+		commentator.stop(MSG_DONE);
+		report << "Rank of D: " << rank << endl;
+
+		BLAS3::write(ctx, report, sub_D, FORMAT_SAGE);
+
+		Indexer<uint32> idxCD;
+
+		commentator.start("Processing new matrix D");
+			idxCD.processMatrix(sub_D);
+		commentator.stop(MSG_DONE);
+
+		commentator.start("Combine inner indexer");
+			indexer.combineInnerIndexer(idxCD, true);
+		commentator.stop(MSG_DONE);
+
+		commentator.start("Reconstructing matrix");
+			indexer.reconstructMatrix(A, sub_A, sub_B, sub_D);
+		commentator.stop(MSG_DONE);
+
+		report << "New A" << endl;
+		BLAS3::write(ctx, report, A, FORMAT_SAGE);
+
+	commentator.stop("REDUCE_CD");
+	report << endl;
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	commentator.start("[Indexer] constructing indexes");
+		indexerC.processMatrix(C);
+	commentator.stop(MSG_DONE);
+    SparseMatrix<Ring::Element>	sub_A_C (indexerC.Npiv, indexerC.Npiv),
+					sub_B_C (indexerC.Npiv, C.coldim () - indexerC.Npiv),
+					sub_C_C (C.rowdim () - indexerC.Npiv, indexerC.Npiv),
+					sub_D_C (C.rowdim () - indexerC.Npiv, C.coldim () - indexerC.Npiv);
+
+    commentator.start("[Indexer] constructing sub matrices");
+		indexerC.constructSubMatrices(C, sub_A_C, sub_B_C, sub_C_C, sub_D_C, true);
 	commentator.stop(MSG_DONE);
 
-	//MatrixUtil::freeMatrixMemory(sub_A);
 
-	MatrixUtil::show_mem_usage("B = A^-1 x B");
-//	showMatrixSizeAndDensity(sub_A, "sub_A");
-//	showMatrixSizeAndDensity(sub_B, "sub_B");
+	BLAS3::write(ctx, report, sub_A_C, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_B_C, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_C_C, FORMAT_SAGE);
+	BLAS3::write(ctx, report, sub_D_C, FORMAT_SAGE);
 
-	commentator.start("D <- D - CB");
-		MatrixOp::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D, true);
-		//Equivalent to BLAS3::gemm
-	commentator.stop(MSG_DONE);
+	commentator.start("Using old method", "OLD_METHOD");
+		commentator.start("B = A^-1 x B");
+			MatrixOp::reducePivotsByPivots(R, sub_A_C, sub_B_C);
+			//Equivalent to BLAS3::trsm (ctx, ctx.F.one (), sub_A, sub_B, UpperTriangular, false);
+		commentator.stop(MSG_DONE);
+
+		BLAS3::write(ctx, report, sub_B_C, FORMAT_SAGE);
+
+		commentator.start("D <- D - CB");
+			MatrixOp::reduceNonPivotsByPivots(R, sub_C_C, sub_B_C, sub_D_C);
+		commentator.stop(MSG_DONE);
+
+		BLAS3::write(ctx, report, sub_D_C, FORMAT_SAGE);
+
+		commentator.start("Echelonize (D)");
+			rank = MatrixOp::echelonize(R, sub_D_C);
+			MatrixUtil::makeRowsUnitary(R, sub_D_C);		//D pivots are not necessarily unitary
+		commentator.stop(MSG_DONE);
+
+		BLAS3::write(ctx, report, sub_D_C, FORMAT_SAGE);
+		Indexer<uint32> idxInnerC;
+
+		commentator.start("Processing new matrix D");
+			idxInnerC.processMatrix(sub_D_C);
+		commentator.stop(MSG_DONE);
+
+		indexerC.combineInnerIndexer(idxInnerC, true);
+
+		commentator.start("Reconstructing matrix");
+			indexerC.reconstructMatrixFromBD(C, sub_B_C, sub_D_C);
+		commentator.stop(MSG_DONE);
+
+		BLAS3::write(ctx, report, C, FORMAT_SAGE);
+
+	commentator.stop("OLD_METHOD");
+
+	//MatrixUtil::dumpMatrixAsPbmImage(A, "A.pbm");
+	MatrixUtil::dumpMatrixAsPbmImage(C, "C.pbm");
+
+	report << "----------------------------------------------------------------------------------" << endl;
+	report << "Computing reduced echelon form of the matrix using structured Gaussian elimination" << endl;
+
+	commentator.start("Structured rref Original matrix", "STRUCTURED_RREF");
+		StructuredGauss::echelonize_reduced(R, M_orig);
+		//elim.echelonize_reduced (M_orig, L, P, rank, det);
+	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+
+	commentator.start("Structured rref C", "STRUCTURED_RREF");
+		StructuredGauss::echelonize_reduced(R, C);
+		//elim.echelonize_reduced (C, L, P, rank, det);
+	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+
+	commentator.start("Structured rref A", "STRUCTURED_RREF");
+		StructuredGauss::echelonize_reduced(R, A);
+		//elim.echelonize_reduced (C, L, P, rank, det);
+	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+
+	report << endl;
+
+	//MatrixUtil::dumpMatrixAsPbmImage(A, "A_rref.pbm");
+	MatrixUtil::dumpMatrixAsPbmImage(C, "C_rref.pbm");
+	MatrixUtil::dumpMatrixAsPbmImage(M_orig, "M_rref.pbm");
+
+	BLAS3::write(ctx, report, C, FORMAT_SAGE);
+	report << endl;
+	BLAS3::write(ctx, report, M_orig, FORMAT_SAGE);
+
+	if(BLAS3::equal(ctx, M_orig, C))
+	{
+		report << "C - Result CORRECT" << std::endl;
+		report << endl;
+	}
+	else
+	{
+		report << "C - Result NOT OK" << std::endl;
+		report << endl;
+	}
+
+	if(BLAS3::equal(ctx, M_orig, A))
+	{
+		report << "A - Result CORRECT" << std::endl;
+		report << endl;
+	}
+	else
+	{
+		report << "A - Result NOT OK" << std::endl;
+		report << endl;
+	}
+
+	return true;
+
 	MatrixUtil::freeMatrixMemory(sub_C);
 	MatrixUtil::show_mem_usage("D <- D - CB");
 //	showMatrixSizeAndDensity(sub_D, "sub_D");
 	
 ///D
 	report << endl;
-	size_t rank;
 
 	commentator.start("Echelonize (D)");
-		rank = MatrixOp::echelonize(R, sub_D, true);
+		rank = MatrixOp::echelonize(R, sub_D);
 		MatrixUtil::makeRowsUnitary(R, sub_D);		//D pivots are not necessarily unitary
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("Echelonize (D)");

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <vector>
+#include <assert.h>
 #include "lela/vector/sparse.h"
 
 
@@ -24,6 +25,7 @@ public:
 	MultiLineVector( const MultiLineVector& source ):
 					_bloc_height(source._bloc_height)
 	{
+			assert(_bloc_height > 0);
 			IndexData._index_vector = std::vector<uint32> ();
 			ValuesData._data = std::vector<Element> ();
 	}
@@ -38,7 +40,7 @@ public:
 	{
 		if (line_index >= _bloc_height)
 		{
-			std::cerr << "std::out_of_range (line_index) " << line_index << "[_bloc_height = " << _bloc_height << "]" <<std::endl;
+			std::cerr << "std::out_of_range (line_index)=" << line_index << " [_bloc_height=" << _bloc_height << "]" <<std::endl;
 			throw std::out_of_range ("line_index");
 		}
 
@@ -60,13 +62,6 @@ public:
 	inline Element* at_unchecked_pointer(uint16 line_index, size_t n)
 	{
 		return &(ValuesData._data[line_index + _bloc_height * n]);
-	}
-
-	inline void push_back(uint32 index, Element e1, Element e2)
-	{
-		IndexData.push_back(index);
-		ValuesData.push_back(e1);
-		ValuesData.push_back(e2);
 	}
 
 	struct IndexData

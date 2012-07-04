@@ -62,13 +62,6 @@ public:
 		return &(ValuesData._data[line_index + _bloc_height * n]);
 	}
 
-	inline void push_back(uint32 index, Element e1, Element e2)
-	{
-		IndexData.push_back(index);
-		ValuesData.push_back(e1);
-		ValuesData.push_back(e2);
-	}
-
 	struct IndexData
 	{
 		typedef typename std::vector<uint32>::iterator iterator;

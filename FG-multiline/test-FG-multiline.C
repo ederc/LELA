@@ -8,489 +8,401 @@
 #include <iostream>
 
 #include "FG-types.h"
-#include "../new-faugere-lachartre/matrix-util.h"
+/*#include "../new-faugere-lachartre/matrix-util.h"
 #include "../new-faugere-lachartre/matrix-op.h"
-#include "../new-faugere-lachartre/indexer.h"
+#include "../new-faugere-lachartre/indexer.h"*/
+#include "../only-D/matrix-util.h"
+#include "../only-D/matrix-op.h"
+#include "../only-D/indexer.h"
+#include "../only-D/structured-gauss-lib.h"
+
 #include "multiline-indexer.h"
+#include "matrix-util-m.C"
+#include "matrix-op-m.C"
 
 #include "../util/support.h"
+
 
 using namespace LELA;
 using namespace std;
 
-template <typename Element>
-void dumpMatrixAsPbmImage(const SparseMultilineMatrix<Element>& A, const char *outputFileName)
-{
-	typename SparseMultilineMatrix<Element>::ConstRowIterator i_A = A.rowBegin ();
-	uint32 j, col, m, row_size;
-	char buffer[512];
-	unsigned char output_byte = 0;
-	m = A.coldim ();
-
-	FILE *outStream = fopen(outputFileName, "wb");
-
-	//magic PBM header
-#ifdef __LP64__	//64 bit machine
-	sprintf(buffer, "P4\n# matrix size(%lu, %lu)\n%lu %lu\n", A.rowdim (), A.coldim (), A.coldim (), A.rowdim ());
-#else			//32 bit machine
-	sprintf(buffer, "P4\n# matrix size(%u, %u)\n%u %u\n", A.rowdim (), A.coldim (), A.coldim (), A.rowdim ());
-#endif
-
-	fwrite(buffer, sizeof(char), strlen(buffer), outStream);
-
-	while(i_A != A.rowEnd())					//for each multiline
-	{
-		row_size = i_A->size ();
-
-		for(uint16 i=0; i < A.nb_lines_per_bloc (); ++i)		//for each line in the multiline
-		{
-			j=0;
-			for(col=0; col<m; ++col){
-				if(j<row_size && i_A->IndexData[j] == col)
-				{
-					if(i_A->at (i, j) != 0)
-						output_byte |= (1 << (7 - (col%8)));
-					else
-						output_byte &= ~(1 << (7 - (col%8)));
-
-					++j;
-				}
-				else
-				{
-					output_byte &= ~(1 << (7 - (col%8)));
-				}
-
-				if(col%8 == 7) //flush byte every 8 cols
-				{
-					fwrite(&output_byte, sizeof(unsigned char), 1, outStream);
-					output_byte = 0;
-				}
-			}
-
-			if(col%8 != 0)
-				fwrite(&output_byte, sizeof(unsigned char), 1, outStream);
-
-			fflush(outStream);
-		}
-
-		++i_A;
-	}
-
-	fclose(outStream);
-}
-
-template <typename Matrix, typename Element>
-bool equal(Modular<Element>& R, SparseMultilineMatrix<Element>& A, Matrix& B)
-{
-	SparseVector<Element> v;
-	typename SparseMultilineMatrix<Element>::ConstRowIterator i_A = A.rowBegin ();
-	typename Matrix::ConstRowIterator i_B = B.rowBegin ();
-
-	Context<Modular<Element> > ctx (R);
-
-	if(A.rowdim() != B.rowdim ())
-		return false;
-
-	uint32 line=0;
-
-	while(i_A != A.rowEnd ())			//for each multiline of A
-	{
-		for(uint16 i=0; i<A.nb_lines_per_bloc (); ++i)		//for each line in the multiline
-		{
-			//cout << "Line " << t << " size: " << i_A->size () << endl << "[";
-			for(uint32 j=0; j < i_A->size (); ++j)
-			{
-				if(i_A->at(i, j) != 0)
-				{
-					v.push_back(typename Matrix::Row::value_type(i_A->IndexData[j], i_A->at(i, j)));
-				}
-			}
-
-			if(v.empty () && i_B == B.rowEnd ())
-				return true;
-
-			++line;
-			if(!BLAS1::equal(ctx, *i_B, v))
-			{
-				BLAS1::write(ctx, cout, v);
-				cout << endl << endl;
-				BLAS1::write(ctx, cout, *i_B);
-				cout << endl << endl;
-
-				cout << "Diff on line: " << line;
-				cout << endl << endl;
-
-
-				for(uint32 j=0; j < i_B->size (); ++j)
-				{
-					if((*i_B)[j].first != v[j].first)
-					{
-						cout << "DIFF ON Index: " << (*i_B)[j].first << "      " << v[j].first<< endl;
-						return false;
-					}
-					else
-					if((*i_B)[j].second != v[j].second)
-					{
-						cout << "DIFF ON Value: " << (*i_B)[j].second << "      " << v[j].second
-								<< " At index: " << (*i_B)[j].first << endl;
-						return false;
-					}
-
-				}
-
-
-				return false;
-			}
-			else
-				;//cout << "Line " << line << " OK " << endl;
-
-			v.clear ();
-			++i_B;
-		}
-
-		++i_A;
-	}
-
-	return true;
-}
-
-
-/*inline void razArray64(uint64 arr[], uint32 arrSize)
-{
-	memset(arr, 0, arrSize*sizeof(uint64));
-}*/
-
-void copyMultilineToDenseArrays64(const MultiLineVector<uint16>& v, uint64 *arr1, uint64 *arr2)
-{
-	//typedef typename MultiLineVector<uint16>::ValuesData::iterator data_it;
-	//typedef typename MultiLineVector<uint16>::IndexData::iterator index_it;
-	register uint32 idx;
-	for(uint32 i=0; i<v.size (); ++i)
-	{
-		idx = v.IndexData[i];
-		arr1[idx] = (uint64)v.at_unchecked(0, i);
-		arr2[idx] = (uint64)v.at_unchecked(1, i);
-	}
-}
-
 template <typename Ring>
-void copyDenseArraysToMultilineVector64(const Ring& R, uint64 *arr1, uint64 *arr2, uint32 size,
-		MultiLineVector<uint16>& v)
+bool testFaugereLachartre_invert_steps(const Ring& R, SparseMatrix<typename Ring::Element>& A, bool only_D, bool parallel, bool validate_results)
 {
-	MultiLineVector<uint16> tmp;
-	typename Ring::Element e1, e2;
-
-	for (uint32 i = 0; i < size; ++i){
-
-
-		//if(!R.isZero(e))
-		if((arr1[i] % R._modulus != 0) || (arr2[i] % R._modulus != 0))
-		{
-			ModularTraits<typename Ring::Element>::reduce (e1, arr1[i], R._modulus);
-			ModularTraits<typename Ring::Element>::reduce (e2, arr2[i], R._modulus);
-
-			tmp.IndexData.push_back(i);
-			tmp.ValuesData.push_back(e1);
-			tmp.ValuesData.push_back(e2);
-		}
-	}
-
-	v.swap(tmp);
-}
-
-void axpy(uint16 av1_col1, uint16 av2_col1,
-		  const MultiLineVector<uint16>& v,
-		  uint16 line,
-		  uint64 *arr1,
-		  uint64 *arr2)
-{
-	lela_check(line < v.nb_lines());
-	const uint8 STEP=17;
-
-	uint32 sz = v.size ();
-	register uint32 av1_col1_32 = (uint32)av1_col1;
-	register uint32 av2_col1_32 = (uint32)av2_col1;
-	//register uint32 av1_col2_32 = (uint32)av1_col2;
-	//register uint32 av2_col2_32 = (uint32)av2_col2;
-
-	register uint32 idx;
-	register uint16 val1; //, val2;
-
-	/*for(uint32 i=0; i<v.size (); ++i)
-	{
-		idx = v.IndexData[i];
-
-		val1 = v.at_unchecked(line, i);
-		//val2 = v.at_unchecked(1, i);
-
-		arr1[idx] += av1_col1_32 * val1;
-		//arr1[idx] += av1_col2_32 * val2;
-
-		arr2[idx] += av2_col1_32 * val1;
-		//arr2[idx] += av2_col2_32 * val2;
-	}*/
-
-
-	uint8 xl = v.size () % STEP;
-	register uint32 x=0;
-	while(x<xl)
-	{
-		idx = v.IndexData[x];
-		val1 = v.at_unchecked(line, x);
-		arr1[idx] += av1_col1_32 * val1;
-		arr2[idx] += av2_col1_32 * val1;
-
-		++x;
-	}
-
-	for(x=xl; x<sz; x+=STEP)
-	{
-
-#pragma loop unroll
-		for(uint8 t=0; t<STEP; ++t)
-		{
-			idx = v.IndexData[x+t];
-			val1 = v.at_unchecked(line, x+t);
-			arr1[idx] += av1_col1_32 * val1;
-			arr2[idx] += av2_col1_32 * val1;
-		}
-	}
-}
-
-template <typename Ring>
-void reducePivotsByPivots(const Ring& R, const SparseMultilineMatrix<uint16>& A, SparseMultilineMatrix<uint16>& B)
-{
-	lela_check(A.coldim () == B.coldim ());
-	lela_check(A.rowdim () == A.coldim ());
-
-	//typedef Modular<uint16> Ring;
-	typedef SparseMultilineMatrix<uint16> Matrix;
-
-
-	typename Matrix::ConstRowIterator i_A;
-	typename Matrix::RowIterator i_B;
-
-	uint32 B_coldim = B.coldim ();
-	uint64 tmpDenseArray1[B_coldim];
-	uint64 tmpDenseArray2[B_coldim];
-
-	TIMER_DECLARE_(RazArrayTimer);
-	TIMER_DECLARE_(CopySparseVectorToDenseArrayTimer);
-	TIMER_DECLARE_(CopyDenseArrayToSparseVectorTimer);
-	TIMER_DECLARE_(AxpyTimer);
-	TIMER_DECLARE_(AxpyOuterTimer);
-
-#ifdef SHOW_PROGRESS
-	uint32 i=A.rowdim ();
-	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-	report << "In spec Modular<uint16> Multiline" << std::endl;
-#endif
-
-	i_A = A.rowEnd ();
-	i_B = B.rowEnd ();
-
-	while(i_A != A.rowBegin ()) {		//for each multiline
-		--i_A;
-		--i_B;
-
-		TIMER_START_(RazArrayTimer);
-			 razArray64(tmpDenseArray1, B_coldim);
-			 razArray64(tmpDenseArray2, B_coldim);
-		TIMER_STOP_(RazArrayTimer);
-
-		TIMER_START_(CopySparseVectorToDenseArrayTimer);
-			copyMultilineToDenseArrays64(*i_B, tmpDenseArray1, tmpDenseArray2);
-		TIMER_STOP_(CopySparseVectorToDenseArrayTimer);
-
-		//line = A.nb_lines_per_bloc() - 1;		//last line
-		//do {		//for each line
-#ifdef SHOW_PROGRESS
-		--i;
-        report << "                                                                    \r";
-        report << "\t" << i << std::ends;
-#endif
-
-        	typename Ring::Element Av1_col1, Av2_col1;
-        	uint32 Ap1;
-        	//typename Ring::Element Av1_col2, Av2_col2;
-        	//uint32 Ap2;
-
-        	for(uint32 j=2; j < i_A->size (); ++j) 		//skip first two elements
-        	{
-        		Ap1 = i_A->IndexData[j];
-        		R.copy(Av1_col1, i_A->at_unchecked(0, j));
-        		R.copy(Av2_col1, i_A->at_unchecked(1, j));
-
-        		if(Av1_col1 != 0)
-        			R.negin(Av1_col1);
-        		if(Av2_col1 != 0)
-        			R.negin(Av2_col1);
-
-				TIMER_START_(AxpyTimer);
-						 axpy(Av1_col1, Av2_col1,
-							  B[Ap1/A.nb_lines_per_bloc()],
-							  Ap1%A.nb_lines_per_bloc(),
-							  tmpDenseArray1,
-							  tmpDenseArray2);
-				TIMER_STOP_(AxpyTimer);
-        	}
-
-        	if(i_A->size () > 1)			//reduce lines within the same multiline
-        	{
-				//j=1
-				Ap1 = i_A->IndexData[1];
-				R.copy(Av1_col1, i_A->at_unchecked(0, 1));
-
-				if(Av1_col1 != 0)
-				{
-					R.negin(Av1_col1);
-
-					for(uint32 t=0; t < B_coldim; ++t)
-						tmpDenseArray2[t] %= R._modulus;	//Make sure product in next loop doesn't overflow
-
-					for(uint32 t=0; t < B_coldim; ++t)
-						tmpDenseArray1[t] += (uint32)Av1_col1 * tmpDenseArray2[t];
-				}
-        	}
-
-
-		TIMER_START_(CopyDenseArrayToSparseVectorTimer);
-			copyDenseArraysToMultilineVector64(R, tmpDenseArray1, tmpDenseArray2, B_coldim, *i_B);
-		TIMER_STOP_(CopyDenseArrayToSparseVectorTimer);
-
-
-		//} while(line != 0);		//end for each line
-	}		//for each multiline
-
-#ifdef SHOW_PROGRESS
-        report << "\r                                                                    \n";
-#endif
-
-	TIMER_REPORT_(RazArrayTimer);
-	TIMER_REPORT_(CopySparseVectorToDenseArrayTimer);
-	TIMER_REPORT_(CopyDenseArrayToSparseVectorTimer);
-	TIMER_REPORT_(AxpyTimer);
-	TIMER_REPORT_(AxpyOuterTimer);
-}
-
-
-
-
-
-
-
-
-
-bool testFaugereLachartre(const char *file_name)
-{
-	typedef uint16 modulus_type;
-	typedef Modular<modulus_type> Ring;
-
-	modulus_type modulus = MatrixUtil::loadF4Modulus(file_name);
-	Modular<modulus_type> R (modulus);
-	Context<Ring> ctx (R);
+	Context<Ring> ctx(R);
 
 	MultiLineIndexer multilineIndexer;
-	Indexer<uint32> simpleIndexer;
+	size_t rank;
+	bool reduced = false;
 
-	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
+	SparseMatrix<typename Ring::Element> M_orig (A.rowdim(), A.coldim());
 
-	commentator.start("Loading matrix");
-		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
-	commentator.stop(MSG_DONE);
-	MatrixUtil::show_mem_usage("Loading matrix");
+	if(validate_results)
+		BLAS3::copy(ctx, A, M_orig);
+
+commentator.start("FG_LACHARTRE_INVERT_STEPS", "FG_LACHARTRE_INVERT_STEPS");
+commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[MultiLineIndexer] constructing indexes");
 		multilineIndexer.processMatrix(A);
 	commentator.stop(MSG_DONE);
 
-	commentator.start("[SimpleIndexer] constructing indexes");
-		simpleIndexer.processMatrix(A);
+	report << "Pivots found: " << multilineIndexer.Npiv << endl << endl;
+
+	SparseMultilineMatrix<typename Ring::Element> sub_A(multilineIndexer.Npiv, multilineIndexer.Npiv),
+										 sub_B(multilineIndexer.Npiv, A.coldim() - multilineIndexer.Npiv),
+										 sub_C(A.rowdim() - multilineIndexer.Npiv, multilineIndexer.Npiv),
+										 sub_D(A.rowdim() - multilineIndexer.Npiv, A.coldim() - multilineIndexer.Npiv);
+
+	report << "**** \tsub_A (\t" << sub_A.rowdim() << ",\t" << sub_A.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_B (\t" << sub_B.rowdim() << ",\t" << sub_B.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_C (\t" << sub_C.rowdim() << ",\t" << sub_C.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_D (\t" << sub_D.rowdim() << ",\t" << sub_D.coldim() << ")\t**** " << endl;
+	report << endl;
+
+	commentator.start("[multilineIndexer] constructing sub matrices");
+		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
+	commentator.stop(MSG_DONE); report << endl;
+
+
+	commentator.start("D <- D - CB [MODIFIED]");
+		if(parallel)
+			NS::reduceCDParallel(R, sub_A, sub_B, sub_C, sub_D, 8);
+		else
+			NS::reduceCD(R, sub_A, sub_B, sub_C, sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+
+	commentator.start("[Multiline] Echelonize (D)");
+		rank = NS::echelonize(R, sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+	report << "Rank of D: " << rank << endl; report << endl;
+
+
+	MultiLineIndexer multiIdxrCD;
+
+	commentator.start("[Multiline] Processing new matrix D");
+		multiIdxrCD.processMatrix(sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+	//report << "Pivots found: " << multiIdxrCD.Npiv << endl << endl;
+
+	commentator.start("[Multiline] Combine inner indexer");
+		multilineIndexer.combineInnerIndexer(multiIdxrCD, true);
+	commentator.stop(MSG_DONE); report << endl;
+
+	commentator.start("[Multiline] Reconstructing matrix");
+		multilineIndexer.reconstructMatrix(A, sub_A, sub_B, sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+
+commentator.stop("ROUND 1");
+
+	if(!only_D)
+	{
+report << "------------------------------------------------" << endl;
+commentator.start("ROUND 2");
+		MultiLineIndexer idx2;
+		commentator.start("[MultiLineIndexer] constructing indexes");
+			idx2.processMatrix(A);
+		commentator.stop(MSG_DONE); report << endl;
+
+		report << "Pivots found: " << idx2.Npiv << endl << endl;
+
+		SparseMultilineMatrix<typename Ring::Element> sub_A_prime(idx2.Npiv, idx2.Npiv),
+											 sub_B_prime(idx2.Npiv, A.coldim() - idx2.Npiv),
+											 sub_C_prime(A.rowdim() - idx2.Npiv, idx2.Npiv),
+											 sub_D_prime(A.rowdim() - idx2.Npiv, A.coldim() - idx2.Npiv);
+
+		/*report << "sub_A (" << sub_A_prime.rowdim() << ", " << sub_A_prime.coldim() << ")" << endl;
+		report << "sub_B (" << sub_B_prime.rowdim() << ", " << sub_B_prime.coldim() << ")" << endl;
+		report << "sub_C (" << sub_C_prime.rowdim() << ", " << sub_C_prime.coldim() << ")" << endl;
+		report << "sub_D (" << sub_D_prime.rowdim() << ", " << sub_D_prime.coldim() << ")" << endl;*/
+
+
+		commentator.start("[multilineIndexer] constructing sub matrices 2 ");
+			idx2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, true);
+		commentator.stop(MSG_DONE); report << endl;
+
+		commentator.start("[Multiline] B = A^-1 B");
+			NS::reducePivotsByPivots(R, sub_A_prime, sub_B_prime);
+		commentator.stop(MSG_DONE); report << endl;
+
+		MultiLineIndexer inner_dummy_idxr;
+		inner_dummy_idxr.processMatrix(sub_D_prime);
+
+		idx2.combineInnerIndexer(inner_dummy_idxr, true);
+
+		commentator.start("[Multiline] Reconstructing final matrix");
+			idx2.reconstructMatrix(A, sub_B_prime);
+		commentator.stop(MSG_DONE); report << endl;
+		reduced = true;
+
+commentator.stop("ROUND 2");
+	}
+commentator.stop("FG_LACHARTRE_INVERT_STEPS");
+
+	report << endl << "True Rank " << multilineIndexer.Npiv + rank << endl;
+	bool pass =true;
+
+	if(validate_results)
+	{
+		report << "----------------------------------------------------------------------------------" << endl;
+		report << "Computing reduced echelon form of the matrix using structured Gaussian elimination" << endl;
+
+		commentator.start("Structured rref of original matrix", "STRUCTURED_RREF");
+			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced(R, M_orig);
+		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+
+		if(!reduced)
+		{
+			commentator.start("Structured rref of A", "STRUCTURED_RREF");
+				StructuredGauss::echelonize_reduced(R, A);
+			commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+		}
+
+		report << endl << ">> Rank " << rank_strucutured_gauss << endl;
+
+		report << endl;
+
+		if(BLAS3::equal(ctx, M_orig, A))
+		{
+			report << "Result CORRECT" << std::endl;
+			report << endl;
+		}
+		else
+		{
+			report << "Result NOT OK" << std::endl;
+			report << endl;
+			pass = false;
+		}
+	}
+
+	report << endl;
+
+	return pass;
+}
+
+template <typename Ring>
+bool testFaugereLachartre_normal(const Ring& R, SparseMatrix<typename Ring::Element>& A, bool only_D, bool validate_results)
+{
+	Context<Ring> ctx(R);
+
+	MultiLineIndexer multilineIndexer;
+	size_t rank;
+	bool reduced = false;
+
+	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+
+	SparseMatrix<typename Ring::Element> M_orig (A.rowdim(), A.coldim());
+	if(validate_results)
+		BLAS3::copy(ctx, A, M_orig);
+
+
+commentator.start("FG_LACHARTRE", "FG_LACHARTRE");
+commentator.start("ROUND 1", "ROUND 1");
+
+	commentator.start("[MultiLineIndexer] constructing indexes");
+		multilineIndexer.processMatrix(A);
 	commentator.stop(MSG_DONE);
-	//MatrixUtil::show_mem_usage("[Indexer] constructing indexes");
 
 	report << "Pivots found: " << multilineIndexer.Npiv << endl << endl;
 
-	SparseMultilineMatrix<Ring::Element>	sub_A (multilineIndexer.Npiv, multilineIndexer.Npiv),
-											sub_B (multilineIndexer.Npiv, A.coldim () - multilineIndexer.Npiv),
-											sub_C (A.rowdim () - multilineIndexer.Npiv, multilineIndexer.Npiv),
-											sub_D (A.rowdim () - multilineIndexer.Npiv, A.coldim () - multilineIndexer.Npiv);
+	SparseMultilineMatrix<typename Ring::Element> sub_A(multilineIndexer.Npiv, multilineIndexer.Npiv),
+										 sub_B(multilineIndexer.Npiv, A.coldim() - multilineIndexer.Npiv),
+										 sub_C(A.rowdim() - multilineIndexer.Npiv, multilineIndexer.Npiv),
+										 sub_D(A.rowdim() - multilineIndexer.Npiv, A.coldim() - multilineIndexer.Npiv);
 
-	commentator.start("[multilineIndexer] constructing sub matrices");
-		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, false);
-	commentator.stop(MSG_DONE);
+	report << "**** \tsub_A (\t" << sub_A.rowdim() << ",\t" << sub_A.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_B (\t" << sub_B.rowdim() << ",\t" << sub_B.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_C (\t" << sub_C.rowdim() << ",\t" << sub_C.coldim() << ")\t**** " << endl;
+	report << "**** \tsub_D (\t" << sub_D.rowdim() << ",\t" << sub_D.coldim() << ")\t**** " << endl;
 	report << endl;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-	SparseMatrix<Ring::Element>		sub_A_ (simpleIndexer.Npiv, simpleIndexer.Npiv),
-									sub_B_ (simpleIndexer.Npiv, A.coldim () - simpleIndexer.Npiv),
-									sub_C_ (A.rowdim () - simpleIndexer.Npiv, simpleIndexer.Npiv),
-									sub_D_ (A.rowdim () - simpleIndexer.Npiv, A.coldim () - simpleIndexer.Npiv);
+	commentator.start("[multilineIndexer] constructing sub matrices");
+		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
+	commentator.stop(MSG_DONE); report << endl;
 
-	commentator.start("[SimpleIndexer] constructing sub matrices");
-		simpleIndexer.constructSubMatrices(A, sub_A_, sub_B_, sub_C_, sub_D_, false);
+	commentator.start("[Multiline] B = A^-1 B");
+		NS::reducePivotsByPivots(R, sub_A, sub_B);
+	commentator.stop(MSG_DONE); report << endl;
+
+	commentator.start("[Multiline] D = D - CB");
+		NS::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+
+	commentator.start("[Multiline] Echelonize (D)");
+		rank = NS::echelonize(R, sub_D);
+	commentator.stop(MSG_DONE); report << endl;
+	report << "Rank of D: " << rank << endl; report << endl;
+
+	if(only_D)
+	{
+		MultiLineIndexer idx2;
+		idx2.processMatrix(sub_D);
+		multilineIndexer.combineInnerIndexer(idx2, true);
+
+		commentator.start("[Multiline] Reconstructing matrix");
+			multilineIndexer.reconstructMatrix(A, sub_B, sub_D);
+		commentator.stop(MSG_DONE); report << endl;
+	}
+commentator.stop("ROUND 1");
+
+	if(!only_D)
+	{
+report << "------------------------------------------------" << endl;
+commentator.start("ROUND 2", "ROUND 2");
+
+	SparseMatrix<typename Ring::Element> sub_D_sparse (sub_D.rowdim(), sub_D.coldim());
+	commentator.start("Copy D");
+		NS::copy(R, sub_D, sub_D_sparse);
 	commentator.stop(MSG_DONE);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+	MultiLineIndexer inner_indexer;
+	commentator.start("[MultiLineIndexer] constructing indexes");
+		inner_indexer.processMatrix(sub_D_sparse);
+	commentator.stop(MSG_DONE); report << endl;
 
-	if(equal(R, sub_A, sub_A_) && equal(R, sub_B, sub_B_))
-		cout << "EQUAL" << endl;
-	else
-		cout << "NOT EQUAL" << endl;
+	SparseMultilineMatrix<typename Ring::Element> D1(inner_indexer.Npiv, inner_indexer.Npiv),
+										 D2(inner_indexer.Npiv, sub_D.coldim() - inner_indexer.Npiv),
+										 B1(sub_B.rowdim(), inner_indexer.Npiv),
+										 B2(sub_B.rowdim(), sub_B.coldim() - inner_indexer.Npiv);
 
-	//dumpMatrixAsPbmImage(sub_A, "sub_A_multiline.pbm");
-	//MatrixUtil::dumpMatrixAsPbmImage(sub_A_, "sub_A_simple.pbm");
+	commentator.start("[MultiLineIndexer] constructing submatrices B1, B1, D1, D2");
+		inner_indexer.constructSubMatrices(sub_B, sub_D_sparse, B1, B2, D1, D2);
+	commentator.stop(MSG_DONE); report << endl;
 
-	commentator.start("B = A^-1 x B [multiline]");
-		reducePivotsByPivots(R, sub_A, sub_B);
-	commentator.stop(MSG_DONE);
+	commentator.start("D2 = D1^-1 x D2");
+		NS::reducePivotsByPivots(R, D1, D2);
+	commentator.stop(MSG_DONE); report << endl;
 
-	commentator.start("B = A^-1 x B [simple]");
-		MatrixOp::reducePivotsByPivots(R, sub_A_, sub_B_, false, 8);
-	commentator.stop(MSG_DONE);
+	commentator.start("B2 <- B2 - D2 D1");
+		NS::reduceNonPivotsByPivots(R, B1, D2, B2);
+	commentator.stop(MSG_DONE); report << endl;
 
-	if(equal(R, sub_B, sub_B_))
-		cout << "EQUAL" << endl;
-	else
-		cout << "NOT EQUAL" << endl;
+	commentator.start("[MultiLineIndexer] Reconstructing indexes");
+		multilineIndexer.combineInnerIndexer(inner_indexer);
+	commentator.stop(MSG_DONE); report << endl;
 
-	dumpMatrixAsPbmImage(sub_B, "sub_B_multiline.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_B_, "sub_B_simple.pbm");
+	commentator.start("[Indexer] Reconstructing matrix");
+		multilineIndexer.reconstructMatrix(A, B2, D2);
+	commentator.stop(MSG_DONE); report << endl;
+	reduced = true;
 
-	return true;
+commentator.stop("ROUND 2");
+	}
+commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
+
+report << endl << ">> True Rank " << multilineIndexer.Npiv + rank << endl;
+	bool pass =true;
+
+	if(validate_results)
+	{
+		report << "----------------------------------------------------------------------------------" << endl;
+		report << "Computing reduced echelon form of the matrix using structured Gaussian elimination" << endl;
+
+		size_t rank_strucutured_gauss;
+		commentator.start("Structured rref Original matrix", "STRUCTURED_RREF");
+			rank_strucutured_gauss = StructuredGauss::echelonize_reduced(R, M_orig);
+		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+
+		if(!reduced)
+		{
+			commentator.start("Structured rref of A", "STRUCTURED_RREF");
+				StructuredGauss::echelonize_reduced(R, A);
+			commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+		}
+
+		report << endl << ">> Rank " << rank_strucutured_gauss << endl;
+		report << endl;
+
+		//MatrixUtil::dumpMatrixAsPbmImage(A, "A-rref.pbm");
+		//MatrixUtil::dumpMatrixAsPbmImage(M_orig, "M0-rref.pbm");
+
+		if(BLAS3::equal(ctx, M_orig, A))
+		{
+			report << "Result CORRECT" << std::endl;
+			report << endl;
+		}
+		else
+		{
+			report << "Result NOT OK" << std::endl;
+			report << endl;
+			pass = false;
+		}
+	}
+
+	report << endl;
+
+	return pass;
 }
 
-
-
-
-
-int main (int argc, char **argv)
+int main(int argc, char **argv)
 {
 	char *fileName = NULL;
 
 	bool pass = true;
+	bool validate_results = false;
+	bool parallel = false;
+	bool method = 0;
+	bool compare = false;
+	bool only_D = false;
 
-	static Argument args[] = {
-		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName},
+	static Argument args[] =
+	{
+		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName },
+		{ 'r', "-r", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
+		{ 'p', "-p", "Use parallel version", TYPE_NONE, &parallel },
+		{ 'm', "-m", "Use inverted steps method", TYPE_NONE, &method },
+		{ 'c', "-c", "Compared methods", TYPE_NONE, &compare },
+		{ 'd', "-d", "Compute only the Gauss elimination of the matrix", TYPE_NONE, &only_D },
 		{ '\0' }
 	};
 
-	parseArguments (argc, argv, args, "", 0);
+	parseArguments(argc, argv, args, "", 0);
 
-	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDepth (5);
-	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDetailLevel (Commentator::LEVEL_NORMAL);
-	commentator.getMessageClass (TIMING_MEASURE).setMaxDepth (3);
-	commentator.getMessageClass (TIMING_MEASURE).setMaxDetailLevel (Commentator::LEVEL_NORMAL);
-	commentator.getMessageClass (PROGRESS_REPORT).setMaxDepth (3);
+	commentator.getMessageClass(INTERNAL_DESCRIPTION).setMaxDepth(5);
+	commentator.getMessageClass(INTERNAL_DESCRIPTION).setMaxDetailLevel(Commentator::LEVEL_NORMAL);
+	commentator.getMessageClass(TIMING_MEASURE).setMaxDepth(3);
+	commentator.getMessageClass(TIMING_MEASURE).setMaxDetailLevel(Commentator::LEVEL_NORMAL);
+	commentator.getMessageClass(PROGRESS_REPORT).setMaxDepth(3);
 
-	commentator.start ("Faugère-Lachartre Bloc Version", "FaugereLachartre");
+	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
-	pass = testFaugereLachartre(fileName);
+	commentator.start("Faugère-Lachartre Multiline Version");
 
-	commentator.stop (MSG_STATUS (pass));
+	typedef uint16 modulus_type;
+	typedef Modular<modulus_type> Ring;
+
+	modulus_type modulus = MatrixUtil::loadF4Modulus(fileName);
+	Modular<modulus_type> R(modulus);
+
+	commentator.start("Loading matrix");
+		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, fileName);
+	commentator.stop(MSG_DONE);
+	MatrixUtil::show_mem_usage("Loading matrix");
+	report << endl;
+
+	if(compare)
+	{
+		commentator.getMessageClass(INTERNAL_DESCRIPTION).setMaxDepth(4);
+		SparseMatrix<Ring::Element> C (A.rowdim(), A.coldim());
+		Context<Ring> ctx(R);
+		BLAS3::copy(ctx, A, C);
+
+		pass = testFaugereLachartre_invert_steps(R, A, only_D, parallel, validate_results);
+		pass &= testFaugereLachartre_normal(R, C, only_D, validate_results);
+
+		commentator.stop(MSG_STATUS (pass));
+		return pass ? 0 : -1;
+	}
+
+	if(method)
+		pass = testFaugereLachartre_invert_steps(R, A, only_D, parallel, validate_results);
+	else
+		pass = testFaugereLachartre_normal(R, A, only_D, validate_results);
+
+	commentator.stop(MSG_STATUS (pass));
 
 	return pass ? 0 : -1;
 }
-
 

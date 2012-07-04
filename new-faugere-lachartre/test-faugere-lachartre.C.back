@@ -82,6 +82,8 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 
 	SparseMatrix<Ring::Element>	sub_A (indexer.Npiv, indexer.Npiv),
 					sub_B (indexer.Npiv, A.coldim () - indexer.Npiv),
+					sub_B_ (indexer.Npiv, A.coldim () - indexer.Npiv),
+					sub_B_orig (indexer.Npiv, A.coldim () - indexer.Npiv),
 					sub_C (A.rowdim () - indexer.Npiv, indexer.Npiv),
 					sub_D (A.rowdim () - indexer.Npiv, A.coldim () - indexer.Npiv);
 
@@ -89,10 +91,12 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 		indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("[Indexer] constructing sub matrices");
-//	showMatrixSizeAndDensity(sub_A, "sub_A");
-//	showMatrixSizeAndDensity(sub_B, "sub_B");
-//	showMatrixSizeAndDensity(sub_C, "sub_C");
-//	showMatrixSizeAndDensity(sub_D, "sub_D");
+	showMatrixSizeAndDensity(sub_A, "sub_A");
+	showMatrixSizeAndDensity(sub_B, "sub_B");
+	showMatrixSizeAndDensity(sub_C, "sub_C");
+	showMatrixSizeAndDensity(sub_D, "sub_D");
+
+	BLAS3::copy(ctx, sub_B, sub_B_orig);
 
 	//uncomment this to see the structure of the submatrices as pbm image files
 	/*MatrixUtil::dumpMatrixAsPbmImage(sub_A, "sub_A.pbm");
@@ -100,38 +104,62 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	MatrixUtil::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
 	MatrixUtil::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");*/
 	
+
 	commentator.start("B = A^-1 x B");
-		MatrixOp::reducePivotsByPivots(R, sub_A, sub_B, true, 32);
+		MatrixOp::reducePivotsByPivots(R, sub_A, sub_B);
 		//Equivalent to BLAS3::trsm (ctx, ctx.F.one (), sub_A, sub_B, UpperTriangular, false);
 	commentator.stop(MSG_DONE);
 
+
+	for(uint8 a=32; a < 33; a+=8)
+	{
+		BLAS3::copy(ctx, sub_B_orig, sub_B_);
+		report << "<<a = " << (uint32)a << ">>\t";
+		commentator.start("B = A^-1 x B [uint64]");
+			MatrixOp::reducePivotsByPivots(R, sub_A, sub_B_, true, a);
+			//Equivalent to BLAS3::trsm (ctx, ctx.F.one (), sub_A, sub_B, UpperTriangular, false);
+		commentator.stop(MSG_DONE);
+		if(BLAS3::equal(ctx, sub_B, sub_B_))
+				report << " OK " << endl;
+			else
+				report << " NOT OK " << endl;
+
+	}
+
 	//MatrixUtil::freeMatrixMemory(sub_A);
 
+	if(BLAS3::equal(ctx, sub_B, sub_B_))
+		report << " OK " << endl;
+	else
+		report << " NOT OK " << endl;
+
+	return true;
+
+
 	MatrixUtil::show_mem_usage("B = A^-1 x B");
-//	showMatrixSizeAndDensity(sub_A, "sub_A");
-//	showMatrixSizeAndDensity(sub_B, "sub_B");
+	showMatrixSizeAndDensity(sub_A, "sub_A");
+	showMatrixSizeAndDensity(sub_B, "sub_B");
 
 	commentator.start("D <- D - CB");
-		MatrixOp::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D, true);
+		MatrixOp::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D);
 		//Equivalent to BLAS3::gemm
 	commentator.stop(MSG_DONE);
 	MatrixUtil::freeMatrixMemory(sub_C);
 	MatrixUtil::show_mem_usage("D <- D - CB");
-//	showMatrixSizeAndDensity(sub_D, "sub_D");
+	showMatrixSizeAndDensity(sub_D, "sub_D");
 	
 ///D
 	report << endl;
 	size_t rank;
 
 	commentator.start("Echelonize (D)");
-		rank = MatrixOp::echelonize(R, sub_D, true);
+		rank = MatrixOp::echelonize(R, sub_D);
 		MatrixUtil::makeRowsUnitary(R, sub_D);		//D pivots are not necessarily unitary
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("Echelonize (D)");
-//	showMatrixSizeAndDensity(sub_D, "sub_D");
+	showMatrixSizeAndDensity(sub_D, "sub_D");
 	report << "Rank of D: " << rank << endl;
-
-	return true;	
+	
 ///Second round
 	report << endl;
 	Indexer<uint32> indexer2;

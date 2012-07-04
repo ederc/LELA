@@ -6,11 +6,11 @@ BENCHMARK_CXXFLAGS = -O2
 SUBDIRS = 
 
 AM_CPPFLAGS= $(GMP_CFLAGS) $(PNG_CFLAGS) $(M4RI_CFLAGS)
-LDADD = $(GMP_LIBS)  $(PNG_LIBS) $(M4RI_LIBS) $(BLAS_LIBS) $(top_builddir)/lela/liblela.la -lstdc++ -lm -lpthread
+LDADD = $(GMP_LIBS)  $(PNG_LIBS) $(M4RI_LIBS) $(BLAS_LIBS) $(top_builddir)/lela/liblela.la -lstdc++ -lm
 
 BASIC_TESTS =			\
 		test-FG-multiline	\
-		test-FG-multiline-only-D
+		test-FG-multiline4
 
 EXTRA_PROGRAMS = $(NON_COMPILING_TESTS) $(BENCHMARKS)
 
@@ -27,18 +27,17 @@ test_FG_multiline_SOURCES =						\
 		../new-faugere-lachartre/matrix-op.h	\
 		../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
-		matrix-util-m.C							\
-		matrix-op-m.C							\
+		matrix-util.C	\
 		../util/support.C
 
-test_FG_multiline_only_D_SOURCES =						\
-		test-FG-multiline-only-D.C						\
+
+test_FG_multiline4_SOURCES =						\
+		test-FG-multiline4.C						\
 		../new-faugere-lachartre/matrix-util.h	\
 		../new-faugere-lachartre/matrix-op.h	\
 		../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
-		matrix-util-m.C							\
-		matrix-op-m.C							\
+		matrix-util.C	\
 		../util/support.C
 
 	
