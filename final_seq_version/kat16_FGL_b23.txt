@@ -1,0 +1,1072 @@
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat1 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat10 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat11 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat12 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat13 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat14 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat15 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat16 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat17 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat18 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat2 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat3 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat4 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat5 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat6 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat7 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat8 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat9 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat1 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat10 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat11 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat12 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat13 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat14 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat15 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat16 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat17 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat18 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat2 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat3 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat4 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat5 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat6 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat7 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat8 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat9 file...
+./run-tests.sh: line 23: ~/matrices/testRrefInterface.th0.b128: No such file or directory
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat1 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat1 
+	Dimensions : 271 x 968
+	Nombre d'elements non nuls : 16890 (6.44%)
+
+ * Analyse et premiere decomposition (0.000s)
+
+	- Nombre de pivots : 243
+	- Nombre de blocs  : 6
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (   28 x   243, 8.44 %)
+	- Matrice D (   28 x   725, 6.54 %)
+	- Matrice A (  243 x   243, 3.84 %)
+	- Matrice B (  243 x   725, 7.08 %)
+
+ * Calcul de B <- A^-1 * B (0.000s)
+
+ * Calcul de D <- D - C * B (0.000s)
+
+ * Calcul de Gauss(D)  (rang : 28) (0.004s)
+
+ * Temps Total :
+	- User+Sys : 0.004s
+	- Reel     : 0.010s
+
+ * Rang : 271
+
+
+,[0,0.004,0.010]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat10 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat10   <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat1 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat1 
+	Dimensions : 271 x 968
+	Nombre d'elements non nuls : 16890 (6.44%)
+
+ * Analyse et premiere decomposition (0.000s)
+
+	- Nombre de pivots : 243
+	- Nombre de blocs  : 6
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (   28 x   243, 8.44 %)
+	- Matrice D (   28 x   725, 6.54 %)
+	- Matrice A (  243 x   243, 3.84 %)
+	- Matrice B (  243 x   725, 7.08 %)
+
+ * Calcul de B <- A^-1 * B (0.000s)
+
+ * Calcul de D <- D - C * B (0.000s)
+
+ * Calcul de Gauss(D)  (rang : 28) (0.004s)
+
+ * Temps Total :
+	- User+Sys : 0.004s
+	- Reel     : 0.000s
+
+ * Rang : 271
+
+
+,[0,0.004,0.000]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat10 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat10   <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat1 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat1 
+	Dimensions : 271 x 968
+	Nombre d'elements non nuls : 16890 (6.44%)
+
+ * Analyse et premiere decomposition (0.000s)
+
+	- Nombre de pivots : 243
+	- Nombre de blocs  : 6
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (   28 x   243, 8.44 %)
+	- Matrice D (   28 x   725, 6.54 %)
+	- Matrice A (  243 x   243, 3.84 %)
+	- Matrice B (  243 x   725, 7.08 %)
+
+ * Calcul de B <- A^-1 * B (0.000s)
+
+ * Calcul de D <- D - C * B (0.000s)
+
+ * Calcul de Gauss(D)  (rang : 28) (0.004s)
+
+ * Temps Total :
+	- User+Sys : 0.004s
+	- Reel     : 0.000s
+
+ * Rang : 271
+
+
+,[0,0.004,0.000]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat10 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat10 
+	Dimensions : 223056 x 274339
+	Nombre d'elements non nuls : 778660280 (1.27%)
+
+ * Analyse et premiere decomposition (30.334s)
+
+	- Nombre de pivots : 222614
+	- Nombre de blocs  : 405
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  442 x 222614, 0.16 %)
+	- Matrice D (  442 x 51725, 75.12 %)
+	- Matrice A (222614 x 222614, 4.66 %)
+	- Matrice B (222614 x 51725, 22.34 %)
+
+ * Calcul de B <- A^-1 * B (10mn 2.718s)
+
+ * Calcul de D <- D - C * B (1.232s)
+
+ * Calcul de Gauss(D)  (rang : 442) (2.988s)
+
+ * Temps Total :
+	- User+Sys : 645.604s
+	- Reel     : 645.930s
+
+ * Rang : 223056
+
+
+,[0,645.604,645.930]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat11 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat11 
+	Dimensions : 373624 x 432524
+	Nombre d'elements non nuls : 2201413751 (1.36%)
+
+ * Analyse et premiere decomposition ( 1mn 26.801s)
+
+	- Nombre de pivots : 369161
+	- Nombre de blocs  : 496
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 4463 x 369161, 8.39 %)
+	- Matrice D ( 4463 x 63363, 32.13 %)
+	- Matrice A (369161 x 369161, 13.11 %)
+	- Matrice B (369161 x 63363, 81.46 %)
+
+ * Calcul de B <- A^-1 * B (42mn 31.663s)
+
+ * Calcul de D <- D - C * B (14mn 52.932s)
+
+ * Calcul de Gauss(D)  (rang : 4463) ( 3mn 43.350s)
+
+ * Temps Total :
+	- User+Sys : 3776.908s
+	- Reel     : 3778.880s
+
+ * Rang : 373624
+
+
+,[0,3776.908,3778.880]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat12 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat12 
+	Dimensions : 401429 x 464523
+	Nombre d'elements non nuls : 2385711130 (1.28%)
+
+ * Analyse et premiere decomposition ( 1mn 38.338s)
+
+	- Nombre de pivots : 397366
+	- Nombre de blocs  : 525
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 4063 x 397366, 8.68 %)
+	- Matrice D ( 4063 x 67157, 36.36 %)
+	- Matrice A (397366 x 397366, 9.87 %)
+	- Matrice B (397366 x 67157, 198.91 %)
+
+ * Calcul de B <- A^-1 * B (32mn 48.335s)
+
+ * Calcul de D <- D - C * B (14mn 49.948s)
+
+ * Calcul de Gauss(D)  (rang : 4063) ( 3mn 58.795s)
+
+ * Temps Total :
+	- User+Sys : 3219.997s
+	- Reel     : 3221.580s
+
+ * Rang : 401429
+
+
+,[0,3219.997,3221.580]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat13 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat13 
+	Dimensions : 426807 x 491659
+	Nombre d'elements non nuls : 2790815750 (1.33%)
+
+ * Analyse et premiere decomposition ( 1mn 51.495s)
+
+	- Nombre de pivots : 424122
+	- Nombre de blocs  : 528
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 2685 x 424122, 9.12 %)
+	- Matrice D ( 2685 x 67537, 36.13 %)
+	- Matrice A (424122 x 424122, 10.32 %)
+	- Matrice B (424122 x 67537, 77.60 %)
+
+ * Calcul de B <- A^-1 * B (39mn 13.603s)
+
+ * Calcul de D <- D - C * B (10mn 57.181s)
+
+ * Calcul de Gauss(D)  (rang : 2685) ( 1mn 13.545s)
+
+ * Temps Total :
+	- User+Sys : 3225.390s
+	- Reel     : 3226.970s
+
+ * Rang : 426807
+
+
+,[0,3225.390,3226.970]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat14 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat14 
+	Dimensions : 437603 x 503003
+	Nombre d'elements non nuls : 3025941805 (1.37%)
+
+ * Analyse et premiere decomposition ( 2mn 18.469s)
+
+	- Nombre de pivots : 436318
+	- Nombre de blocs  : 521
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 1285 x 436318, 9.44 %)
+	- Matrice D ( 1285 x 66685, 35.49 %)
+	- Matrice A (436318 x 436318, 30.91 %)
+	- Matrice B (436318 x 66685, 75.50 %)
+
+ * Calcul de B <- A^-1 * B (47mn 42.103s)
+
+ * Calcul de D <- D - C * B ( 5mn 25.112s)
+
+ * Calcul de Gauss(D)  (rang : 1285) (17.129s)
+
+ * Temps Total :
+	- User+Sys : 3379.747s
+	- Reel     : 3381.410s
+
+ * Rang : 437603
+
+
+,[0,3379.747,3381.410]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat15 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat15 
+	Dimensions : 440754 x 506273
+	Nombre d'elements non nuls : 3124617407 (1.40%)
+
+ * Analyse et premiere decomposition ( 1mn 58.671s)
+
+	- Nombre de pivots : 440312
+	- Nombre de blocs  : 516
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  442 x 440312, 9.28 %)
+	- Matrice D (  442 x 65961, 37.18 %)
+	- Matrice A (440312 x 440312, 74.27 %)
+	- Matrice B (440312 x 65961, 80.91 %)
+
+ * Calcul de B <- A^-1 * B (43mn 1.897s)
+
+ * Calcul de D <- D - C * B ( 1mn 51.023s)
+
+ * Calcul de Gauss(D)  (rang : 442) (1.320s)
+
+ * Temps Total :
+	- User+Sys : 2846.094s
+	- Reel     : 2847.490s
+
+ * Rang : 440754
+
+
+,[0,2846.094,2847.490]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat16 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat16 
+	Dimensions : 441423 x 506958
+	Nombre d'elements non nuls : 3153803434 (1.41%)
+
+ * Analyse et premiere decomposition ( 2mn 0.920s)
+
+	- Nombre de pivots : 441319
+	- Nombre de blocs  : 513
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  104 x 441319, 8.79 %)
+	- Matrice D (  104 x 65639, 40.70 %)
+	- Matrice A (441319 x 441319, 30.24 %)
+	- Matrice B (441319 x 65639, 84.31 %)
+
+ * Calcul de B <- A^-1 * B (43mn 2.001s)
+
+ * Calcul de D <- D - C * B (25.114s)
+
+ * Calcul de Gauss(D)  (rang : 104) (0.132s)
+
+ * Temps Total :
+	- User+Sys : 2767.125s
+	- Reel     : 2768.480s
+
+ * Rang : 441423
+
+
+,[0,2767.125,2768.480]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat17 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat17 
+	Dimensions : 441525 x 507061
+	Nombre d'elements non nuls : 3159447385 (1.41%)
+
+ * Analyse et premiere decomposition ( 1mn 59.691s)
+
+	- Nombre de pivots : 441510
+	- Nombre de blocs  : 513
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (   15 x 441510, 8.42 %)
+	- Matrice D (   15 x 65551, 43.30 %)
+	- Matrice A (441510 x 441510, 27.20 %)
+	- Matrice B (441510 x 65551, 85.35 %)
+
+ * Calcul de B <- A^-1 * B (43mn 18.926s)
+
+ * Calcul de D <- D - C * B (3.752s)
+
+ * Calcul de Gauss(D)  (rang : 15) (0.016s)
+
+ * Temps Total :
+	- User+Sys : 2761.517s
+	- Reel     : 2762.860s
+
+ * Rang : 441525
+
+
+,[0,2761.517,2762.860]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat18 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat18 
+	Dimensions : 441534 x 507070
+	Nombre d'elements non nuls : 3160037361 (1.41%)
+
+ * Analyse et premiere decomposition ( 2mn 1.592s)
+
+	- Nombre de pivots : 441533
+	- Nombre de blocs  : 513
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (    1 x 441533, 7.08 %)
+	- Matrice D (    1 x 65537, 52.30 %)
+	- Matrice A (441533 x 441533, 26.88 %)
+	- Matrice B (441533 x 65537, 85.53 %)
+
+ * Calcul de B <- A^-1 * B (44mn 5.389s)
+
+ * Calcul de D <- D - C * B (0.700s)
+
+ * Calcul de Gauss(D)  (rang : 1) (0.000s)
+
+ * Temps Total :
+	- User+Sys : 2806.139s
+	- Reel     : 2807.520s
+
+ * Rang : 441534
+
+
+,[0,2806.139,2807.520]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat2 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat2 
+	Dimensions : 2048 x 4565
+	Nombre d'elements non nuls : 292367 (3.13%)
+
+ * Analyse et premiere decomposition (0.004s)
+
+	- Nombre de pivots : 1914
+	- Nombre de blocs  : 21
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  134 x  1914, 5.67 %)
+	- Matrice D (  134 x  2651, 15.30 %)
+	- Matrice A ( 1914 x  1914, 0.98 %)
+	- Matrice B ( 1914 x  2651, 3.66 %)
+
+ * Calcul de B <- A^-1 * B (0.064s)
+
+ * Calcul de D <- D - C * B (0.012s)
+
+ * Calcul de Gauss(D)  (rang : 134) (0.008s)
+
+ * Temps Total :
+	- User+Sys : 0.092s
+	- Reel     : 0.090s
+
+ * Rang : 2048
+
+
+,[0,0.092,0.090]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat3 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat3 
+	Dimensions : 9953 x 16839
+	Nombre d'elements non nuls : 3668826 (2.19%)
+
+ * Analyse et premiere decomposition (0.072s)
+
+	- Nombre de pivots : 9512
+	- Nombre de blocs  : 58
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  441 x  9512, 5.50 %)
+	- Matrice D (  441 x  7327, 11.82 %)
+	- Matrice A ( 9512 x  9512, 0.41 %)
+	- Matrice B ( 9512 x  7327, 3.84 %)
+
+ * Calcul de B <- A^-1 * B (1.048s)
+
+ * Calcul de D <- D - C * B (0.376s)
+
+ * Calcul de Gauss(D)  (rang : 441) (0.096s)
+
+ * Temps Total :
+	- User+Sys : 1.628s
+	- Reel     : 1.620s
+
+ * Rang : 9953
+
+
+,[0,1.628,1.620]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat4 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat4 
+	Dimensions : 23290 x 36757
+	Nombre d'elements non nuls : 15122106 (1.77%)
+
+ * Analyse et premiere decomposition (0.368s)
+
+	- Nombre de pivots : 22953
+	- Nombre de blocs  : 108
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  337 x 22953, 3.64 %)
+	- Matrice D (  337 x 13804, 8.51 %)
+	- Matrice A (22953 x 22953, 0.24 %)
+	- Matrice B (22953 x 13804, 4.15 %)
+
+ * Calcul de B <- A^-1 * B (4.856s)
+
+ * Calcul de D <- D - C * B (0.656s)
+
+ * Calcul de Gauss(D)  (rang : 337) (0.092s)
+
+ * Temps Total :
+	- User+Sys : 6.104s
+	- Reel     : 6.110s
+
+ * Rang : 23290
+
+
+,[0,6.104,6.110]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat5 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat5 
+	Dimensions : 45844 x 67046
+	Nombre d'elements non nuls : 43189754 (1.41%)
+
+ * Analyse et premiere decomposition (1.352s)
+
+	- Nombre de pivots : 45271
+	- Nombre de blocs  : 171
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  573 x 45271, 3.28 %)
+	- Matrice D (  573 x 21775, 10.54 %)
+	- Matrice A (45271 x 45271, 0.22 %)
+	- Matrice B (45271 x 21775, 3.69 %)
+
+ * Calcul de B <- A^-1 * B (22.277s)
+
+ * Calcul de D <- D - C * B (3.100s)
+
+ * Calcul de Gauss(D)  (rang : 573) (0.484s)
+
+ * Temps Total :
+	- User+Sys : 27.642s
+	- Reel     : 27.660s
+
+ * Rang : 45844
+
+
+,[0,27.642,27.660]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat6 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat6 
+	Dimensions : 83046 x 114252
+	Nombre d'elements non nuls : 117995084 (1.24%)
+
+ * Analyse et premiere decomposition (4.304s)
+
+	- Nombre de pivots : 82086
+	- Nombre de blocs  : 252
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C (  960 x 82086, 4.16 %)
+	- Matrice D (  960 x 32166, 16.05 %)
+	- Matrice A (82086 x 82086, 0.61 %)
+	- Matrice B (82086 x 32166, 3.59 %)
+
+ * Calcul de B <- A^-1 * B ( 1mn 27.213s)
+
+ * Calcul de D <- D - C * B (17.025s)
+
+ * Calcul de Gauss(D)  (rang : 960) (2.452s)
+
+ * Temps Total :
+	- User+Sys : 112.303s
+	- Reel     : 112.360s
+
+ * Rang : 83046
+
+
+,[0,112.303,112.360]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat7 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat7 
+	Dimensions : 160426 x 204782
+	Nombre d'elements non nuls : 419015855 (1.28%)
+
+ * Analyse et premiere decomposition (16.245s)
+
+	- Nombre de pivots : 156452
+	- Nombre de blocs  : 378
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 3974 x 156452, 8.59 %)
+	- Matrice D ( 3974 x 48330, 19.71 %)
+	- Matrice A (156452 x 156452, 1.84 %)
+	- Matrice B (156452 x 48330, 8.34 %)
+
+ * Calcul de B <- A^-1 * B ( 5mn 34.653s)
+
+ * Calcul de D <- D - C * B ( 5mn 10.195s)
+
+ * Calcul de Gauss(D)  (rang : 3974) ( 1mn 47.923s)
+
+ * Temps Total :
+	- User+Sys : 773.680s
+	- Reel     : 774.060s
+
+ * Rang : 160426
+
+
+,[0,773.680,774.060]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat8 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat8 
+	Dimensions : 175286 x 214892
+	Nombre d'elements non nuls : 574746362 (1.53%)
+
+ * Analyse et premiere decomposition (19.825s)
+
+	- Nombre de pivots : 171995
+	- Nombre de blocs  : 336
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 3291 x 171995, 7.93 %)
+	- Matrice D ( 3291 x 42897, 31.07 %)
+	- Matrice A (171995 x 171995, 2.28 %)
+	- Matrice B (171995 x 42897, 12.94 %)
+
+ * Calcul de B <- A^-1 * B ( 7mn 43.565s)
+
+ * Calcul de D <- D - C * B ( 4mn 6.103s)
+
+ * Calcul de Gauss(D)  (rang : 3291) ( 1mn 25.369s)
+
+ * Temps Total :
+	- User+Sys : 820.851s
+	- Reel     : 821.260s
+
+ * Rang : 175286
+
+
+,[0,820.851,821.260]
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /home/martani/matrices/F5/kat16/mat9 file...
+nb=36
+nbf=0.000000
+WA_SIZE=68719476736
+
+ * Lecture de la matrice /home/martani/matrices/F5/kat16/mat9 
+	Dimensions : 328980 x 385905
+	Nombre d'elements non nuls : 1737728359 (1.37%)
+
+ * Analyse et premiere decomposition ( 1mn 8.552s)
+
+	- Nombre de pivots : 325366
+	- Nombre de blocs  : 473
+
+
+	***************************************
+	***   Calcul de Gauss sequentiel    ***
+	***************************************
+
+****   Taille des blocs sur les colonnes de B et D :  128   ****
+****            Memoire allouee : 65536 Mo                  ****
+
+	- Matrice C ( 3614 x 325366, 8.04 %)
+	- Matrice D ( 3614 x 60539, 21.92 %)
+	- Matrice A (325366 x 325366, 13.42 %)
+	- Matrice B (325366 x 60539, 48.51 %)
+
+ * Calcul de B <- A^-1 * B (36mn 40.942s)
+
+ * Calcul de D <- D - C * B ( 9mn 48.169s)
+
+ * Calcul de Gauss(D)  (rang : 3614) ( 2mn 37.566s)
+
+ * Temps Total :
+	- User+Sys : 3036.818s
+	- Reel     : 3038.340s
+
+ * Rang : 328980
+
+
+,[0,3036.818,3038.340]
+    
+    

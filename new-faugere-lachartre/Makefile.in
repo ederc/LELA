@@ -38,8 +38,8 @@ EXTRA_PROGRAMS =
 TESTS = $(am__EXEEXT_1)
 check_PROGRAMS = $(am__EXEEXT_2)
 subdir = new-faugere-lachartre
-DIST_COMMON = README $(noinst_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in AUTHORS COPYING ChangeLog INSTALL NEWS
+DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/macros/blas-check.m4 \
 	$(top_srcdir)/macros/gmp-check.m4 \

@@ -1,0 +1,220 @@
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /dsk/l1/martani/F5/minrank_minors_9_9_6//mat1 file...
+Writing report data to cout
+
+Faugère-Lachartre Multiline Version
+Faugère-Lachartre Multiline Version...  Loading matrix
+    loading file /dsk/l1/martani/F5/minrank_minors_9_9_6//mat1
+    1296 x 11440 matrix
+    mod 65521
+    Nb of Nz elements 14826022 (density 99.9985)
+  Finished activity (rea: 0.8204s, cpu: 0.06099s, sys: 0.07299s): done
+  [[[Loading matrix]]]		 Memory (RSS: 86.49MB; VM: 107.6MB)
+  
+  FG_LACHARTRE_INVERT_STEPS
+    ROUND 1
+      [MultiLineIndexer] constructing indexes
+      Finished activity (rea: 0.0001631s, cpu: 0s, sys: 0s): done
+      Pivots found: 1
+      
+      [multilineIndexer] constructing sub matrices
+      Finished activity (rea: 0.07921s, cpu: 0.07999s, sys: 0s): done
+      
+      ****	sub_A(       1x 1       )	- density: 100% 	*****
+      ****	sub_B(       1x 11439   )	- density: 99.97% 	*****
+      ****	sub_C(    1295x 1       )	- density: 50.04% 	*****
+      ****	sub_D(    1295x 11439   )	- density: 50.04% 	*****
+      
+      D <- D - CB [MODIFIED]
+        [SEQUENTIAL] NB THREADS 
+      Finished activity (rea: 0.208s, cpu: 0.206s, sys: 0s): done
+      ****	sub_C(    1295x 1       )	- density: 50.04% 	*****
+      
+      [Multiline] Echelonize (D)
+      Finished activity (rea: 8.221s, cpu: 8.145s, sys: 0s): done
+      
+      Rank of D: 1295
+      
+      [Multiline] Processing new matrix D
+      Finished activity (rea: 0.0001268s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Combine inner indexer
+      Finished activity (rea: 2.408e-05s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Reconstructing matrix
+      Finished activity (rea: 0.1058s, cpu: 0.09298s, sys: 0.007999s): done
+      
+    Finished activity (rea: 8.615s, cpu: 8.524s, sys: 0.007999s): ROUND 1
+  Finished activity (rea: 8.615s, cpu: 8.524s, sys: 0.007999s): FG_LACHARTRE_INVERT_STEPS
+  
+  True Rank 1296
+  
+passed (8.58469 s)
+Finished activity (rea: 9.435s, cpu: 8.585s, sys: 0.08099s): passed
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /dsk/l1/martani/F5/minrank_minors_9_9_6//mat2 file...
+Writing report data to cout
+
+Faugère-Lachartre Multiline Version
+Faugère-Lachartre Multiline Version...  Loading matrix
+    loading file /dsk/l1/martani/F5/minrank_minors_9_9_6//mat2
+    5380 x 22400 matrix
+    mod 65521
+    Nb of Nz elements 54583188 (density 45.2927)
+  Finished activity (rea: 2.817s, cpu: 0.184s, sys: 0.28s): done
+  [[[Loading matrix]]]		 Memory (RSS: 314.3MB; VM: 335.4MB)
+  
+  FG_LACHARTRE_INVERT_STEPS
+    ROUND 1
+      [MultiLineIndexer] constructing indexes
+      Finished activity (rea: 0.000828s, cpu: 0s, sys: 0.001s): done
+      Pivots found: 4561
+      
+      [multilineIndexer] constructing sub matrices
+      Finished activity (rea: 0.3536s, cpu: 0.3339s, sys: 0.015s): done
+      
+      ****	sub_A(    4561x 4561    )	- density: 3.077% 	*****
+      ****	sub_B(    4561x 17839   )	- density: 28.18% 	*****
+      ****	sub_C(     819x 4561    )	- density: 36.76% 	*****
+      ****	sub_D(     819x 17839   )	- density: 33.87% 	*****
+      
+      D <- D - CB [MODIFIED]
+        [SEQUENTIAL] NB THREADS 
+      Finished activity (rea: 28.89s, cpu: 28.66s, sys: 0s): done
+      ****	sub_C(     819x 4561    )	- density: 36.76% 	*****
+      
+      [Multiline] Echelonize (D)
+      Finished activity (rea: 5.415s, cpu: 5.367s, sys: 0s): done
+      
+      Rank of D: 819
+      
+      [Multiline] Processing new matrix D
+      Finished activity (rea: 0.0001369s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Combine inner indexer
+      Finished activity (rea: 4.315e-05s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Reconstructing matrix
+      Finished activity (rea: 0.4801s, cpu: 0.3979s, sys: 0.07499s): done
+      
+    Finished activity (rea: 35.14s, cpu: 34.76s, sys: 0.09099s): ROUND 1
+  Finished activity (rea: 35.14s, cpu: 34.76s, sys: 0.09099s): FG_LACHARTRE_INVERT_STEPS
+  
+  True Rank 5380
+  
+passed (34.9427 s)
+Finished activity (rea: 37.97s, cpu: 34.94s, sys: 0.3709s): passed
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /dsk/l1/martani/F5/minrank_minors_9_9_6//mat3 file...
+Writing report data to cout
+
+Faugère-Lachartre Multiline Version
+Faugère-Lachartre Multiline Version...  Loading matrix
+    loading file /dsk/l1/martani/F5/minrank_minors_9_9_6//mat3
+    12224 x 36784 matrix
+    mod 65521
+    Nb of Nz elements 147671593 (density 32.8416)
+  Finished activity (rea: 7.627s, cpu: 0.4519s, sys: 0.7759s): done
+  [[[Loading matrix]]]		 Memory (RSS: 847.5MB; VM: 868.6MB)
+  
+  FG_LACHARTRE_INVERT_STEPS
+    ROUND 1
+      [MultiLineIndexer] constructing indexes
+      Finished activity (rea: 0.00183s, cpu: 0.002s, sys: 0s): done
+      Pivots found: 11151
+      
+      [multilineIndexer] constructing sub matrices
+      Finished activity (rea: 0.9363s, cpu: 0.8999s, sys: 0.029s): done
+      
+      ****	sub_A(   11151x 11151   )	- density: 2.611% 	*****
+      ****	sub_B(   11151x 25633   )	- density: 21.89% 	*****
+      ****	sub_C(    1073x 11151   )	- density: 31.65% 	*****
+      ****	sub_D(    1073x 25633   )	- density: 37.81% 	*****
+      
+      D <- D - CB [MODIFIED]
+        [SEQUENTIAL] NB THREADS 
+      Finished activity (rea: 107.9s, cpu: 107s, sys: 0s): done
+      ****	sub_C(    1073x 11151   )	- density: 31.65% 	*****
+      
+      [Multiline] Echelonize (D)
+      Finished activity (rea: 12.84s, cpu: 12.72s, sys: 0s): done
+      
+      Rank of D: 1073
+      
+      [Multiline] Processing new matrix D
+      Finished activity (rea: 0.0002122s, cpu: 0.001s, sys: 0s): done
+      
+      [Multiline] Combine inner indexer
+      Finished activity (rea: 5.889e-05s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Reconstructing matrix
+      Finished activity (rea: 1.191s, cpu: 0.9539s, sys: 0.219s): done
+      
+    Finished activity (rea: 122.9s, cpu: 121.6s, sys: 0.248s): ROUND 1
+  Finished activity (rea: 122.9s, cpu: 121.6s, sys: 0.248s): FG_LACHARTRE_INVERT_STEPS
+  
+  True Rank 12224
+  
+passed (122.04 s)
+Finished activity (rea: 130.5s, cpu: 122s, sys: 1.024s): passed
+    
+    
+  <<<<<<< ********************************** >>>>>>>> 
+Processing /dsk/l1/martani/F5/minrank_minors_9_9_6//mat4 file...
+Writing report data to cout
+
+Faugère-Lachartre Multiline Version
+Faugère-Lachartre Multiline Version...  Loading matrix
+    loading file /dsk/l1/martani/F5/minrank_minors_9_9_6//mat4
+    21066 x 52502 matrix
+    mod 65521
+    Nb of Nz elements 303412950 (density 27.4332)
+  Finished activity (rea: 14.54s, cpu: 0.9249s, sys: 1.564s): done
+  [[[Loading matrix]]]		 Memory (RSS: 1739MB; VM: 1760MB)
+  
+  FG_LACHARTRE_INVERT_STEPS
+    ROUND 1
+      [MultiLineIndexer] constructing indexes
+      Finished activity (rea: 0.003079s, cpu: 0.002999s, sys: 0s): done
+      Pivots found: 19738
+      
+      [multilineIndexer] constructing sub matrices
+      Finished activity (rea: 1.825s, cpu: 1.757s, sys: 0.05399s): done
+      
+      ****	sub_A(   19738x 19738   )	- density: 2.359% 	*****
+      ****	sub_B(   19738x 32764   )	- density: 19.83% 	*****
+      ****	sub_C(    1328x 19738   )	- density: 32.1% 	*****
+      ****	sub_D(    1328x 32764   )	- density: 36.95% 	*****
+      
+      D <- D - CB [MODIFIED]
+        [SEQUENTIAL] NB THREADS 
+      Finished activity (rea: 280s, cpu: 277.7s, sys: 0s): done
+      ****	sub_C(    1328x 19738   )	- density: 32.1% 	*****
+      
+      [Multiline] Echelonize (D)
+      Finished activity (rea: 24.4s, cpu: 24.21s, sys: 0s): done
+      
+      Rank of D: 1328
+      
+      [Multiline] Processing new matrix D
+      Finished activity (rea: 0.000231s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Combine inner indexer
+      Finished activity (rea: 8.106e-05s, cpu: 0s, sys: 0s): done
+      
+      [Multiline] Reconstructing matrix
+      Finished activity (rea: 2.367s, cpu: 1.863s, sys: 0.4809s): done
+      
+    Finished activity (rea: 308.6s, cpu: 305.6s, sys: 0.5359s): ROUND 1
+  Finished activity (rea: 308.6s, cpu: 305.6s, sys: 0.5359s): FG_LACHARTRE_INVERT_STEPS
+  
+  True Rank 21066
+  
+passed (306.493 s)
+Finished activity (rea: 323.1s, cpu: 306.5s, sys: 2.1s): passed
+    
+    

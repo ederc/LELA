@@ -12,7 +12,7 @@
 #  define TIMER_START_(part) part##_timer.start ()
 #  define TIMER_STOP_(part) part##_timer.stop (); part##_time += part##_timer.time ()
 #  define TIMER_REPORT_(part) \
-		commentator.report (Commentator::LEVEL_ALWAYS, TIMING_MEASURE)		\
+		commentator.report (Commentator::LEVEL_ALWAYS, TIMING_MEASURE)	\
 		<< "Total " #part " time: " << part##_time << "s" << std::endl;
 //#  define TIMER_REPORT_(part)
 #else

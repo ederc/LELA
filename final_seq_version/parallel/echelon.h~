@@ -1,0 +1,50 @@
+/*
+ * echelon.h
+ *
+ *  Created on: 4 août 2012
+ *      Author: martani
+ */
+
+#ifndef ECHELON_H_
+#define ECHELON_H_
+
+
+
+#include "lela/matrix/sparse.h"
+#include "level2-ops.h"
+
+using namespace LELA;
+
+class Level3ParallelEchelon
+{
+
+public:
+	template<typename Index>
+	uint32 echelonize__Parallel(const Modular<uint16>& R,
+			SparseBlocMatrix<SparseMultilineBloc<uint16, Index> >& inMatrix,
+			SparseMultilineMatrix<uint16>& outMatrix, bool destruct_in_matrix,
+			int NB_THREADS);
+
+private:
+		typedef struct echelonize_Params_t {
+			typedef Modular<uint16> Ring;
+			const Ring* R;
+			SparseMultilineMatrix<uint16>* A;
+		} echelonize_Params_t;
+
+		typedef struct waiting_row_t {
+			uint32 row_idx;
+			uint32 last_pivot_reduced_by;
+		};
+		
+		static void* echelonize__Parallel(void* p_params);
+
+	static void copyBlocMatrixToMultilineMatrix(SparseBlocMatrix<SparseMultilineBloc<uint16, Index> >& inMatrix,
+			SparseMultilineMatrix<uint16>& outMatrix, bool destruct_in_matrix);
+};
+
+
+
+#include "echelon.C"
+
+#endif /* ECHELON_H_ */

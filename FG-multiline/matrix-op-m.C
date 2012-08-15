@@ -168,7 +168,8 @@ inline void axpy(const uint16 av1_col1,
 		const MultiLineVector<uint16>& v,
 		const uint16 line,
 		uint64 *arr1,
-		uint64 *arr2)
+		uint64 *arr2,
+		uint16 start_from = 0)
 {
 	lela_check(line < v.nb_lines());
 	const uint32 sz = v.size();
@@ -185,7 +186,7 @@ inline void axpy(const uint16 av1_col1,
 
 
 	const uint8 xl = v.size() % UNROLL_STEP;
-	register uint32 x = 0;
+	register uint32 x = start_from;
 
 	register uint32 idx;
 	register uint16 val1;
@@ -274,7 +275,8 @@ inline void axpy2(const uint16 av1_col1,
 		const uint16 av2_col2,
 		const MultiLineVector<uint16>& v,
 		uint64 *arr1,
-		uint64 *arr2)
+		uint64 *arr2,
+		uint16 start_from = 0)
 {
 	register uint32 idx;
 	register uint16 val1, val2;
@@ -309,20 +311,20 @@ inline void axpy2(const uint16 av1_col1,
 */
 	if(av1_col1 == 0 && av2_col1 == 0)
 	{
-		axpy(av1_col2, av2_col2, v, 1, arr1, arr2);
+		axpy(av1_col2, av2_col2, v, 1, arr1, arr2, start_from);
 		return;
 	}
 
 	if(av1_col2 == 0 && av2_col2 == 0)
 	{
-		axpy(av1_col1, av2_col1, v, 0, arr1, arr2);
+		axpy(av1_col1, av2_col1, v, 0, arr1, arr2, start_from);
 		return;
 	}
 
 	if (av1_col1 == 0)
 	{
 		if (av1_col2 == 0)
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -336,7 +338,7 @@ inline void axpy2(const uint16 av1_col1,
 			}
 		else if (av2_col2 == 0)
 		{
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -352,7 +354,7 @@ inline void axpy2(const uint16 av1_col1,
 		}
 		else
 		{
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -369,7 +371,7 @@ inline void axpy2(const uint16 av1_col1,
 	else if (av2_col1 == 0)
 	{
 		if (av1_col2 == 0)
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -383,7 +385,7 @@ inline void axpy2(const uint16 av1_col1,
 				arr2[idx] += (uint32) av2_col2 * val2;
 			}
 		else if (av2_col2 == 0)
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -396,7 +398,7 @@ inline void axpy2(const uint16 av1_col1,
 				//arr2[idx] += (uint32) av2_col2 * val2;
 			}
 		else
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -412,7 +414,7 @@ inline void axpy2(const uint16 av1_col1,
 	else // av1_col1 && av2_col1 != 0
 	{
 		if (av1_col2 == 0)
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -425,7 +427,7 @@ inline void axpy2(const uint16 av1_col1,
 				arr2[idx] += (uint64)(((uint32) av2_col1 * val1) + (uint64)((uint32) av2_col2 * val2));
 			}
 		else if (av2_col2 == 0)
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -438,7 +440,7 @@ inline void axpy2(const uint16 av1_col1,
 				//arr2[idx] += (uint32) av2_col2 * val2;
 			}
 		else
-			for (uint32 i = 0; i < v.size(); ++i)
+			for (uint32 i = start_from; i < v.size(); ++i)
 			{
 				idx = v.IndexData[i];
 
@@ -458,24 +460,25 @@ inline void axpy2_unroll(const uint16 av1_col1,
 		const uint16 av2_col2,
 		const MultiLineVector<uint16>& v,
 		uint64 *arr1,
-		uint64 *arr2)
+		uint64 *arr2,
+		uint16 start_from = 0)
 {
 
 	if(av1_col1 == 0 && av2_col1 == 0)
 	{
-		axpy(av1_col2, av2_col2, v, 1, arr1, arr2);
+		axpy(av1_col2, av2_col2, v, 1, arr1, arr2, start_from);
 		return;
 	}
 
 	if(av1_col2 == 0 && av2_col2 == 0)
 	{
-		axpy(av1_col1, av2_col1, v, 0, arr1, arr2);
+		axpy(av1_col1, av2_col1, v, 0, arr1, arr2, start_from);
 		return;
 	}
 
 	const uint32 sz = v.size();
 	const uint8 xl = v.size() % UNROLL_STEP;
-	uint32 x = 0;
+	uint32 x = start_from;
 
 	register uint32 idx;
 	register uint16 val1, val2;
@@ -601,7 +604,7 @@ template<typename Ring>
 void reducePivotsByPivots(const Ring& R, const SparseMultilineMatrix<uint16>& A,
 							SparseMultilineMatrix<uint16>& B)
 {
-	lela_check(A.coldim () == B.coldim ());
+	lela_check(A.rowdim () == B.rowdim ());
 	lela_check(A.rowdim () == A.coldim ());
 
 	//typedef Modular<uint16> Ring;
@@ -779,10 +782,11 @@ template<typename Ring>
 void reduceNonPivotsByPivots(const Ring R,
 							 const SparseMultilineMatrix<uint16>& C,
 							 const SparseMultilineMatrix<uint16>& B,
-							 SparseMultilineMatrix<uint16>& D)
+							 SparseMultilineMatrix<uint16>& D,
+							 bool invert_scalars = true)
 {
 	lela_check(B.coldim () == D.coldim ());
-	lela_check(C.rowdim () == D.coldim ());
+	lela_check(C.rowdim () == D.rowdim ());
 
 #ifdef SHOW_PROGRESS
 	uint32 i=0;
@@ -837,11 +841,14 @@ void reduceNonPivotsByPivots(const Ring R,
 			R.copy(Cv1_col1, i_C->at_unchecked(0, j));
 			R.copy(Cv2_col1, i_C->at_unchecked(1, j));
 
-			if (Cv1_col1 != 0)
-				R.negin(Cv1_col1);
-			if (Cv2_col1 != 0)
-				R.negin(Cv2_col1);
-
+			if(invert_scalars)	//when the new method is used, scalars of matrix C are already 
+						//in their final form, no need to compute the opposite
+			{
+				if (Cv1_col1 != 0)
+					R.negin(Cv1_col1);
+				if (Cv2_col1 != 0)
+					R.negin(Cv2_col1);
+			}
 			if (Cp1 % 2 == 0 && j < i_C->size() - 1)
 			{
 				assert(j != i_C->size() - 1);
@@ -851,11 +858,13 @@ void reduceNonPivotsByPivots(const Ring R,
 					R.copy(Cv1_col2, i_C->at_unchecked(0, j + 1));
 					R.copy(Cv2_col2, i_C->at_unchecked(1, j + 1));
 
-					if (Cv1_col2 != 0)
-						R.negin(Cv1_col2);
-					if (Cv2_col2 != 0)
-						R.negin(Cv2_col2);
-
+					if(invert_scalars)
+					{
+						if (Cv1_col2 != 0)
+							R.negin(Cv1_col2);
+						if (Cv2_col2 != 0)
+							R.negin(Cv2_col2);
+					}
 					++j;
 
 					TIMER_START_(Axpy2Timer);
@@ -887,8 +896,11 @@ void reduceNonPivotsByPivots(const Ring R,
 		}
 		TIMER_STOP_(AxpyOuterTimer);
 
-		copyDenseArraysToMultilineVector64(R, tmpDenseArray1, tmpDenseArray2,
+		TIMER_START_(CopyDenseArrayToSparseVectorTimer);
+			copyDenseArraysToMultilineVector64(R, tmpDenseArray1, tmpDenseArray2,
 				D_coldim, D[x], true);
+		TIMER_STOP_(CopyDenseArrayToSparseVectorTimer);
+
 		x++;
 	}
 #ifdef SHOW_PROGRESS
@@ -904,14 +916,158 @@ void reduceNonPivotsByPivots(const Ring R,
 }
 
 
+//performs a pseudo reduction of C by A (A^-1 transpose(C))
+template<typename Ring>
+void reduceCD_onlyC(const Ring& R, const SparseMultilineMatrix<uint16>& A, SparseMultilineMatrix<uint16>& C)
+{
+	typedef SparseMultilineMatrix<uint16> Matrix;
+	typename Matrix::RowIterator i_C;
+
+	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	report << "[SEQUENTIAL] NB THREADS " << endl;
+
+#ifdef SHOW_PROGRESS
+	uint32 i=0;
+	//std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	report << "In spec Modular<uint16> Multiline" << std::endl;
+#endif
+
+	uint32 C_coldim = C.coldim ();
+	uint64 *tmpDenseArray1C __attribute__((aligned(0x1000)));
+		tmpDenseArray1C = new uint64[C_coldim];
+	uint64 *tmpDenseArray2C __attribute__((aligned(0x1000)));
+		tmpDenseArray2C = new uint64[C_coldim];
+
+	TIMER_DECLARE_(RazArrayTimer);
+	TIMER_DECLARE_(CopySparseVectorToDenseArrayTimer);
+	TIMER_DECLARE_(CopyDenseArrayToSparseVectorTimer);
+	TIMER_DECLARE_(Axpy1CTimer);
+	TIMER_DECLARE_(Axpy2CTimer);
+	TIMER_DECLARE_(AxpyOuterTimer);
+
+	//int x=0;
+	for(i_C = C.rowBegin (); i_C != C.rowEnd (); ++i_C){
+#ifdef SHOW_PROGRESS
+		++i;
+		report << "                                                                    \r";
+		report << "\t" << i << std::ends;
+#endif
+
+		TIMER_START_(RazArrayTimer);
+			razArray64(tmpDenseArray1C, C_coldim);
+			razArray64(tmpDenseArray2C, C_coldim);
+		TIMER_STOP_(RazArrayTimer);
+
+		TIMER_START_(CopySparseVectorToDenseArrayTimer);
+			copyMultilineToDenseArrays64(*i_C, tmpDenseArray1C, tmpDenseArray2C);
+		TIMER_STOP_(CopySparseVectorToDenseArrayTimer);
+
+		typename Ring::Element Cv1_col1=0, Cv2_col1=0;
+		uint32 Cp1=0;
+		typename Ring::Element Cv1_col2=0, Cv2_col2=0;
+		uint32 Cp2=0;
+
+		uint32 tmp=0;
+		TIMER_START_(AxpyOuterTimer);
+		for(uint32 j=i_C->IndexData[0]; j<C_coldim; ++j)
+		{
+			if(tmpDenseArray1C[j] % R._modulus == 0 && tmpDenseArray2C[j] % R._modulus == 0)
+				continue;
+
+			Cp1 = j;
+			R.copy(Cv1_col1, tmpDenseArray1C[j] % R._modulus);
+			R.copy(Cv2_col1, tmpDenseArray2C[j] % R._modulus);
+
+			if (Cv1_col1 != 0)
+				R.negin(Cv1_col1);
+			if (Cv2_col1 != 0)
+				R.negin(Cv2_col1);
+
+			if (Cp1 % 2 == 0 && j < C_coldim - 1 )
+			{
+				Cp2 = j+1;
+				R.copy(Cv1_col2, tmpDenseArray1C[j+1] % R._modulus);
+				R.copy(Cv2_col2, tmpDenseArray2C[j+1] % R._modulus);
+
+				uint16 val1 = A[Cp1 / C.nb_lines_per_bloc()].at_unchecked(0, 1);
+
+				tmp = Cv1_col2 + (uint32)Cv1_col1*val1;
+				R.init(Cv1_col2, tmp);
+				tmp = Cv2_col2 + (uint32)Cv2_col1*val1;
+				R.init(Cv2_col2, tmp);
+
+				if (Cv1_col2 != 0)
+					R.negin(Cv1_col2);
+				if (Cv2_col2 != 0)
+					R.negin(Cv2_col2);
+
+				TIMER_START_(Axpy2CTimer);
+				axpy2(Cv1_col1, Cv2_col1, Cv1_col2, Cv2_col2,
+						A[Cp1 / C.nb_lines_per_bloc()],
+						tmpDenseArray1C,
+						tmpDenseArray2C);
+
+				tmpDenseArray1C[Cp1] = Cv1_col1;
+				tmpDenseArray2C[Cp1] = Cv2_col1;
+
+				tmpDenseArray1C[Cp2] = Cv1_col2;
+				tmpDenseArray2C[Cp2] = Cv2_col2;
+				TIMER_STOP_(Axpy2CTimer);
+
+				++j;
+			}
+			else
+			{
+				TIMER_START_(Axpy1CTimer);
+					axpy(Cv1_col1, Cv2_col1,
+						 A[Cp1 / C.nb_lines_per_bloc()],
+						 Cp1 % C.nb_lines_per_bloc(),
+						 tmpDenseArray1C,
+						 tmpDenseArray2C);
+					tmpDenseArray1C[Cp1] = Cv1_col1;
+					tmpDenseArray2C[Cp1] = Cv2_col1;
+				TIMER_STOP_(Axpy1CTimer);
+			}
+		}
+		TIMER_STOP_(AxpyOuterTimer);
+
+		TIMER_START_(CopyDenseArrayToSparseVectorTimer);
+			copyDenseArraysToMultilineVector64(R, tmpDenseArray1C, tmpDenseArray2C, C_coldim, *i_C, true);
+		TIMER_STOP_(CopyDenseArrayToSparseVectorTimer);
+	}
+
+#ifdef SHOW_PROGRESS
+	report << "\r                                                                    \n";
+#endif
+		TIMER_REPORT_(RazArrayTimer);
+		TIMER_REPORT_(CopySparseVectorToDenseArrayTimer);
+		TIMER_REPORT_(CopyDenseArrayToSparseVectorTimer);
+		TIMER_REPORT_(Axpy1CTimer);
+		TIMER_REPORT_(Axpy2CTimer);
+		TIMER_REPORT_(AxpyOuterTimer);
+
+		delete [] tmpDenseArray1C;
+		delete [] tmpDenseArray2C;
+}
+
+template<typename Ring>
+void reduceCD_onlyD(const Ring& R, const SparseMultilineMatrix<uint16>& C,
+		const SparseMultilineMatrix<uint16>& B,
+		SparseMultilineMatrix<uint16>& D)
+{
+	//same code
+	reduceNonPivotsByPivots(R, C, B, D);
+}
+
+
 template<typename Ring>
 void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 							const SparseMultilineMatrix<uint16>& B,
-							const SparseMultilineMatrix<uint16>& C,
+							SparseMultilineMatrix<uint16>& C,
 							SparseMultilineMatrix<uint16>& D)
 {
 	lela_check(B.coldim () == D.coldim ());
-	lela_check(C.rowdim () == D.coldim ());
+	lela_check(C.rowdim () == D.rowdim ());
 
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 	report << "[SEQUENTIAL] NB THREADS " << endl;
@@ -947,7 +1103,6 @@ void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 	TIMER_DECLARE_(Axpy2CTimer);
 	TIMER_DECLARE_(Axpy2DTimer);
 	TIMER_DECLARE_(AxpyOuterTimer);
-	TIMER_DECLARE_(AxpyLeftTimer);
 
 	int x=0;
 	for(i_C = C.rowBegin (), i_D = D.rowBegin (); i_C != C.rowEnd (); ++i_C, ++i_D){
@@ -973,7 +1128,7 @@ void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 		typename Ring::Element Cv1_col1=0, Cv2_col1=0;
 		uint32 Cp1=0;
 		typename Ring::Element Cv1_col2=0, Cv2_col2=0;
-		uint32 Cp2=0;
+		//uint32 Cp2=0;
 
 		uint32 tmp=0;
 
@@ -995,7 +1150,7 @@ void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 
 			if (Cp1 % 2 == 0 && j < C_coldim - 1 )
 			{
-				Cp2 = j+1;
+				//Cp2 = j+1;
 				R.copy(Cv1_col2, tmpDenseArray1C[j+1] % R._modulus);
 				R.copy(Cv2_col2, tmpDenseArray2C[j+1] % R._modulus);
 
@@ -1069,7 +1224,11 @@ void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 		}
 		TIMER_STOP_(AxpyOuterTimer);
 
-		copyDenseArraysToMultilineVector64(R, tmpDenseArray1D, tmpDenseArray2D, D_coldim, D[x], true);
+		TIMER_START_(CopyDenseArrayToSparseVectorTimer);
+			copyDenseArraysToMultilineVector64(R, tmpDenseArray1D, tmpDenseArray2D, D_coldim, D[x], true);
+			//copyDenseArraysToMultilineVector64(R, tmpDenseArray1C, tmpDenseArray2C, C_coldim, C[x], true);
+		TIMER_STOP_(CopyDenseArrayToSparseVectorTimer);
+
 		x++;
 	}
 #ifdef SHOW_PROGRESS
@@ -1083,7 +1242,6 @@ void reduceCD(const Ring R, const SparseMultilineMatrix<uint16>& A,
 		TIMER_REPORT_(Axpy1DTimer);
 		TIMER_REPORT_(Axpy2DTimer);
 		TIMER_REPORT_(AxpyOuterTimer);
-		TIMER_REPORT_(AxpyLeftTimer);
 
 		delete [] tmpDenseArray1C;
 		delete [] tmpDenseArray2C;
@@ -1130,7 +1288,7 @@ void reduceCDParallel(const Ring& R, const SparseMultilineMatrix<uint16>& A,
 	pthread_t threads[NUM_THREADS];
 	void *status;
 	int rc;
-	uint64 t;
+	int t;
 
 #ifdef USE_MUTEX
 	pthread_mutex_init(&mutex_lock, NULL);
@@ -1168,9 +1326,6 @@ void reduceCDParallel(const Ring& R, const SparseMultilineMatrix<uint16>& A,
 
 static void* reduceCDParallel_in(void* p_params)
 {
-	lela_check(B.coldim () == D.coldim ());
-	lela_check(C.rowdim () == D.coldim ());
-
 #ifdef SHOW_PROGRESS
 	uint32 i=0;
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
@@ -1248,7 +1403,7 @@ static void* reduceCDParallel_in(void* p_params)
 		uint16 Cv1_col1, Cv2_col1;
 		uint32 Cp1;
 		uint16 Cv1_col2, Cv2_col2;
-	 	uint32 Cp2;
+	 	//uint32 Cp2;
 
 		uint32 tmp;
 
@@ -1270,7 +1425,7 @@ static void* reduceCDParallel_in(void* p_params)
 
 			if (Cp1 % 2 == 0 && j < C_coldim - 1 )
 			{
-				Cp2 = j+1;
+				//Cp2 = j+1;
 				params.R->copy(Cv1_col2, tmpDenseArray1C[j+1] % params.R->_modulus);
 				params.R->copy(Cv2_col2, tmpDenseArray2C[j+1] % params.R->_modulus);
 
@@ -1364,7 +1519,7 @@ static void* reduceCDParallel_in(void* p_params)
 		delete [] tmpDenseArray1D;
 		delete [] tmpDenseArray2D;
 
-		pthread_exit((void*) nb_rows_handled);
+		return (void*) nb_rows_handled;
 }
 
 
@@ -1409,8 +1564,8 @@ static inline void normalize_multiline(const Ring& R, MultiLineVector<uint16>& v
 {
 	uint32 idx;
 	uint16 h1=0, h2=0;
-	long a = head(v, 0, h1, idx);
-	a = head(v, 1, h2, idx);
+	head(v, 0, h1, idx);
+	head(v, 1, h2, idx);
 
 	if(v.empty ())
 		return;

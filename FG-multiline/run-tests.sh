@@ -20,7 +20,7 @@ do
   echo "Processing $f file..." | tee -a $OUTPUT
   
   # take action on each file. $f store current file name
-  $PROGRAM $f $PARAMS | tee -a $OUTPUT
+  $PROGRAM $f $PARAMS 2>&1 | tee -a $OUTPUT
   echo "    " | tee -a $OUTPUT
   echo "    " | tee -a $OUTPUT
   echo "    "

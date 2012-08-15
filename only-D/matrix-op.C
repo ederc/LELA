@@ -554,17 +554,17 @@ void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, cons
 }
 
 
-static double show_density(uint64* arr, uint32 sz)
-{
-	double nb_nz = 0.0;
-	for(uint32 i=0; i<sz; ++i)
-	{
-		if(arr[i] != 0)
-			nb_nz++;
-	}
-
-	return nb_nz/sz * 100;
-}
+//static double show_density(uint64* arr, uint32 sz)
+//{
+//	double nb_nz = 0.0;
+//	for(uint32 i=0; i<sz; ++i)
+//	{
+//		if(arr[i] != 0)
+//			nb_nz++;
+//	}
+//
+//	return nb_nz/sz * 100;
+//}
 
 
 template <typename Matrix>

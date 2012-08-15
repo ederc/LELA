@@ -157,8 +157,8 @@ public:
 
 		initArrays(this->rowdim, this->coldim);
 
-		for(uint32 i=0; i<this->coldim; ++i)
-			assert(pivot_rows_idxs_by_entry[i] == -1);
+		//for(uint32 i=0; i<this->coldim; ++i)
+			//assert(pivot_rows_idxs_by_entry[i] == MINUS_ONE);
 
 		Npiv = 0;
 
@@ -199,7 +199,7 @@ public:
 				pivot_columns_map[i] = piv_col_idx;
 				pivot_columns_rev_map[piv_col_idx] = i;
 
-				assert(piv_col_idx < this->Npiv);
+//				assert(piv_col_idx < this->Npiv);
 				piv_col_idx++;
 			}
 			else
@@ -207,21 +207,21 @@ public:
 				non_pivot_columns_map[i] = non_piv_col_idx;
 				non_pivot_columns_rev_map[non_piv_col_idx] = i;
 
-				assert(non_piv_col_idx < (coldim - Npiv));
+//				assert(non_piv_col_idx < (coldim - Npiv));
 				non_piv_col_idx++;
 			}
 		}
 
-		assert(Npiv == piv_col_idx);
-		assert(this->coldim - Npiv == non_piv_col_idx);
-
-		for(uint32 i = 0; i < this->coldim; ++i){
-			assert((pivot_columns_map[i] < Npiv) || (pivot_columns_map[i] == MINUS_ONE));
-		}
-
-		for(uint32 i = 0; i < this->coldim; ++i){
-			assert((non_pivot_columns_map[i] < (this->coldim - Npiv))  || (non_pivot_columns_map[i] == MINUS_ONE));
-		}
+//		assert(Npiv == piv_col_idx);
+//		assert(this->coldim - Npiv == non_piv_col_idx);
+//
+//		for(uint32 i = 0; i < this->coldim; ++i){
+//			assert((pivot_columns_map[i] < Npiv) || (pivot_columns_map[i] == MINUS_ONE));
+//		}
+//
+//		for(uint32 i = 0; i < this->coldim; ++i){
+//			assert((non_pivot_columns_map[i] < (this->coldim - Npiv))  || (non_pivot_columns_map[i] == MINUS_ONE));
+//		}
 
 		_index_maps_constructed = true;
 	}
@@ -387,20 +387,20 @@ public:
 		SparseMatrix<uint16>::Row::const_iterator it1, it2;
 		uint32 curr_piv_AB = 0;
 
-		uint32 row1=-1, row2=-1;
+		uint32 row1=MINUS_ONE, row2=MINUS_ONE;
 
 		//MATRIX A and B
 		for (uint32 i = 0; i < M.coldim (); ++i) {
 			if(pivot_rows_idxs_by_entry[i] == MINUS_ONE)			//non pivot row
 				continue;
 
-			if(row1 == -1)
+			if(row1 == MINUS_ONE)
 			{
 				row1 = pivot_rows_idxs_by_entry[i];
 				continue;
 			}
 
-			if(row2 != -1)
+			if(row2 != MINUS_ONE)
 				throw "ERROR";
 			else
 				row2 = pivot_rows_idxs_by_entry[i];
@@ -450,7 +450,7 @@ public:
 			row1 = row2 = -1;
 		}
 
-		if(row1 != -1 && row2 == -1){
+		if(row1 != MINUS_ONE && row2 == MINUS_ONE){
 			it1 = M[row1].begin ();
 
 			while(it1 != M[row1].end ())
@@ -469,18 +469,18 @@ public:
 
 		//MATRIX C and D
 		uint32 curr_piv_CD = 0;
-		row1 = row2 = -1;
+		row1 = row2 = MINUS_ONE;
 		for (uint32 i = 0; i < M.rowdim (); ++i) {
 			if(non_pivot_rows_idxs[i] == MINUS_ONE)
 				continue;
 
-			if(row1==-1)
+			if(row1==MINUS_ONE)
 			{
 				row1 = non_pivot_rows_idxs[i];
 				continue;
 			}
 
-			if(row2 != -1)
+			if(row2 != MINUS_ONE)
 				throw "ERROR";
 			else
 				row2 = non_pivot_rows_idxs[i];
@@ -531,7 +531,7 @@ public:
 			row1 = row2 = -1;
 		}
 
-		if(row1 != -1 && row2 == -1){
+		if(row1 != MINUS_ONE && row2 == MINUS_ONE){
 			it1 = M[row1].begin ();
 
 			while(it1 != M[row1].end ())
@@ -557,21 +557,22 @@ public:
 							  SparseMultilineMatrix<uint16>& D1,
 							  SparseMultilineMatrix<uint16>& D2)
 	{
-		uint32 row1=-1, row2=-1;
+		uint32 row1=MINUS_ONE, row2=MINUS_ONE;
 		SparseMatrix<uint16>::Row::const_iterator it1, it2;
 		uint32 curr_piv_D1D2=0;
 
+		//D1 D2
 		for (uint32 i = 0; i < D.coldim (); ++i) {
 			if(pivot_rows_idxs_by_entry[i] == MINUS_ONE)			//non pivot row
 				continue;
 
-			if(row1 == -1)
+			if(row1 == MINUS_ONE)
 			{
 				row1 = pivot_rows_idxs_by_entry[i];
 				continue;
 			}
 
-			if(row2 != -1)
+			if(row2 != MINUS_ONE)
 				throw "ERROR";
 			else
 				row2 = pivot_rows_idxs_by_entry[i];
@@ -615,7 +616,7 @@ public:
 			row1 = row2 = -1;
 		}
 
-		if(row1 != -1 && row2 == -1){
+		if(row1 != MINUS_ONE && row2 == MINUS_ONE){
 			it1 = D[row1].begin ();
 
 			while(it1 != D[row1].end ())
@@ -732,7 +733,8 @@ public:
 	}
 
 	template <typename Matrix, typename Element>
-	void reconstructMatrix(Matrix& M, const SparseMultilineMatrix<Element>& A, const SparseMultilineMatrix<Element>& B, const Matrix& D)
+	void reconstructMatrix(Matrix& M, const SparseMultilineMatrix<Element>& A,
+			const SparseMultilineMatrix<Element>& B, const Matrix& D)
 	{
 		lela_check(A.rowdim() == B.rowdim());
 		lela_check(A.rowdim() == A.coldim());
@@ -856,8 +858,6 @@ public:
 	template <typename Matrix, typename Element>
 	void reconstructMatrix(Matrix& M, const SparseMultilineMatrix<Element>& B, const SparseMultilineMatrix<Element>& D)
 	{
-		lela_check(A.rowdim() == B.rowdim());
-		lela_check(A.rowdim() == A.coldim());
 		lela_check(D.coldim() == B.coldim());
 
 		typename SparseMultilineMatrix<Element>::ConstRow *rowB, *rowD;

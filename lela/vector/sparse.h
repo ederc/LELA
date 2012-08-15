@@ -480,6 +480,7 @@ public:
 	inline size_type       max_size  () const      { return std::min (_idx.max_size (), _elt.max_size ());  }
 
 	inline void		reserve	 (size_t sz)   { _idx.reserve (sz); _elt.reserve (sz); }
+	inline size_type 		capacity ()   { return _idx.capacity (); }
 	inline void		free		 ()
 	{
 		_idx.clear ();

@@ -201,6 +201,7 @@ SparseMatrix<typename Ring::Element> MatrixUtil::loadF4Matrix(const Ring &R, con
 	if(fread(&nb, sizeof(unsigned long long),1,f) != 1)
 		throw "Error while reading file";
 
+	report << "loading file " << fileName << std::endl;
 	report << n << " x " << m << " matrix" << std::endl;
 	report << "mod " << mod << std::endl;
 	{
@@ -235,8 +236,8 @@ SparseMatrix<typename Ring::Element> MatrixUtil::loadF4Matrix(const Ring &R, con
 
 		for(j=0; j<szi; j++)
 		{
-			i_A->push_back (typename Vector<Ring>::Sparse::value_type (pos[j], typename Ring::Element ()));
-			R.init(i_A->back ().second, nz[j]);
+			i_A->push_back (typename Vector<Ring>::Sparse::value_type (pos[j], nz[j]));
+			//R.init(i_A->back ().second, nz[j]);
 			//printf("%u %u %u\n",i+1,pos[j]+1,(unsigned int)(nz[j]));
 
 			//assert(pos[j] < m);
@@ -591,13 +592,13 @@ std::pair<uint64, double> MatrixUtil::getMatrixSizeAndDensity(const Matrix& A)
 {
 	uint64 nb_elts = 0;
         
-        typename Matrix::ConstRowIterator i_A = A.rowBegin ();
+    typename Matrix::ConstRowIterator i_A = A.rowBegin ();
         
 	while(i_A != A.rowEnd ())
-        {
-                nb_elts += i_A->size ();
-                ++i_A;
-        }
+    {
+		nb_elts += i_A->size ();
+        ++i_A;
+    }
 
 	double Nz = (double)(A.rowdim ())*(double)(A.coldim ());
 	Nz = (double)(nb_elts)/Nz;

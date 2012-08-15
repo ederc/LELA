@@ -190,4 +190,10 @@ macros/Makefile
 doc/Makefile
 new-faugere-lachartre/Makefile
 FG-multiline/Makefile
+FG-bloc/Makefile
+FG-bloc-contiguous/Makefile
+FG-bloc-contiguous-hybrid/Makefile
+FG-bloc-multiline/Makefile
+FG-bloc-multiline-hybrid/Makefile
+final_seq_version/Makefile
 ])

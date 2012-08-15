@@ -65,7 +65,7 @@ void printHelpMessage (const char *program, Argument *args, const char *freeArgs
 	for (i = 0; args[i].c != '\0'; i++) {
 		if (args[i].example != 0) {
 			std::cout << "  " << args[i].example;
-			l = 10 - strlen (args[i].example);
+			l = 15 - strlen (args[i].example);
 			do std::cout << ' '; while (--l > 0);
 		}
 		else if (args[i].type == TYPE_NONE)
@@ -75,7 +75,7 @@ void printHelpMessage (const char *program, Argument *args, const char *freeArgs
 			
 		std::cout << args[i].helpString;
 		if (printDefaults) {
-			l = 54 - strlen (args[i].helpString);
+			l = 74 - strlen (args[i].helpString);
 			do std::cout << ' '; while (--l > 0);
 			std::cout << " (default ";
 			switch (args[i].type) {
@@ -185,9 +185,9 @@ void parseArguments (int argc, char **argv, Argument *args, const char *freeArgs
 				*(va_arg (arg_list, char **)) = argv[i];
 				--freeArgs;
 			} else {
-				commentator.setDefaultReportFile (argv[i]);
-				std::cout << "Writing report data to " << argv[i] << std::endl << std::endl;
-				std::cout.flush ();
+				//commentator.setDefaultReportFile (argv[i]);
+				//std::cout << "Writing report data to " << argv[i] << std::endl << std::endl;
+				//std::cout.flush ();
 			}
 		}
 	}
