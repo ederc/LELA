@@ -147,13 +147,13 @@ commentator.start("ROUND 2", "ROUND 2");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 
 	commentator.start("D2 = D1^-1 x D2");
-		Level3Ops::reducePivotsByPivots(R, D1, D2);
+		Level3ParallelOps::reducePivotsByPivots__Parallel(R, D1, D2, NUM_THREADS);
 	commentator.stop(MSG_DONE);
 	D1.free (true);
 	MatrixUtils::show_mem_usage("[D2 = D1^-1 x D2]"); report << endl;
 
 	commentator.start("B2 <- B2 - D2 D1");
-		Level3Ops::reduceNonPivotsByPivots(R, B1, D2, B2);
+		Level3ParallelOps::reduceNonPivotsByPivots__Parallel(R, B1, D2, B2, true, NUM_THREADS);
 	commentator.stop(MSG_DONE);
 	B1.free (true);
 	MatrixUtils::show_mem_usage("[D2 = D1^-1 x D2]"); report << endl;
@@ -352,7 +352,7 @@ commentator.start("ROUND 2");
 		MatrixUtils::show_mem_usage("[constructing sub matrices 2]"); report << endl;
 
 		commentator.start("[Bloc] B1 = A1^-1 B1");
-			Level3Ops::reducePivotsByPivots(R, sub_A_prime, sub_B_prime);
+			Level3ParallelOps::reducePivotsByPivots__Parallel(R, sub_A_prime, sub_B_prime, NUM_THREADS);
 		commentator.stop(MSG_DONE);
 		sub_A_prime.free(true);
 		MatrixUtils::show_mem_usage("[B1 = A1^-1 B1]"); report << endl;

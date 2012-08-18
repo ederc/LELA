@@ -9,14 +9,14 @@ cd /home/martani/LELA_private/final_seq_version
 
 # ======================================= test-FG-seq =====================================================================
 #minrank_minors_9_9_6 ONLY D
-./run-tests.sh "./test-FGL-seq -f" "-" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_oldmethod_seq_only_d.txt;
+./run-tests.sh "./test-FGL-seq -f" "-"    ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_oldmethod_seq_only_d.txt;
 ./run-tests.sh "./test-FGL-seq -f" "- -m" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_newmethod_seq_only_d.txt;
 ./run-tests.sh "./test-FGL-seq -f" "- -n" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_newmethod_reduceCBloc_seq_only_d.txt;
 ./run-tests.sh "./test-FGL-seq -f" "- -m -k" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_newmethod_keepmemory_seq_only_d.txt;
 
 
 #minrank_minors_9_9_6 RREF
-./run-tests.sh "./test-FGL-seq -f" "- -d" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_oldmethod_seq_rref.txt;
+./run-tests.sh "./test-FGL-seq -f" "- -d"    ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_oldmethod_seq_rref.txt;
 ./run-tests.sh "./test-FGL-seq -f" "- -m -d" ~/matrices/F5/minrank_minors_9_9_6 ~/output_FGL/mr996_newprog_newmethod_seq_rref.txt;
 
 

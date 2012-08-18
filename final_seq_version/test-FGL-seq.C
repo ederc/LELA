@@ -535,6 +535,8 @@ commentator.start("ROUND 2");
 
 		reduced = true;
 
+		//MatrixUtils::dumpMatrixAsPbmImage(A, "A-rref.pbm");
+
 commentator.stop("ROUND 2");
 	}
 

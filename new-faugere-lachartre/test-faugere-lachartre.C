@@ -131,7 +131,6 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 //	showMatrixSizeAndDensity(sub_D, "sub_D");
 	report << "Rank of D: " << rank << endl;
 
-	return true;	
 ///Second round
 	report << endl;
 	Indexer<uint32> indexer2;
@@ -275,10 +274,8 @@ int main (int argc, char **argv)
 	{
 		testLelaFaugereLachartre(fileName);
 		pass = true;
-	}else if(validate_results == 0)
-		pass = testFaugereLachartre(fileName);
-	else
-		pass = testFaugereLachartre(fileName, true);
+	}else
+		pass = testFaugereLachartre(fileName, validate_results);
 
 	
 		
