@@ -195,5 +195,5 @@ FG-bloc-contiguous/Makefile
 FG-bloc-contiguous-hybrid/Makefile
 FG-bloc-multiline/Makefile
 FG-bloc-multiline-hybrid/Makefile
-final_seq_version/Makefile
+final_FAUGERE_LACHARTRE/Makefile
 ])

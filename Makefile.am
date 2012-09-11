@@ -3,7 +3,7 @@
 # This file is part of LELA, licensed under the GNU General Public
 # License version 3. See COPYING for more information.
 
-SUBDIRS=lela util doc macros tests doc new-faugere-lachartre FG-multiline FG-bloc FG-bloc-contiguous FG-bloc-contiguous-hybrid FG-bloc-multiline FG-bloc-multiline-hybrid final_seq_version
+SUBDIRS=lela util doc macros tests doc new-faugere-lachartre FG-multiline FG-bloc FG-bloc-contiguous FG-bloc-contiguous-hybrid FG-bloc-multiline FG-bloc-multiline-hybrid final_FAUGERE_LACHARTRE
 
 ACLOCAL_AMFLAGS = -I macros
 
