@@ -156,7 +156,7 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	showMatrixSizeAndDensity(B2, "B2");
 
 	commentator.start("D2 = D1^-1 x D2");
-		MatrixOp::reducePivotsByPivots(R, D1, D2);
+		MatrixOp::reducePivotsByPivots(R, D1, D2, true, 32);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("D2 = D1^-1 x D2");
 	MatrixUtil::freeMatrixMemory(D1);
@@ -164,7 +164,7 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	
 	//TODO: This operation is very inefficient, since it uses sparse-sparse operations on almost dense matrices
 	commentator.start("B2 <- B2 - D2 D1");
-		MatrixOp::reduceNonPivotsByPivots(R, B1, D2, B2);
+		MatrixOp::reduceNonPivotsByPivots(R, B1, D2, B2, true);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::freeMatrixMemory(B1);
 	MatrixUtil::show_mem_usage("B2 <- B2 - D2 D1");

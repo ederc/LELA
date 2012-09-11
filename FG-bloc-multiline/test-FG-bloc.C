@@ -34,7 +34,7 @@ bool testFaugereLachartre_bloc(const Ring& R, SparseMatrix<typename Ring::Elemen
 	Indexer<uint32> simple_indexer;
 
 #ifdef DEFAULT_BLOC_HEIGHT
-#if DEFAULT_BLOC_HEIGHT>256
+#if DEFAULT_BLOC_HEIGHT>=256
 	typedef uint16 IndexType;
 	string type = "uint16";
 #else
@@ -87,29 +87,29 @@ bool testFaugereLachartre_bloc(const Ring& R, SparseMatrix<typename Ring::Elemen
 										 sub_C__(A.rowdim() - simple_indexer.Npiv, simple_indexer.Npiv),
 										 sub_D__(A.rowdim() - simple_indexer.Npiv, A.coldim() - simple_indexer.Npiv);
 
-		simple_indexer.constructSubMatrices(A, sub_A__, sub_B__, sub_C__, sub_D__, false);
+		simple_indexer.constructSubMatrices(A, sub_A__, sub_B__, sub_C__, sub_D__, true);
 	commentator.stop(MSG_DONE);
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_b1.pbm");
-
-	if (MatrixUtils::equal(R, sub_A, sub_A__))
-		report << "<<<<<<< A SUCESS >>>>>>>>>>" << endl;
-	else
-		report << ">>>>>>> A FAILURE <<<<<<<<<<" << endl;
-
-	if (MatrixUtils::equal(R, sub_B, sub_B__))
-		report << "<<<<<<< B SUCESS >>>>>>>>>>" << endl;
-	else
-		report << ">>>>>>> B FAILURE <<<<<<<<<<" << endl;
-
-	if (MatrixUtils::equal(R, sub_C, sub_C__))
-		report << "<<<<<<< C SUCESS >>>>>>>>>>" << endl;
-	else
-		report << ">>>>>>> C FAILURE <<<<<<<<<<" << endl;
-
-	if (MatrixUtils::equal(R, sub_D, sub_D__))
-		report << "<<<<<<< D SUCESS >>>>>>>>>>" << endl;
-	else
-		report << ">>>>>>> D FAILURE <<<<<<<<<<" << endl;
+//	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_b1.pbm");
+//
+//	if (MatrixUtils::equal(R, sub_A, sub_A__))
+//		report << "<<<<<<< A SUCESS >>>>>>>>>>" << endl;
+//	else
+//		report << ">>>>>>> A FAILURE <<<<<<<<<<" << endl;
+//
+//	if (MatrixUtils::equal(R, sub_B, sub_B__))
+//		report << "<<<<<<< B SUCESS >>>>>>>>>>" << endl;
+//	else
+//		report << ">>>>>>> B FAILURE <<<<<<<<<<" << endl;
+//
+//	if (MatrixUtils::equal(R, sub_C, sub_C__))
+//		report << "<<<<<<< C SUCESS >>>>>>>>>>" << endl;
+//	else
+//		report << ">>>>>>> C FAILURE <<<<<<<<<<" << endl;
+//
+//	if (MatrixUtils::equal(R, sub_D, sub_D__))
+//		report << "<<<<<<< D SUCESS >>>>>>>>>>" << endl;
+//	else
+//		report << ">>>>>>> D FAILURE <<<<<<<<<<" << endl;
 
 	/*for(uint16 i=0; i<DEFAULT_BLOC_HEIGHT/2; ++i)
 	{

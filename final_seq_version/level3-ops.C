@@ -74,8 +74,8 @@ void Level3Ops::reducePivotsByPivots(const Modular<uint16>& R,
 			TIMER_STOP_(copySparseBlocToDenseBlocArray);
 
 #ifdef SHOW_PROGRESS
-		report << "                                                                                    \r";
-		report << "\tcolumn\t" << i << "/" << nb_column_blocs_B << "\trow\t" << j << std::ends;
+		//report << "                                                                                    \r";
+		//report << "\tcolumn\t" << i << "/" << nb_column_blocs_B << "\trow\t" << j << std::ends;
 #endif
 			//for all the blocs in the current row of A
 			for (uint32 k = 0; k < last_bloc_idx; ++k)
@@ -98,7 +98,7 @@ void Level3Ops::reducePivotsByPivots(const Modular<uint16>& R,
 		}
 	}
 #ifdef SHOW_PROGRESS
-	report << "\r                                                                                    \n";
+	//report << "\r                                                                                    \n";
 #endif
 
 	TIMER_REPORT_(memsetBlocToZero);
@@ -206,7 +206,7 @@ void Level3Ops::reduceC(const Modular<uint16>& R,
 			SparseBlocMatrix<SparseMultilineBloc<uint16, Index> >& C)
 {
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-	report << "[MatrixOps::reduceC] In spec Modular<uint16> Bloc version" << std::endl;
+	report << "[MatrixOps::reduceC] In spec Modular<uint16> Bloc-block version" << std::endl;
 
 	uint64 *dense_bloc[DEFAULT_BLOC_HEIGHT]  __attribute__((aligned(0x1000)));
 	for (uint32 i = 0; i < DEFAULT_BLOC_HEIGHT; ++i)
@@ -292,7 +292,7 @@ void Level3Ops::reduceC(const Modular<uint16>& R,
 	typedef Modular<uint16> Ring;
 	
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-	report << "[Level3Ops::reduceC] In spec Modular<uint16> Bloc version" << std::endl;
+	report << "[Level3Ops::reduceC] In spec Modular<uint16> Bloc-multiline version" << std::endl;
 
 	uint32 C_coldim = C.coldim ();
 	

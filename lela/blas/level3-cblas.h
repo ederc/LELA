@@ -43,6 +43,7 @@ class _gemm<TypeWrapperRing<float>, BLASModule<float>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<float> &F, Modules &M, float a, const Matrix1 &A, const Matrix2 &B, float b, Matrix3 &C,
 				   MatrixStorageTypes::Dense, MatrixStorageTypes::Dense, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -58,6 +59,7 @@ class _gemm<TypeWrapperRing<float>, BLASModule<float>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<float> &F, Modules &M, float a, const Matrix1 &A, const Matrix2 &B, float b, Matrix3 &C,
 				   MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -73,6 +75,7 @@ class _gemm<TypeWrapperRing<float>, BLASModule<float>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<float> &F, Modules &M, float a, const Matrix1 &A, const Matrix2 &B, float b, Matrix3 &C,
 				   MatrixStorageTypes::Dense, MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -88,6 +91,7 @@ class _gemm<TypeWrapperRing<float>, BLASModule<float>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<float> &F, Modules &M, float a, const Matrix1 &A, const Matrix2 &B, float b, Matrix3 &C,
 				   MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -197,6 +201,7 @@ class _gemm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, const Matrix2 &B, double b, Matrix3 &C,
 				   MatrixStorageTypes::Dense, MatrixStorageTypes::Dense, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -209,6 +214,7 @@ class _gemm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, const Matrix2 &B, double b, Matrix3 &C,
 				   MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -221,6 +227,7 @@ class _gemm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, const Matrix2 &B, double b, Matrix3 &C,
 				   MatrixStorageTypes::Dense, MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -233,6 +240,7 @@ class _gemm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	static Matrix3 &gemm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, const Matrix2 &B, double b, Matrix3 &C,
 				   MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS CALLED" << std::endl;
 		lela_check (A.rowdim () == C.rowdim ());
 		lela_check (B.coldim () == C.coldim ());
 		lela_check (A.coldim () == B.rowdim ());
@@ -293,12 +301,16 @@ class _trsm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	template <class Modules, class Matrix1, class Matrix2>
 	static Matrix2 &trsm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, Matrix2 &B, TriangularMatrixType type, bool diagIsOne,
 				   MatrixStorageTypes::Generic, MatrixStorageTypes::Generic)
-		{ return _trsm<TypeWrapperRing<double>, BLASModule<double>::Tag::Parent>::op (F, M, a, A, B, type, diagIsOne); }
+		{
+			//std::cout << ">>>BLAS MatrixStorageTypes::Generic, MatrixStorageTypes::Generic<<<" << std::endl;
+			return _trsm<TypeWrapperRing<double>, BLASModule<double>::Tag::Parent>::op (F, M, a, A, B, type, diagIsOne);
+		}
 
 	template <class Modules, class Matrix1, class Matrix2>
 	static Matrix2 &trsm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, Matrix2 &B, TriangularMatrixType type, bool diagIsOne,
 				   MatrixStorageTypes::Dense, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS MatrixStorageTypes::Dense, MatrixStorageTypes::Dense<<<" << std::endl;
 		lela_check (A.rowdim () == B.rowdim ());
 		lela_check (A.coldim () == B.rowdim ());
 		lela_check (type == UpperTriangular || type == LowerTriangular);
@@ -311,6 +323,7 @@ class _trsm<TypeWrapperRing<double>, BLASModule<double>::Tag>
 	static Matrix2 &trsm_impl (const TypeWrapperRing<double> &F, Modules &M, double a, const Matrix1 &A, Matrix2 &B, TriangularMatrixType type, bool diagIsOne,
 				   MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense)
 	{
+		//std::cout << ">>>BLAS MatrixStorageTypes::DenseTranspose, MatrixStorageTypes::Dense<<<" << std::endl;
 		lela_check (A.rowdim () == B.rowdim ());
 		lela_check (A.coldim () == B.rowdim ());
 		lela_check (type == UpperTriangular || type == LowerTriangular);

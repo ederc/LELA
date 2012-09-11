@@ -32,8 +32,8 @@ using namespace LELA;
 #  define TIMER_STOP_(part)
 #  define TIMER_REPORT_(part)
 #endif //DETAILED_PROFILE_TIMERS
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+//#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+//#define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
 #define check_equal_or_raise_exception(a, b)	\
 	if (!((a) == (b)))	{							\
@@ -159,6 +159,9 @@ public:
 	static void copyBlocToMultilineMatrix_DownTop_RightLeft(
 			const SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& inMatrix,
 			SparseMultilineMatrix<Element>& outMatrix);
+
+	template <typename Matrix>
+	static void invertMatrixRows(Matrix& A);
 
 private:
 	/*template <typename Element, typename Index>

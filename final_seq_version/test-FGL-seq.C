@@ -9,7 +9,6 @@
 #include "types.h"
 #include "matrix-utils.h"
 #include "level3-ops.h"
-#include "parallel/echelon.h"
 
 #include "indexer.h"
 
@@ -78,6 +77,9 @@ commentator.start("ROUND 1", "ROUND 1");
 	SHOW_MATRIX_INFO_BLOC(sub_C);
 	SHOW_MATRIX_INFO_BLOC(sub_D);
 
+	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
+	//MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
+
 	commentator.start("[Bloc] B = A^-1 B", "[B = A^-1 B]");
 		Level3Ops::reducePivotsByPivots(R, sub_A, sub_B);
 	commentator.stop("[B = A^-1 B]");
@@ -85,7 +87,7 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_A.free(true);
 	MatrixUtils::show_mem_usage("[B = A^-1 B]"); report << endl;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
+	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B_reduced.pbm");
 
 	commentator.start("[Bloc] D = D - C*B", "[D = D - C*B]");
 		if(horizontal)
@@ -97,6 +99,8 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
+	//MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D_reduced.pbm");
+
 	//return true;
 
 	commentator.start("echelonize D", "[echelonize D]");
@@ -104,6 +108,8 @@ commentator.start("ROUND 1", "ROUND 1");
 	commentator.stop("[echelonize D]");
 	MatrixUtils::show_mem_usage("[echelonize D]"); report << endl;
 	report << "Rank of D " << rank << endl;
+
+	//MatrixUtils::dumpMatrixAsPbmImage(sub_D_multiline, "sub_D_after_echelonize.pbm");
 
 	if(only_D)
 	{
@@ -114,12 +120,13 @@ commentator.start("ROUND 1", "ROUND 1");
 		MatrixUtils::show_mem_usage("[After processing]"); report << endl;
 
 		commentator.start("[Bloc] Reconstructing matrix", "[Reconstructing matrix]");
-			outer_indexer.reconstructMatrix(A, sub_B, sub_D_multiline, true);
+			outer_indexer.reconstructMatrix(A, sub_B, sub_D_multiline, free_memory_on_the_go);
 		commentator.stop("[Reconstructing matrix]"); report << endl;
 		MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
 
 		SHOW_MATRIX_INFO_SPARSE(A);
 
+		//MatrixUtils::dumpMatrixAsPbmImage(A, "A_echelon_old_method.pbm");
 	}
 commentator.stop("ROUND 1");
 
@@ -164,6 +171,8 @@ commentator.start("ROUND 2", "ROUND 2");
 	MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
 	reduced = true;
 
+	//MatrixUtils::dumpMatrixAsPbmImage(A, "A_rref_old_method.pbm");
+
 commentator.stop("ROUND 2");
 	}
 commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
@@ -178,7 +187,7 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 		report << "<< Computing reduced echelon form of the matrix using structured Gaussian elimination >>" << endl;
 
 		commentator.start("Structured rref of original matrix", "STRUCTURED_RREF");
-			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced(R, M_orig);
+			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced_uint16(R, M_orig);
 		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 
 		if(!reduced)
@@ -190,7 +199,7 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 			}
 
 			commentator.start("Structured rref of A", "STRUCTURED_RREF");
-				StructuredGauss::echelonize_reduced(R, A);
+				StructuredGauss::echelonize_reduced_uint16(R, A);
 			commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 		}
 		
@@ -348,7 +357,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 		report << "<< Computing reduced echelon form of the matrix using structured Gaussian elimination >>" << endl;
 
 		commentator.start("Structured rref of original matrix", "STRUCTURED_RREF");
-			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced(R, M_orig);
+			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced_uint16(R, M_orig);
 		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 
 		if(!reduced)
@@ -360,7 +369,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 			}
 
 			commentator.start("Structured rref of A", "STRUCTURED_RREF");
-				StructuredGauss::echelonize_reduced(R, A);
+				StructuredGauss::echelonize_reduced_uint16(R, A);
 			commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 		}
 		
@@ -495,7 +504,7 @@ commentator.start("ROUND 1");
 	commentator.stop("[Reconstructing matrix]");
 	MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
 
-
+	//MatrixUtils::dumpMatrixAsPbmImage(A, "A_echelon_new_method.pbm");
 
 	report << "True rank " << outer_indexer.Npiv + rank << endl;
 	outer_indexer.freeMemory (); //not used anymore
@@ -550,7 +559,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 		report << "<< Computing reduced echelon form of the matrix using structured Gaussian elimination >>" << endl;
 
 		commentator.start("Structured rref of original matrix", "STRUCTURED_RREF");
-			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced(R, M_orig);
+			size_t rank_strucutured_gauss = StructuredGauss::echelonize_reduced_uint16(R, M_orig);
 		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 
 		if(!reduced)
@@ -562,7 +571,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 			}
 
 			commentator.start("Structured rref of A", "STRUCTURED_RREF");
-				StructuredGauss::echelonize_reduced(R, A);
+				StructuredGauss::echelonize_reduced_uint16(R, A);
 			commentator.stop(MSG_DONE, "STRUCTURED_RREF");
 		}
 
@@ -596,30 +605,31 @@ int main(int argc, char **argv)
 	const char *fileName = "";
 
 	bool pass = true;
-	bool new_method = false;
+	bool new_method_Block_C = false;
 	bool validate_results = false;
 	bool free_mem = false;
-	bool only_D = false;
-	bool use_multiline = false;
+	bool compute_Rref = false;
+	bool use_standard_method = false;
 	bool horizontal = false;
 	bool reconstruct_old = false;
 
 	static Argument args[] =
 	{
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName },
-		{ 'n', "-n", "Use the new method (computations on CD only)", TYPE_NONE, &new_method },
-		{ 'r', "-r", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
-		{ 'k', "-k", "**DO NOT** free memory as early as possible", TYPE_NONE, &free_mem},
-		{ 'd', "-d", "Compute only the Gauss elimination of the matrix (no RREF form)", TYPE_NONE, &only_D },
-		{ 'm', "-m", "Computation on submatrix C as a multiline matrix and not a bloc matrix", TYPE_NONE, &use_multiline },
-		{ 'u', "-u", "Perform parallel computations horizontally (row majot then column)", TYPE_NONE, &horizontal },
-		{ 'c', "-c", "Use old reconstrt matrix (doesn't matter)", TYPE_NONE, &reconstruct_old },
+		{ 'r', "-r", "Compute the REDUCED row echelon form (default: only an echelon form)", TYPE_NONE, &compute_Rref },
+		{ 's', "-s", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
+		{ 'o', "-o", "Use the standard Faugère-Lachartre (the new method is the default)", TYPE_NONE, &use_standard_method },
+
+
+		{ 'n', "-n", "[DEBUG] Use the new method (computation on C by block)", TYPE_NONE, &new_method_Block_C },
+		{ 'k', "-k", "[DEBUG] **DO NOT free** memory as early as possible", TYPE_NONE, &free_mem},
+		{ 'u', "-u", "[DEBUG] Perform parallel computations horizontally (row majot then column)", TYPE_NONE, &horizontal },
+		{ 'c', "-c", "[DEBUG] Use old reconstrt matrix (doesn't matter)", TYPE_NONE, &reconstruct_old },
 		{ '\0' }
 	};
 
 	parseArguments(argc, argv, args, "", 0);
 	free_mem = !free_mem;
-	only_D = !only_D;
 
 	commentator.getMessageClass(INTERNAL_DESCRIPTION).setMaxDepth(5);
 	commentator.getMessageClass(INTERNAL_DESCRIPTION).setMaxDetailLevel(Commentator::LEVEL_NORMAL);
@@ -649,17 +659,14 @@ int main(int argc, char **argv)
 
 	report << endl;
 
-	if(use_multiline)
-		pass = testFaugereLachartre_new_method_multiline_C(R, A, validate_results, only_D, free_mem, horizontal,
+	if(!use_standard_method)
+		pass = testFaugereLachartre_new_method_multiline_C(R, A, validate_results, !compute_Rref, free_mem, horizontal,
 				reconstruct_old);
 
-	else
-	{
-		if(new_method)
-			pass = testFaugereLachartre_new_method(R, A, validate_results, only_D, free_mem);
-		else
-			pass = testFaugereLachartre_old_method(R, A, validate_results, only_D, free_mem, horizontal);
-	}
+	else if (new_method_Block_C)
+			pass = testFaugereLachartre_new_method(R, A, validate_results, !compute_Rref, free_mem);
+	else if (use_standard_method)
+			pass = testFaugereLachartre_old_method(R, A, validate_results, !compute_Rref, free_mem, horizontal);
 
 	SHOW_MATRIX_INFO_SPARSE(A);
 	MatrixUtils::show_mem_usage("[In main]"); report << endl;

@@ -43,20 +43,17 @@ bool testFaugereLachartre_invert_steps(const Ring& R, SparseMatrix<typename Ring
 
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
-	SparseMatrix<typename Ring::Element> M_orig;
+	SparseMatrix<typename Ring::Element> M_orig (A.rowdim(), A.coldim());
 
 	if(validate_results)
-	{
-		M_orig = SparseMatrix<typename Ring::Element> (A.rowdim(), A.coldim());
 		BLAS3::copy(ctx, A, M_orig);
-	}
 
 commentator.start("FG_LACHARTRE_INVERT_STEPS", "FG_LACHARTRE_INVERT_STEPS");
 commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[MultiLineIndexer] constructing indexes");
 		multilineIndexer.processMatrix(A);
-	commentator.stop(MSG_DONE);
+	commentator.stop("[MultiLineIndexer] constructing indexes");
 
 	report << "Pivots found: " << multilineIndexer.Npiv << endl << endl;
 
@@ -67,7 +64,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[multilineIndexer] constructing sub matrices");
 		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[multilineIndexer] constructing sub matrices"); report << endl;
 
 	SHOW_MATRIX_INFO(sub_A);
 	SHOW_MATRIX_INFO(sub_B);
@@ -89,14 +86,14 @@ commentator.start("ROUND 1", "ROUND 1");
 				NS::reduceCD_onlyD(R, sub_C, sub_B, sub_D);
 			commentator.stop(MSG_DONE);*/
 		}
-	commentator.stop(MSG_DONE);
+	commentator.stop("D <- D - CB [MODIFIED]");
 
 	SHOW_MATRIX_INFO(sub_C); report << endl;
 	//NS::dumpMatrixAsPbmImage(sub_D, "sub_D_CD.pbm");
 
 	commentator.start("[Multiline] Echelonize (D)");
 		rank = NS::echelonize(R, sub_D);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Multiline] Echelonize (D)"); report << endl;
 	report << "Rank of D: " << rank << endl; report << endl;
 
 
@@ -145,7 +142,7 @@ commentator.start("ROUND 2");
 
 		commentator.start("[Multiline] B = A^-1 B");
 			NS::reducePivotsByPivots(R, sub_A_prime, sub_B_prime);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[Multiline] B = A^-1 B"); report << endl;
 
 		MultiLineIndexer inner_dummy_idxr;
 		inner_dummy_idxr.processMatrix(sub_D_prime);
@@ -154,7 +151,7 @@ commentator.start("ROUND 2");
 
 		commentator.start("[Multiline] Reconstructing final matrix");
 			idx2.reconstructMatrix(A, sub_B_prime);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[Multiline] Reconstructing final matrix"); report << endl;
 		reduced = true;
 
 commentator.stop("ROUND 2");
@@ -224,7 +221,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[MultiLineIndexer] constructing indexes");
 		multilineIndexer.processMatrix(A);
-	commentator.stop(MSG_DONE);
+	commentator.stop("[MultiLineIndexer] constructing indexes");
 
 	report << "Pivots found: " << multilineIndexer.Npiv << endl << endl;
 
@@ -235,7 +232,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[multilineIndexer] constructing sub matrices");
 		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[multilineIndexer] constructing sub matrices"); report << endl;
 
 	SHOW_MATRIX_INFO(sub_A);
 	SHOW_MATRIX_INFO(sub_B);
@@ -245,17 +242,19 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[Multiline] B = A^-1 B");
 		NS::reducePivotsByPivots(R, sub_A, sub_B);
-	commentator.stop(MSG_DONE);
+	commentator.stop("[Multiline] B = A^-1 B");
 
 	SHOW_MATRIX_INFO(sub_B); report << endl;
 
 	commentator.start("[Multiline] D = D - CB");
 		NS::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Multiline] D = D - CB"); report << endl;
 
+	//NS::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
+	
 	commentator.start("[Multiline] Echelonize (D)");
 		rank = NS::echelonize(R, sub_D);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Multiline] Echelonize (D)"); report << endl;
 	report << "Rank of D: " << rank << endl; report << endl;
 
 	if(only_D)
@@ -266,7 +265,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 		commentator.start("[Multiline] Reconstructing matrix");
 			multilineIndexer.reconstructMatrix(A, sub_B, sub_D);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[Multiline] Reconstructing matrix"); report << endl;
 	}
 commentator.stop("ROUND 1");
 
@@ -292,15 +291,15 @@ commentator.start("ROUND 2", "ROUND 2");
 
 	commentator.start("[MultiLineIndexer] constructing submatrices B1, B1, D1, D2");
 		inner_indexer.constructSubMatrices(sub_B, sub_D_sparse, B1, B2, D1, D2);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[MultiLineIndexer] constructing submatrices B1, B1, D1, D2"); report << endl;
 
 	commentator.start("D2 = D1^-1 x D2");
 		NS::reducePivotsByPivots(R, D1, D2);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("D2 = D1^-1 x D2"); report << endl;
 
 	commentator.start("B2 <- B2 - D2 D1");
 		NS::reduceNonPivotsByPivots(R, B1, D2, B2);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("B2 <- B2 - D2 D1"); report << endl;
 
 	commentator.start("[MultiLineIndexer] Reconstructing indexes");
 		multilineIndexer.combineInnerIndexer(inner_indexer);
@@ -308,7 +307,7 @@ commentator.start("ROUND 2", "ROUND 2");
 
 	commentator.start("[Indexer] Reconstructing matrix");
 		multilineIndexer.reconstructMatrix(A, B2, D2);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Indexer] Reconstructing matrix"); report << endl;
 	reduced = true;
 
 commentator.stop("ROUND 2");
@@ -392,7 +391,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[multilineIndexer] constructing sub matrices");
 		multilineIndexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[multilineIndexer] constructing sub matrices"); report << endl;
 
 	SHOW_MATRIX_INFO(sub_A);
 	SHOW_MATRIX_INFO(sub_B);
@@ -403,20 +402,19 @@ commentator.start("ROUND 1", "ROUND 1");
 	commentator.start("CD STEP");
 		commentator.start("NS::reduceCD_onlyC");
 			NS::reduceCD_onlyC(R, sub_A, sub_C);
-		commentator.stop(MSG_DONE);
+		commentator.stop("NS::reduceCD_onlyC");
 		SHOW_MATRIX_INFO(sub_C); report << endl;
-		NS::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
 
 		commentator.start("[Multiline] D = D - CB");
 			NS::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D, false);
-		commentator.stop(MSG_DONE); report << endl;
-		//NS::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
-
+		commentator.stop("[Multiline] D = D - CB"); report << endl;
 	commentator.stop(MSG_DONE);
+
+	//NS::dumpMatrixAsPbmImage(sub_D, "sub_D_C_then_D.pbm");
 
 	commentator.start("[Multiline] Echelonize (D)");
 		rank = NS::echelonize(R, sub_D);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Multiline] Echelonize (D)"); report << endl;
 	report << "Rank of D: " << rank << endl; report << endl;
 
 
@@ -433,7 +431,7 @@ commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[Multiline] Reconstructing matrix");
 		multilineIndexer.reconstructMatrix(A, sub_A, sub_B, sub_D);
-	commentator.stop(MSG_DONE); report << endl;
+	commentator.stop("[Multiline] Reconstructing matrix"); report << endl;
 
 commentator.stop("ROUND 1");
 
@@ -461,11 +459,11 @@ commentator.start("ROUND 2");
 
 		commentator.start("[multilineIndexer] constructing sub matrices 2 ");
 			idx2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, true);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[multilineIndexer] constructing sub matrices 2 "); report << endl;
 
 		commentator.start("[Multiline] B = A^-1 B");
 			NS::reducePivotsByPivots(R, sub_A_prime, sub_B_prime);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[Multiline] B = A^-1 B"); report << endl;
 
 		MultiLineIndexer inner_dummy_idxr;
 		inner_dummy_idxr.processMatrix(sub_D_prime);
@@ -474,7 +472,7 @@ commentator.start("ROUND 2");
 
 		commentator.start("[Multiline] Reconstructing final matrix");
 			idx2.reconstructMatrix(A, sub_B_prime);
-		commentator.stop(MSG_DONE); report << endl;
+		commentator.stop("[Multiline] Reconstructing final matrix"); report << endl;
 		reduced = true;
 
 commentator.stop("ROUND 2");
@@ -565,7 +563,8 @@ int main(int argc, char **argv)
 	Modular<modulus_type> R(modulus);
 
 	commentator.start("Loading matrix");
-		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, fileName);
+		SparseMatrix<Ring::Element> A;
+		NS::loadF4Matrix__low_memory_syscall_no_checks(R, A, fileName);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("Loading matrix");
 	report << endl;

@@ -15,7 +15,7 @@
 
 #include "consts-macros.h"
 
-#include <omp.h>
+//#include <omp.h>
 
 using namespace LELA;
 

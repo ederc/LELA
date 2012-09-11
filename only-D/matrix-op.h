@@ -29,17 +29,17 @@ public:
 
 	//B <- A^-1 x B <=> TRSM
 	template <typename Matrix, typename Ring>
-	static void reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B);
+	static void reducePivotsByPivots(const Ring& R, const Matrix& A, Matrix& B, bool t);
 	
 	template <typename Matrix>
-	static void reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix& B);
+	static void reducePivotsByPivots(const Modular<uint16>& R, const Matrix& A, Matrix& B);
 
 	// D <- D - CB <=> GEMM
 	template <typename Matrix, typename Ring>
-	static void reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B, Matrix& D);
+	static void reduceNonPivotsByPivots(const Ring& R, const Matrix& C, const Matrix& B, Matrix& D, bool t);
 
 	template <typename Matrix>
-	static void reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D);
+	static void reduceNonPivotsByPivots(const Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D);
 	
 	template <typename Ring, typename Matrix>
 	static size_t  echelonize(const Ring& R, Matrix& A);

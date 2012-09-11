@@ -153,7 +153,7 @@ inline void axpy(const uint16 a, const Vector& v, uint64 *arr)
 
 //B <- A^-1 x B
 template <typename Matrix, typename Ring>
-void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
+void MatrixOp::reducePivotsByPivots(const Ring& R, const Matrix& A, Matrix& B, bool t)
 {
 	assert(A.rowdim () == B.rowdim ());
 	assert(A.coldim () == A.rowdim ());
@@ -278,7 +278,7 @@ void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 
 //B <- A^-1 x B
 template <typename Matrix>
-void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix& B)
+void MatrixOp::reducePivotsByPivots(const Modular<uint16>& R, const Matrix& A, Matrix& B)
 {
 	assert(A.rowdim () == B.rowdim ());
 	assert(A.coldim () == A.rowdim ());
@@ -385,7 +385,7 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 
 // D <- D - CB
 template <typename Matrix, typename Ring>
-void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B, Matrix& D)
+void MatrixOp::reduceNonPivotsByPivots(const Ring& R, const Matrix& C, const Matrix& B, Matrix& D, bool t)
 {
 	assert(C.rowdim () == D.rowdim ());
 	assert(C.coldim () == B.rowdim ());
@@ -481,7 +481,7 @@ void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B
 
 // D <- D - CB
 template <typename Matrix>
-void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D)
+void MatrixOp::reduceNonPivotsByPivots(const Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D)
 {
 	assert(C.rowdim () == D.rowdim ());
 	assert(C.coldim () == B.rowdim ());
@@ -554,17 +554,17 @@ void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, cons
 }
 
 
-//static double show_density(uint64* arr, uint32 sz)
-//{
-//	double nb_nz = 0.0;
-//	for(uint32 i=0; i<sz; ++i)
-//	{
-//		if(arr[i] != 0)
-//			nb_nz++;
-//	}
-//
-//	return nb_nz/sz * 100;
-//}
+static double show_density(uint64* arr, uint32 sz)
+{
+	double nb_nz = 0.0;
+	for(uint32 i=0; i<sz; ++i)
+	{
+		if(arr[i] != 0)
+			nb_nz++;
+	}
+
+	return nb_nz/sz * 100;
+}
 
 
 template <typename Matrix>

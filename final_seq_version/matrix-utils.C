@@ -94,7 +94,7 @@ void MatrixUtils::sparse_to_bloc_copyTopDowLeftRight(const SparseMatrix<Element>
 				for(uint16 j=0; j<B.bloc_height () && j < A.rowdim () - i; ++j)
 				{
 					if(!(A[i+j].empty ()))
-						entry = min(entry, A[i+j][0].first);
+						entry = MIN(entry, A[i+j][0].first);
 				}
 
 				//cout << "entry is " << entry << endl;
@@ -262,8 +262,8 @@ void MatrixUtils::sparse_to_bloc_copyDownTopRightLeft(const SparseMatrix<Element
 				{
 					if(!(A[j].empty ()))
 					{
-						entry = min(entry, A[j].front ().first);
-						end = max(end, A[j].back ().first);
+						entry = MIN(entry, A[j].front ().first);
+						end = MAX(end, A[j].back ().first);
 					}
 					nb++;
 				}
@@ -449,8 +449,8 @@ void MatrixUtils::sparse_to_bloc_copyDownTopLeftRight(const SparseMatrix<Element
 				{
 					if(!(A[j].empty ()))
 					{
-						entry = min(entry, A[j][0].first);
-						end = max(end, A[j].back ().first);
+						entry = MIN(entry, A[j][0].first);
+						end = MAX(end, A[j].back ().first);
 					}
 				}
 
@@ -1601,6 +1601,15 @@ std::pair<uint64, double> MatrixUtils::getMatrixSizeAndDensity(const SparseBlocM
 	return std::pair<uint64, double>(nb_elts, Nz);
 }
 
+
+template <typename Matrix>
+void MatrixUtils::invertMatrixRows(Matrix& A)
+{
+	uint32 i, rowdim = A.rowdim ()-1;
+	for (i = 0; i <  (rowdim+1)/2; ++i) {
+		std::swap(A[i], A[rowdim - i]);
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////////
 //

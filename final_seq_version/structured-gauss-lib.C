@@ -403,14 +403,13 @@ size_t  StructuredGauss::echelonize_reduced(const Ring& R, Matrix& A)
 
 
 template <typename Matrix>
-size_t  StructuredGauss::echelonize_reduced_uint16(const Modular<uint16>& R, Matrix& A)
+size_t  StructuredGauss::echelonize_reduced_uint16(const Modular<uint16>& R, Matrix& A, bool reduced)
 {
 
 	typedef Modular<uint16> Ring;
 
-#ifdef SHOW_PROGRESS
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-#endif
+	report << "In StructuredGauss::echelonize_reduced_uint16" << std::endl;
 
 	Context<Ring> ctx(R);
 
@@ -526,6 +525,9 @@ size_t  StructuredGauss::echelonize_reduced_uint16(const Modular<uint16>& R, Mat
 #endif
 
 	commentator.stop(MSG_DONE);
+
+	if(reduced)
+	{
 	commentator.start("Second reduction", __FUNCTION__);
 
 	for (uint i = 0; i < npiv; ++i)
@@ -580,6 +582,7 @@ size_t  StructuredGauss::echelonize_reduced_uint16(const Modular<uint16>& R, Mat
 #endif
 
 	commentator.stop(MSG_DONE);
+	}
 
 	commentator.start("Sorting pivots", __FUNCTION__);
 		sortRows(A, pivot_rows_index);

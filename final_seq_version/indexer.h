@@ -8,9 +8,6 @@
 #ifndef INDEXER_H_
 #define INDEXER_H_
 
-//#include "matrix-utils.h"
-//#include "../only-D/indexer.h"
-
 #include "consts-macros.h"
 
 #include "lela/util/debug.h"
@@ -19,84 +16,7 @@
 using namespace LELA;
 
 template<typename Element, typename Index>
-class AbstractIndexer
-{
-//public:
-//
-//	uint32 coldim, rowdim;
-//	uint32 Npiv;
-//
-//	virtual void freeMemory();
-//
-//	virtual void processMatrix(const SparseMatrix<Element>& M);
-//
-//	virtual void processMatrix(SparseMultilineMatrix<Element>& M);
-//
-//	virtual void constructSubMatrices(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& A,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& C,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
-//			bool destruct_original_matrix);
-//
-//	virtual void constructSubMatrices(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& A,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& C,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
-//			bool destruct_original_matrix);
-//
-//	virtual void constructSubMatrices(SparseMatrix<Element>& M,
-//			SparseMultilineMatrix<Element>& A,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& C,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
-//			bool destruct_original_matrix);
-//
-//	virtual void constructSubMatrices(
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& D,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B1,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B2,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D1,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D2,
-//			bool destruct_original_matrix);
-//
-//	virtual void reconstructMatrix(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& D, bool free_matrices = false);
-//
-//
-//	virtual void reconstructMatrix(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& A,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& D, bool free_matrices = false,
-//			bool A_is_null = false, bool D_is_null = false);
-//
-//
-//	virtual void reconstructMatrix(SparseMatrix<Element>& M,
-//			SparseMultilineMatrix<Element>& A,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			SparseMultilineMatrix<Element>& D, bool free_matrices = false);
-//
-//
-//	virtual void reconstructMatrix(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
-//			bool free_matrices = false);
-//
-//
-//	virtual void reconstructMatrix(SparseMatrix<Element>& M,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B2,
-//			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D2,
-//			bool free_matrices = false);
-//
-//	virtual void combineInnerIndexer(AbstractIndexer<Element, Index>& inner_idxr,
-//			bool only_rows = false);
-
-};
-
-template<typename Element, typename Index>
-class SequentialIndexer : public AbstractIndexer<Element, Index>
+class SequentialIndexer
 {
 private:
 	void freeArrays()
@@ -450,7 +370,8 @@ public:
 		A[row_bloc_idx].clear ();
 		B[row_bloc_idx].clear ();
 
-		std::vector<Index> idx_stack_elt_idx_in_line, idx_stack_bloc;
+		std::vector<Index> idx_stack_elt_idx_in_line;
+		std::vector<uint32> idx_stack_bloc;
 		std::vector<Element> v1_stack, v2_stack;
 
 		uint32 bloc_idx_in_row, elt_idx_in_line;
@@ -745,7 +666,7 @@ public:
 			C = Matrix(M.rowdim() - Npiv, Npiv,
 					Matrix::ArrangementDownTop_RightLeft,
 					false, C.bloc_height(), C.bloc_width());
-			C.acceptRowsHybrid = false;
+			C.acceptRowsHybrid = true;
 
 			D = Matrix(M.rowdim() - Npiv, M.coldim() - Npiv,
 					Matrix::ArrangementDownTop_LeftRight,

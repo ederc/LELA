@@ -395,7 +395,8 @@ public:
 		A[row_bloc_idx].clear ();
 		B[row_bloc_idx].clear ();
 
-		std::vector<Index> idx_stack_elt_idx_in_line, idx_stack_bloc;
+		std::vector<Index> idx_stack_elt_idx_in_line;
+		std::vector<uint32> idx_stack_bloc;
 		std::vector<Element> v1_stack, v2_stack;
 
 		uint32 bloc_idx_in_row, elt_idx_in_line;

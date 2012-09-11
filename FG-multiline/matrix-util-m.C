@@ -11,7 +11,13 @@
 #include <iostream>
 #include "FG-types.h"
 
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
 #include "lela/ring/modular.h"
+#include "lela/matrix/sparse.h"
 
 using namespace std;
 using namespace LELA;
@@ -19,6 +25,127 @@ using namespace LELA;
 namespace NS
 {
 
+template<class Ring>
+static void loadF4Matrix__low_memory_syscall_no_checks(const Ring &R,
+		SparseMatrix<typename Ring::Element>& A, const char *fileName)
+{
+	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
+	report << std::endl << "Loading file: " << fileName << std::endl;
+
+	// Code adapted from C version of dump_matrix.c
+	struct stat fileStat;
+	int f = open(fileName, O_RDONLY);
+
+	if (f < 0)
+	{
+		commentator.report(Commentator::LEVEL_IMPORTANT, INTERNAL_ERROR)
+				<< "Can't open " << fileName << std::endl;
+		throw std::runtime_error ("Can't open file");
+		return;
+	}
+
+	uint16 *nz;
+	uint32 *pos;
+	uint32 sz;
+	uint32 n;
+	uint32 m;
+	uint32 mod;
+	uint64 nb;
+
+	if (read(f, &n, sizeof(unsigned int)) != sizeof(unsigned int))
+		throw std::runtime_error ("Error while reading file");
+	if (read(f, &m, sizeof(unsigned int)) != sizeof(unsigned int))
+		throw std::runtime_error ("Error while reading file");
+	if (read(f, &mod, sizeof(unsigned int)) != sizeof(unsigned int))
+		throw std::runtime_error ("Error while reading file");
+	if (read(f, &nb, sizeof(unsigned long long)) != sizeof(unsigned long long))
+		throw std::runtime_error ("Error while reading file");
+
+	stat(fileName, &fileStat);
+
+	report << n << " x " << m << " matrix" << std::endl;
+	report << "mod " << mod << std::endl;
+	{
+		double Nz = (double) (n) * (double) (m);
+		Nz = (double) (nb) / Nz;
+		Nz *= 100.0;
+		report << "Nb of Nz elements " << nb << " (density " << Nz << "% ) -\tsize "
+			   << fileStat.st_size / 1024 / 1024 << " MB" << std::endl;
+	}
+
+	A = SparseMatrix<typename Ring::Element>(n, m);
+	typename SparseMatrix<typename Ring::Element>::RowIterator i_A;
+
+
+	uint32 i;
+	nz = new unsigned short int[m]; //has a size of at most a full row of the matrix
+	pos = new uint32[m];
+
+	//save the arrays original pointers
+	uint16 *oNz = nz;
+	uint32 *oPos = pos;
+
+	uint32 header_size = sizeof(uint32) * 3 + sizeof(uint64); //size of n, m, mod and nb in the header of the file
+	uint64 row_sizes_offset, row_values_offset, row_positions_offset; //cursors in the file
+
+	//row sizes if positioned after the values and the positions of the elements in the file
+	row_sizes_offset = nb * sizeof(uint16) + nb * sizeof(uint32) + header_size;
+	row_values_offset = header_size;
+	row_positions_offset = nb * sizeof(uint16) + header_size;
+
+	int ret;
+
+	for (i_A = A.rowBegin(), i = 0; i < n; i++, ++i_A)
+	{
+		//get the size of the current row
+		lseek(f, row_sizes_offset, SEEK_SET);
+		ret = read(f, &sz, sizeof(uint32));
+//		if (ret != sizeof(uint32))
+//			throw "Error while reading file";
+
+		row_sizes_offset += sizeof(uint32);
+
+		//assert(sz <= m);
+		//number of elements in a row at max equal to the size of a row in the matrix
+
+		//read sz elements from the values part of the file
+		lseek(f, row_values_offset, SEEK_SET);
+		ret = read(f, nz, sizeof(uint16) * sz);
+//		if (ret != sizeof(uint16) * sz)
+//			throw "Error while reading file";
+
+		row_values_offset += sz * sizeof(uint16);
+
+		//read sz elements from the posistions part of the file
+		lseek(f, row_positions_offset, SEEK_SET);
+		ret = read(f, pos, sizeof(uint32) * sz);
+//		if (ret != sizeof(uint32) * sz)
+//			throw "Error while reading file";
+
+		row_positions_offset += sz * sizeof(uint32);
+
+		i_A->reserve(sz);
+		for (uint32 j = 0; j < sz; j++)
+		{
+			i_A->push_back(
+					typename Vector<Ring>::Sparse::value_type(pos[j], nz[j]));
+
+			//TODO: If using Mosular<>.init, it could take 50 times slower to load a matrix from file
+//							typename Ring::Element()));
+//			R.init(i_A->back().second, nz[j]);
+			//assert(pos[j] < m);
+		}
+	}
+
+	ret++;
+
+	//free memory
+	delete[] oNz;
+	delete[] oPos;
+	close(f);
+}
+
+	
 template<typename Element>
 static void write(const MultiLineVector<Element>& v, uint32 size)
 {

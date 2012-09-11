@@ -561,7 +561,6 @@ public:
 		SparseMatrix<uint16>::Row::const_iterator it1, it2;
 		uint32 curr_piv_D1D2=0;
 
-		//D1 D2
 		for (uint32 i = 0; i < D.coldim (); ++i) {
 			if(pivot_rows_idxs_by_entry[i] == MINUS_ONE)			//non pivot row
 				continue;
@@ -733,8 +732,7 @@ public:
 	}
 
 	template <typename Matrix, typename Element>
-	void reconstructMatrix(Matrix& M, const SparseMultilineMatrix<Element>& A,
-			const SparseMultilineMatrix<Element>& B, const Matrix& D)
+	void reconstructMatrix(Matrix& M, const SparseMultilineMatrix<Element>& A, const SparseMultilineMatrix<Element>& B, const Matrix& D)
 	{
 		lela_check(A.rowdim() == B.rowdim());
 		lela_check(A.rowdim() == A.coldim());

@@ -8,8 +8,8 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-#include "echelon.h"
-#include "../consts-macros.h"
+#include "level3Parallel_echelon.h"
+#include "consts-macros.h"
 
 uint32 __echelonize_global_last_piv; //the greatest pivot available. All rows before this are already reduced
 uint32 __echelonize_global_next_row_to_reduce; //the next row to reduce
@@ -82,13 +82,13 @@ uint32 Level3ParallelEchelon::echelonize__Parallel(const Modular<uint16>& R,
 	check_equal_or_raise_exception(inMatrix.isFilledWithEmptyBlocs (), true);
 	
 	//copy bloc matrix to multiline matrix
-	if(inMatrix.rowdim () <= 1)
-		return inMatrix.rowdim ();
-	
 	commentator.start("copyBlocMatrixToMultilineMatrix");
 		copyBlocMatrixToMultilineMatrix(inMatrix, outMatrix, destruct_in_matrix, NB_THREADS);
 	commentator.stop("copyBlocMatrixToMultilineMatrix");
-	
+
+	//if(inMatrix.rowdim () < 1)
+	//	return inMatrix.rowdim ();
+
 	//TODO: determine this according to the SIZE of the rows and the number of threads
 	__echelonize_global_next_row_to_reduce = NB_THREADS * 2;
 	__echelonize_global_last_piv = __echelonize_global_next_row_to_reduce - 1;

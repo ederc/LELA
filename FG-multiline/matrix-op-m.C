@@ -1754,25 +1754,25 @@ static uint32 echelonize(const Modular<Element>& R, SparseMultilineMatrix<Elemen
 			{
 				R.copy(v1col2, tmpDenseArray1[head_line2] % R._modulus);
 				R.copy(v2col2, tmpDenseArray2[head_line2] % R._modulus);
+				
+				//TODO: check if buggy! if line is empty for example
+				uint16 val = rowA->at_unchecked(0, head_line2_idx);
+
+				tmp = v1col2 + (uint32)v1col1*val;
+				R.init(v1col2, tmp);
+				tmp = v2col2 + (uint32)v2col1*val;
+				R.init(v2col2, tmp);
+
+				if (v1col2 != 0)
+					R.negin(v1col2);
+				if (v2col2 != 0)
+					R.negin(v2col2);
 			}
 			else
 			{
 				v1col2 = 0;
 				v2col2 = 0;
 			}
-
-			//TODO: check if buggy! if line is empty for example
-			uint16 val = rowA->at_unchecked(0, head_line2_idx);
-
-			tmp = v1col2 + (uint32)v1col1*val;
-			R.init(v1col2, tmp);
-			tmp = v2col2 + (uint32)v2col1*val;
-			R.init(v2col2, tmp);
-
-			if (v1col2 != 0)
-				R.negin(v1col2);
-			if (v2col2 != 0)
-				R.negin(v2col2);
 
 			if((v1col1 == 0 && v2col1 == 0) && (v1col2 != 0 || v2col2 != 0))
 			{
@@ -1822,15 +1822,15 @@ static uint32 echelonize(const Modular<Element>& R, SparseMultilineMatrix<Elemen
         {
         	assert(head_line1 >= 0 && head_line1 < coldim);
         	if(tmpDenseArray2[head_line1] % R._modulus != 0)
-			{
-				h = tmpDenseArray2[head_line1] % R._modulus;
-				R.negin(h);
-			}
+		{
+			h = tmpDenseArray2[head_line1] % R._modulus;
+			R.negin(h);
 
 			for(x = head_line1; x<coldim; ++x)
 			{
 				tmpDenseArray2[x] += (uint32)h * tmpDenseArray1[x];
 			}
+		}
         }
 
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1841,7 +1841,9 @@ static uint32 echelonize(const Modular<Element>& R, SparseMultilineMatrix<Elemen
         TIMER_STOP_(HeadArrayTimer);
 
         TIMER_START_(CopyDenseArrayToSparseVectorTimer);
-        	if((head_line2 != -1) && (head_line1 > head_line2))			//saves the line with the smallest column entry first
+        	if(((head_line2 != -1) && (head_line1 > head_line2))
+			|| head_line1 == -1
+		)			//saves the line with the smallest column entry first
         		copyDenseArraysToMultilineVector64(R, tmpDenseArray2, tmpDenseArray1, coldim, *i_A, true);
         	else
         		copyDenseArraysToMultilineVector64(R, tmpDenseArray1, tmpDenseArray2, coldim, *i_A, true);

@@ -24,7 +24,7 @@ public:
 	static size_t  echelonize_reduced(const Ring& R, Matrix& A);
 
 	template <typename Matrix>
-	static size_t  echelonize_reduced_uint16(const Modular<uint16>& R, Matrix& A);
+	static size_t  echelonize_reduced_uint16(const Modular<uint16>& R, Matrix& A, bool reduced = true);
 
 private:
 

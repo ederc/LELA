@@ -24,6 +24,7 @@
 
 #include "structured-gauss-lib.h"
 
+#include "parallel/echelon.h"
 
 using namespace LELA;
 using namespace std;
@@ -78,12 +79,38 @@ void test_RREF_LELA(const Ring& R, Matrix& A)
 	commentator.stop(MSG_DONE);
 }
 
+template <typename Ring, typename Matrix>
+void test_structured_gauss_parallel(const Ring& R, Matrix& A, int NB_THREADS)
+{
+	typedef SparseBlocMatrix<SparseMultilineBloc<typename Ring::Element, IndexType> > BlocMatrix;
+	BlocMatrix bloc_matrix (A.rowdim(), A.coldim (), BlocMatrix::ArrangementDownTop_LeftRight, true);
+	SparseMultilineMatrix<typename Ring::Element> multiline_matrix;
+
+	cout << endl;
+	commentator.start("Copying sparse to bloc matrix");
+	MatrixUtils::copy(A, bloc_matrix);
+	commentator.stop(MSG_DONE);
+	cout << endl;
+
+	cout << endl;
+	commentator.start("Level3ParallelEchelon::echelonize__Parallel");
+	uint32 rank = Level3ParallelEchelon::echelonize__Parallel(R, bloc_matrix, multiline_matrix, true, NB_THREADS);
+	commentator.stop("echelonize__Parallel");
+	cout << endl;
+
+	cout << ">>> Rank " << rank << endl;
+	cout << endl;
+
+}
+
 int main (int argc, char **argv)
 {
 	char *file_name = NULL;
+	int nb_threads = 0;
 
 	static Argument args[] = {
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &file_name},
+		{ 'p', "-p NB_THREADS", "Number of threads in parallel", TYPE_INT, &nb_threads},
 		{ '\0' }
 	};
 
@@ -113,6 +140,8 @@ int main (int argc, char **argv)
 	report << endl;
 	SHOW_MATRIX_INFO_SPARSE(A);
 
+	MatrixUtils::dumpMatrixAsPbmImage(A, "A.pbm");
+
 	MatrixUtils::show_mem_usage("Loading matrix");
 	report << endl;
 	/*commentator.start("Writing matrix to file");
@@ -120,6 +149,12 @@ int main (int argc, char **argv)
 		dumpMatrixAsPbmImage(A, getOutputFileNameWithExtension(file_name, strdup("pbm/"), strdup("-orig.pbm")).c_str());
 	commentator.stop(MSG_DONE);
 	report << endl;*/
+
+	if(nb_threads != 0)
+	{
+		test_structured_gauss_parallel(R, A, nb_threads);
+		//return 0;
+	}
 
 	SparseMatrix<Ring::Element> C (A.rowdim (), A.coldim ()), D (A.rowdim (), A.coldim ());
 
@@ -130,7 +165,7 @@ int main (int argc, char **argv)
 
 	//test_structured_gauss_standard(R, D);
 
-	test_RREF_LELA(R, C);
+	//test_RREF_LELA(R, C);
 
 	if(BLAS3::equal(ctx, A, C))
 		report << "MATRIX RREF OK" << endl;
@@ -161,4 +196,3 @@ int main (int argc, char **argv)
 
 	return 0;
 }
-
