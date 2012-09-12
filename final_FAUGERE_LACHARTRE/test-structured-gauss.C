@@ -11,10 +11,6 @@
 #include "consts-macros.h"
 #include "types.h"
 #include "matrix-utils.h"
-//#include "level3-ops.h"
-//#include "indexer.h"
-
-#include "lela/matrix/sparse.h"
 #include "lela/matrix/dense.h"
 #include "lela/util/commentator.h"
 #include "../util/support.h"
@@ -23,8 +19,7 @@
 #include "lela/algorithms/gauss-jordan.h"
 
 #include "structured-gauss-lib.h"
-
-#include "parallel/echelon.h"
+#include "level3Parallel_echelon.h"
 
 using namespace LELA;
 using namespace std;
@@ -105,7 +100,7 @@ void test_structured_gauss_parallel(const Ring& R, Matrix& A, int NB_THREADS)
 
 int main (int argc, char **argv)
 {
-	char *file_name = NULL;
+	const char *file_name = "";
 	int nb_threads = 0;
 
 	static Argument args[] = {
@@ -115,7 +110,7 @@ int main (int argc, char **argv)
 	};
 
 	parseArguments (argc, argv, args, "", 0);
-
+	commentator.setReportStream (std::cout);
 	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDepth (4);
 	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDetailLevel (Commentator::LEVEL_NORMAL);
 	commentator.getMessageClass (TIMING_MEASURE).setMaxDepth (3);
@@ -140,7 +135,7 @@ int main (int argc, char **argv)
 	report << endl;
 	SHOW_MATRIX_INFO_SPARSE(A);
 
-	MatrixUtils::dumpMatrixAsPbmImage(A, "A.pbm");
+	//MatrixUtils::dumpMatrixAsPbmImage(A, "A.pbm");
 
 	MatrixUtils::show_mem_usage("Loading matrix");
 	report << endl;
@@ -156,10 +151,10 @@ int main (int argc, char **argv)
 		//return 0;
 	}
 
-	SparseMatrix<Ring::Element> C (A.rowdim (), A.coldim ()), D (A.rowdim (), A.coldim ());
+	//SparseMatrix<Ring::Element> C (A.rowdim (), A.coldim ()), D (A.rowdim (), A.coldim ());
 
-	BLAS3::copy(ctx, A, C);
-	BLAS3::copy(ctx, A, D);
+	//BLAS3::copy(ctx, A, C);
+	//BLAS3::copy(ctx, A, D);
 
 	test_structured_gauss_acc64(R, A);
 
@@ -167,10 +162,10 @@ int main (int argc, char **argv)
 
 	//test_RREF_LELA(R, C);
 
-	if(BLAS3::equal(ctx, A, C))
+	/*if(BLAS3::equal(ctx, A, C))
 		report << "MATRIX RREF OK" << endl;
 	else
-		report << "MATRIX RREF WRONG" << endl;
+		report << "MATRIX RREF WRONG" << endl;*/
 
 //	if(BLAS3::equal(ctx, D, C))
 //		report << "MATRIX RREF OK" << endl;

@@ -101,7 +101,7 @@ void test_LELA_FGL_uint16_elts(const Ring& R, SparseMatrix<typename Ring::Elemen
 
 int main (int argc, char **argv)
 {
-	char *file_name = NULL;
+	const char *file_name = "";
 	bool reduced = false;
 	bool use_uint16 = false;
 	bool use_double = !use_uint16;
@@ -117,6 +117,8 @@ int main (int argc, char **argv)
 	use_double = !use_uint16;
 
 	parseArguments (argc, argv, args, "", 0);
+
+	commentator.setReportStream (std::cout);
 
 	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDepth (5);
 	commentator.getMessageClass (INTERNAL_DESCRIPTION).setMaxDetailLevel (Commentator::LEVEL_NORMAL);
