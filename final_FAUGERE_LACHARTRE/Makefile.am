@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir)
-AM_CXXFLAGS = -g -Wall -O3 -DDEBUG -DSHOW_PROGRESS_ -DDETAILED_PROFILE_TIMERS_ -DDEFAULT_BLOC_SIZE=256 -funroll-loops -finline-functions -msse2 -fopenmp
+AM_CXXFLAGS = -g -Wall -O3 -DDEBUG -Wno-sign-compare -DSHOW_PROGRESS_ -DDETAILED_PROFILE_TIMERS_ -DDEFAULT_BLOC_SIZE=256 -funroll-loops -finline-functions -msse2 -fopenmp
 
 BENCHMARK_CXXFLAGS = -O2
 
@@ -12,12 +12,9 @@ AM_LDFLAGS = -fopenmp
 
 BASIC_TESTS =			\
 		test-FGL-seq	\
-		test-FGL-seq-64x64	\
 		test-FGL-parallel	\
-		test-FGL-parallel-64x64		\
 		test-structured-gauss	\
-		test-LELA-FGL-Blas		\
-		test-Thread-Pool
+		test-LELA-FGL-Blas		
 		
 		
 EXTRA_PROGRAMS = $(NON_COMPILING_TESTS) $(BENCHMARKS)
@@ -33,17 +30,11 @@ test_FGL_seq_SOURCES =						\
 		test-FGL-seq.C						\
 		../util/support.C
 		
-test_FGL_seq_64x64_SOURCES =						\
-		test-FGL-seq-64x64.C						\
-		../util/support.C
 		
 test_FGL_parallel_SOURCES =						\
 		test-FGL-parallel.C						\
 		../util/support.C										
 
-test_FGL_parallel_64x64_SOURCES =						\
-		test-FGL-parallel-64x64.C						\
-		../util/support.C	
 		
 test_structured_gauss_SOURCES =				\
 		test-structured-gauss.C					\
@@ -53,8 +44,6 @@ test_LELA_FGL_Blas_SOURCES =				\
 		test-LELA-FGL-Blas.C				\
 		../util/support.C
 		
-stest_Thread_Pool_SOURCES = 				\
-		test-Thread-Pool.C				
 		
 noinst_HEADERS =	\
 		../util/support.h		
