@@ -1,5 +1,6 @@
 /*
  * structured-gauss-lib.h
+ * Copyright 2012 Martani Fayssal (LIP6 / UPMC University Paris06)
  *
  *  Created on: 30 mai 2012
  *      Author: martani (LIP6 / UPMC University Paris06)

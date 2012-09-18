@@ -1,5 +1,7 @@
 A new implementation of Faugere-Lachartre method for LELA.
 
+Update September 2012: This implementation is a simple showcase, the final version is not published yet.
+
 # Compile and run:
 
 - Clone (this) repository from github
