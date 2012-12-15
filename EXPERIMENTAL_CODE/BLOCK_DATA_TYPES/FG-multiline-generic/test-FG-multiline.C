@@ -10,12 +10,12 @@
 #include <iostream>
 
 #include "FG-types.h"
-#include "../new-faugere-lachartre/matrix-util.h"
-#include "../new-faugere-lachartre/matrix-op.h"
-#include "../new-faugere-lachartre/indexer.h"
+#include "../../new-faugere-lachartre/matrix-util.h"
+#include "../../new-faugere-lachartre/matrix-op.h"
+#include "../../new-faugere-lachartre/indexer.h"
 #include "multiline-indexer.h"
 
-#include "../util/support.h"
+#include "../../../util/support.h"
 
 using namespace LELA;
 using namespace std;

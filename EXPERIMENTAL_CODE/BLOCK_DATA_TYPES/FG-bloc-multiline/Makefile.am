@@ -24,9 +24,9 @@ CLEANFILES = $(TESTS)
 
 test_FG_bloc_SOURCES =						\
 		test-FG-bloc.C						\
-		../util/support.C
+		../../../util/support.C
 		
 		
 		
 noinst_HEADERS =	\
-		../util/support.h
+		../../../util/support.h

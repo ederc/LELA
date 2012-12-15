@@ -10,7 +10,7 @@
 #include "matrix-utils.h"
 #include "matrix-ops.h"
 #include "indexer.h"
-#include "../util/support.h"
+#include "../../../util/support.h"
 
 #include "../only-D/indexer.h"
 #include "../only-D/matrix-util.h"

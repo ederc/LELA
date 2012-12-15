@@ -522,7 +522,7 @@ commentator.stop("FG_LACHARTRE_INVERT_STEPS");
 
 int main(int argc, char **argv)
 {
-	char *fileName = NULL;
+	const char *fileName = "";
 
 	bool pass = true;
 	bool validate_results = false;
@@ -537,7 +537,7 @@ int main(int argc, char **argv)
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName },
 		{ 'r', "-r", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
 		{ 'p', "-p", "Use parallel version", TYPE_NONE, &parallel },
-		{ 'm', "-m", "Use inverted steps method", TYPE_NONE, &method },
+		{ 'm', "-m", "Use the new method", TYPE_NONE, &method },
 		{ 'c', "-c", "Compared methods", TYPE_NONE, &compare },
 		{ 'd', "-d", "Compute only the Gauss elimination of the matrix", TYPE_NONE, &only_D },
 		{ 'o', "-o", "Reduce only C", TYPE_NONE, &reduce_C },

@@ -15,7 +15,7 @@
 #include "indexer.h"
 #include "LELA-FG-util.C"
 
-#include "../util/support.h"
+#include "../../util/support.h"
 
 #include "lela/util/commentator.h"
 #include "lela/ring/modular.h"

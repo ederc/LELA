@@ -1,6 +1,6 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir)
-AM_CXXFLAGS = -g -Wall -O3 -DDEBUG -DSHOW_PROGRESS -DDETAILED_PROFILE_TIMERS_ -DDEFAULT_BLOC_HEIGHT=256    \
-	 -DDEFAULT_BLOC_WIDTH=256 -funroll-loops -finline-functions	-msse2
+AM_CXXFLAGS = -g -Wall -O3 -DDEBUG -Wno-sign-compare -DSHOW_PROGRESS_ -DDETAILED_PROFILE_TIMERS_    \
+	 -funroll-loops -finline-functions	-msse2
 
 BENCHMARK_CXXFLAGS = -O2
 
@@ -24,24 +24,24 @@ CLEANFILES = $(TESTS)
 
 test_FG_multiline_SOURCES =						\
 		test-FG-multiline.C						\
-		../new-faugere-lachartre/matrix-util.h	\
-		../new-faugere-lachartre/matrix-op.h	\
-		../new-faugere-lachartre/indexer.h		\
+		../../../new-faugere-lachartre/matrix-util.h	\
+		../../../new-faugere-lachartre/matrix-op.h	\
+		../../../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
 		matrix-util-m.C							\
 		matrix-op-m.C							\
-		../util/support.C
+		../../../util/support.C
 
 test_FG_multiline_only_D_SOURCES =						\
 		test-FG-multiline-only-D.C						\
-		../new-faugere-lachartre/matrix-util.h	\
-		../new-faugere-lachartre/matrix-op.h	\
-		../new-faugere-lachartre/indexer.h		\
+		../../../new-faugere-lachartre/matrix-util.h	\
+		../../../new-faugere-lachartre/matrix-op.h	\
+		../../../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
 		matrix-util-m.C							\
 		matrix-op-m.C							\
-		../util/support.C
+		../../../util/support.C
 
 	
 noinst_HEADERS =	\
-	../util/support.h
+	../../../util/support.h

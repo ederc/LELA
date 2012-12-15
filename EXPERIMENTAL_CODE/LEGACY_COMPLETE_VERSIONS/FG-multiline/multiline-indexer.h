@@ -8,7 +8,7 @@
 #ifndef MULTILINE_INDEX_H_
 #define MULTILINE_INDEX_H_
 
-#include "../only-D/indexer.h"
+//#include "../only-D/indexer.h"
 
 using namespace LELA;
 

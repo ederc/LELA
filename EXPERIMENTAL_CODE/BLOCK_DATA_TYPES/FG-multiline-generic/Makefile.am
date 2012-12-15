@@ -23,23 +23,23 @@ CLEANFILES = $(TESTS)
 
 test_FG_multiline_SOURCES =						\
 		test-FG-multiline.C						\
-		../new-faugere-lachartre/matrix-util.h	\
-		../new-faugere-lachartre/matrix-op.h	\
-		../new-faugere-lachartre/indexer.h		\
+		../../new-faugere-lachartre/matrix-util.h	\
+		../../new-faugere-lachartre/matrix-op.h	\
+		../../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
 		matrix-util.C	\
-		../util/support.C
+		../../../util/support.C
 
 
 test_FG_multiline4_SOURCES =						\
 		test-FG-multiline4.C						\
-		../new-faugere-lachartre/matrix-util.h	\
-		../new-faugere-lachartre/matrix-op.h	\
-		../new-faugere-lachartre/indexer.h		\
+		../../new-faugere-lachartre/matrix-util.h	\
+		../../new-faugere-lachartre/matrix-op.h	\
+		../../new-faugere-lachartre/indexer.h		\
 		multiline-indexer.h						\
 		matrix-util.C	\
-		../util/support.C
+		../../../util/support.C
 
 	
 noinst_HEADERS =	\
-	../util/support.h
+	../../../util/support.h
