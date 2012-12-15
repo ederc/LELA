@@ -5,6 +5,7 @@
  *  Created on: 25 mai 2012
  *      Author: martani (LIP6 / UPMC University Paris06)
  * 
+ * -------------------------------
  * This exposes the exact functionality in ../lela/algorithms/faugere-lachartre
  * The algorithm is broken into parts to return the intermediate computation results
  */

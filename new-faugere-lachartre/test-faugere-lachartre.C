@@ -55,10 +55,7 @@ bool testFaugereLachartre(const char *file_name, bool validate_results = false)
 	Context<Ring> ctx (R);
 	
 	Indexer<uint32> indexer;
-	
-
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-
 
 	commentator.start("Loading matrix");
 		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
@@ -90,16 +87,6 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 		indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, true);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("[Indexer] constructing sub matrices");
-	showMatrixSizeAndDensity(sub_A, "sub_A");
-	showMatrixSizeAndDensity(sub_B, "sub_B");
-	showMatrixSizeAndDensity(sub_C, "sub_C");
-	showMatrixSizeAndDensity(sub_D, "sub_D");
-
-	//uncomment this to see the structure of the submatrices as pbm image files
-	/*MatrixUtil::dumpMatrixAsPbmImage(sub_A, "sub_A.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");*/
 	
 	commentator.start("B = A^-1 x B");
 		MatrixOp::reducePivotsByPivots(R, sub_A, sub_B);
@@ -107,18 +94,14 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	commentator.stop(MSG_DONE);
 
 	//MatrixUtil::freeMatrixMemory(sub_A);
-
 	MatrixUtil::show_mem_usage("B = A^-1 x B");
-	showMatrixSizeAndDensity(sub_A, "sub_A");
-	showMatrixSizeAndDensity(sub_B, "sub_B");
 
 	commentator.start("D <- D - CB");
 		MatrixOp::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D);
 		//Equivalent to BLAS3::gemm
 	commentator.stop(MSG_DONE);
-	MatrixUtil::freeMatrixMemory(sub_C);
+	//MatrixUtil::freeMatrixMemory(sub_C);
 	MatrixUtil::show_mem_usage("D <- D - CB");
-	showMatrixSizeAndDensity(sub_D, "sub_D");
 	
 ///D
 	report << endl;
@@ -129,9 +112,9 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 		MatrixUtil::makeRowsUnitary(R, sub_D);		//D pivots are not necessarily unitary
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("Echelonize (D)");
-	showMatrixSizeAndDensity(sub_D, "sub_D");
+
 	report << "Rank of D: " << rank << endl;
-	
+
 ///Second round
 	report << endl;
 	Indexer<uint32> indexer2;
@@ -151,36 +134,28 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 		indexer2.constructSubMatrices(sub_B, sub_D, B1, B2, D1, D2, true);
 	commentator.stop(MSG_DONE);
 	MatrixUtil::show_mem_usage("[Indexer] constructing submatrices B1, B1, D1, D2");
-	showMatrixSizeAndDensity(D1, "D1");
-	showMatrixSizeAndDensity(D2, "D2");
-	showMatrixSizeAndDensity(B1, "B1");
-	showMatrixSizeAndDensity(B2, "B2");
 
 	commentator.start("D2 = D1^-1 x D2");
 		MatrixOp::reducePivotsByPivots(R, D1, D2);
 	commentator.stop(MSG_DONE);
-	MatrixUtil::show_mem_usage("D2 = D1^-1 x D2");
-	MatrixUtil::freeMatrixMemory(D1);
-	showMatrixSizeAndDensity(D2, "D2");
+	//MatrixUtil::show_mem_usage("D2 = D1^-1 x D2");
+	//MatrixUtil::freeMatrixMemory(D1);
 	
 	//TODO: This operation is very inefficient, since it uses sparse-sparse operations on almost dense matrices
 	commentator.start("B2 <- B2 - D2 D1");
 		MatrixOp::reduceNonPivotsByPivots(R, B1, D2, B2);
 	commentator.stop(MSG_DONE);
-	MatrixUtil::freeMatrixMemory(B1);
-	MatrixUtil::show_mem_usage("B2 <- B2 - D2 D1");
-	showMatrixSizeAndDensity(B2, "B2");
+	//MatrixUtil::freeMatrixMemory(B1);
+	//MatrixUtil::show_mem_usage("B2 <- B2 - D2 D1");
 
 	report << endl;
 	commentator.start("[Indexer] Reconstructing indexes");
 		indexer.combineInnerIndexer(indexer2);
 	commentator.stop(MSG_DONE);
-	MatrixUtil::show_mem_usage("[Indexer] Reconstructing indexes");
 
 	commentator.start("[Indexer] Reconstructing matrix");
 		indexer.reconstructMatrix(A, B2, D2);
 	commentator.stop(MSG_DONE);
-	MatrixUtil::show_mem_usage("[Indexer] Reconstructing matrix");
 
 commentator.stop("FAUGERE LACHARTRE");
 
@@ -195,14 +170,6 @@ commentator.stop("FAUGERE LACHARTRE");
 		commentator.start("Structured rref", "STRUCTURED_RREF");
 			StructuredGauss::echelonize_reduced(R, C);
 		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
-		/*GaussJordan<Ring>::Permutation P;
-		Elimination<Ring> elim (ctx);
-		size_t rank1;
-		Ring::Element det1;
-
-		commentator.start("elim.echelonize_reduced");
-		elim.echelonize_reduced (C, C, P, rank1, det1);
-		commentator.stop(MSG_DONE);*/
 
 		report << endl;
 	
@@ -218,8 +185,6 @@ commentator.stop("FAUGERE LACHARTRE");
 			report << endl;
 			return false;
 		}
-
-
 	}
 	
 	return true;
@@ -248,7 +213,7 @@ void testLelaFaugereLachartre(const char *file_name)
 
 int main (int argc, char **argv)
 {
-	char *fileName = NULL;
+	const char *fileName = "";
 	bool validate_results = false;
 	bool useLelaFG_Lachartre = false;
 
@@ -275,14 +240,9 @@ int main (int argc, char **argv)
 	{
 		testLelaFaugereLachartre(fileName);
 		pass = true;
-	}else if(validate_results == 0)
-		pass = testFaugereLachartre(fileName);
-	else
-		pass = testFaugereLachartre(fileName, true);
+	}else
+		pass = testFaugereLachartre(fileName, validate_results);
 
-	
-		
-	
 	commentator.stop (MSG_STATUS (pass));
 
 	return pass ? 0 : -1;

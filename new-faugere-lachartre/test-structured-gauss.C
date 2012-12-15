@@ -5,6 +5,7 @@
  *  Created on: 24 mai 2012
  *      Author: martani  (LIP6 / UPMC University Paris06)
  * 
+ * -------------------------------
  * Tests the structured Gaussian elmination method
  * run with; ./test-structured-gauss - -f path/to/matrix/file
  */
@@ -22,7 +23,7 @@ using namespace std;
 
 int main (int argc, char **argv)
 {
-	char *file_name = NULL;
+	const char *file_name = "";
 
 	static Argument args[] = {
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &file_name},

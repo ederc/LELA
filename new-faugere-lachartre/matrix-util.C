@@ -248,7 +248,12 @@ void MatrixUtil::dumpMatrixAsPbmImage(const Matrix& A, const char *outputFileNam
 	FILE *outStream = fopen(outputFileName, "wb");
 
 	//magic PBM header
+#ifdef __LP64__	//64 bit machine
+	sprintf(buffer, "P4\n# matrix size(%lu, %lu)\n%lu %lu\n", A.rowdim (), A.coldim (), A.coldim (), A.rowdim ());
+#else			//32 bit machine
 	sprintf(buffer, "P4\n# matrix size(%u, %u)\n%u %u\n", A.rowdim (), A.coldim (), A.coldim (), A.rowdim ());
+#endif
+
 	fwrite(buffer, sizeof(char), strlen(buffer), outStream);
 
 
