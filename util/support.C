@@ -185,9 +185,9 @@ void parseArguments (int argc, char **argv, Argument *args, const char *freeArgs
 				*(va_arg (arg_list, char **)) = argv[i];
 				--freeArgs;
 			} else {
-				commentator.setDefaultReportFile (argv[i]);
-				std::cout << "Writing report data to " << argv[i] << std::endl << std::endl;
-				std::cout.flush ();
+				//commentator.setDefaultReportFile (argv[i]);
+				//std::cout << "Writing report data to " << argv[i] << std::endl << std::endl;
+				//std::cout.flush ();
 			}
 		}
 	}
