@@ -21,7 +21,7 @@ using namespace std;
 
 int main (int argc, char **argv)
 {
-	char *file_name = NULL;
+	const char *file_name = "";
 
 	static Argument args[] = {
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &file_name},

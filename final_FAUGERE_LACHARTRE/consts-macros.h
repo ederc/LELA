@@ -39,7 +39,7 @@ using namespace LELA;
 #endif
 
 #if NB_ROWS_PER_MULTILINE != 2
-#error "NB_ROWS_PER_MULTILINE must be equal to 2"
+#error "NB_ROWS_PER_MULTILINE must be equal to 2. Other sizes are not supported in this version!"
 #endif
 
 //#ifndef NUM_THREADS

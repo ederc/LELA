@@ -10,6 +10,10 @@ LDADD = $(GMP_LIBS)  $(PNG_LIBS) $(M4RI_LIBS) $(BLAS_LIBS) $(top_builddir)/lela/
 
 AM_LDFLAGS = -fopenmp
 
+noinst_PROGRAMS = \
+	test-FGL-seq	\
+	test-FGL-parallel
+
 BASIC_TESTS =			\
 		test-FGL-seq	\
 		test-FGL-parallel	\

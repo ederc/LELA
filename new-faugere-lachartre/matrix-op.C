@@ -120,7 +120,7 @@ void MatrixOp::normalizeRow(const Ring& R, Vector& x)
 }
 
 template <typename Vector>
-inline void axpy(const uint16 a, const Vector& v, uint64 *arr, uint8 STEP_)
+inline void axpy(const uint16 a, const Vector& v, uint64 *arr)
 {
 	const uint8 STEP=32;
 	uint32 sz = v.size ();
@@ -152,7 +152,8 @@ inline void axpy(const uint16 a, const Vector& v, uint64 *arr, uint8 STEP_)
 }
 
 //B <- A^-1 x B
-template <typename Matrix, typename Ring>
+//Generic Code, slower than the specialized version below
+/*template <typename Matrix, typename Ring>
 void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 {
 	assert(A.rowdim () == B.rowdim ());
@@ -274,11 +275,11 @@ void MatrixOp::reducePivotsByPivots(Ring& R, const Matrix& A, Matrix& B)
 	TIMER_REPORT_(CopySparseVectorToDenseArrayTimer);
 	TIMER_REPORT_(CopyDenseArrayToSparseVectorTimer);
 	TIMER_REPORT_(AxpyTimer);
-}
+}*/
 
 //B <- A^-1 x B
 template <typename Matrix>
-void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix& B, bool t, uint8 STEP)
+void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix& B)
 {
 	assert(A.rowdim () == B.rowdim ());
 	assert(A.coldim () == A.rowdim ());
@@ -347,17 +348,13 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 			R.copy(Av, row_it_A->second);
 			Ap = row_it_A->first;
 			R.negin(Av);
-			//Av32 = Av;
-
-			// B[i] <- B[i] - Av * B[Ap]
-			//rowB = &(B[Ap]);
 
 			TIMER_START_(AxpyTimer);
 			/*register uint32 x=0, sz = B[Ap].size ();
 			for(x=0; x<sz; ++x)
 				tmpDenseArray[(*rowB)[x].first] += Av32 * (*rowB)[x].second;*/
 
-			axpy(Av, B[Ap], tmpDenseArray, STEP);
+			axpy(Av, B[Ap], tmpDenseArray);
 			
 			TIMER_STOP_(AxpyTimer);
 
@@ -384,7 +381,8 @@ void MatrixOp::reducePivotsByPivots(Modular<uint16>& R, const Matrix& A, Matrix&
 
 
 // D <- D - CB
-template <typename Matrix, typename Ring>
+//Generic Code, slower than the specialized version below
+/*template <typename Matrix, typename Ring>
 void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B, Matrix& D)
 {
 	assert(C.rowdim () == D.rowdim ());
@@ -476,12 +474,12 @@ void MatrixOp::reduceNonPivotsByPivots(Ring& R, const Matrix& C, const Matrix& B
 	report << "\r                                                                    \n";
 #endif
 
-}
+}*/
 
 
 // D <- D - CB
 template <typename Matrix>
-void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D, bool t)
+void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, const Matrix& B, Matrix& D)
 {
 	assert(C.rowdim () == D.rowdim ());
 	assert(C.coldim () == B.rowdim ());
@@ -553,7 +551,8 @@ void MatrixOp::reduceNonPivotsByPivots(Modular<uint16>& R, const Matrix& C, cons
 
 }
 
-template <typename Ring, typename Matrix>
+//Generic Code, slower than the specialized version below
+/*template <typename Ring, typename Matrix>
 size_t  MatrixOp::echelonize(const Ring& R, Matrix& A)
 {
 	uint32 coldim = A.coldim ();
@@ -621,37 +620,12 @@ size_t  MatrixOp::echelonize(const Ring& R, Matrix& A)
 				}
 			}
 
-#ifdef PRAGMA_UNROLL
-
-			register uint32 x=0;
-			unsigned char xl = A[piv[j]].size () % 32;
-			while(x<xl)
-			{
-				R.axpyin(tmpDenseArray[it->first], 	h_a, 	it->second);
-				++x;
-				++it;
-			}
-
-			for(x=xl; x<A[piv[j]].size (); x+=32)
-			{
-
-//#pragma loop unroll
-				for(char t=0; t<32; ++t)
-				{
-					R.axpyin(tmpDenseArray[(it+t)->first], 	h_a, 	(it+t)->second);
-				}
-				it += 32;
-			}
-
-
-#else
 			while (it != end_iterator)
 			{
 				R.axpyin(tmpDenseArray[it->first], h_a, it->second);
 				++it;
 			}
 
-#endif
 		}
 
 		MatrixOp::copyDenseArrayToSparseVector(R, tmpDenseArray, coldim, *i_A);
@@ -668,10 +642,10 @@ size_t  MatrixOp::echelonize(const Ring& R, Matrix& A)
 #endif
 
 	return npiv;
-}
+}*/
 
 template <typename Matrix>
-size_t  MatrixOp::echelonize(const Modular<uint16>& R, Matrix& A, bool t)
+size_t  MatrixOp::echelonize(const Modular<uint16>& R, Matrix& A)
 {
 	uint32 coldim = A.coldim ();
 	uint32 npiv = 0;

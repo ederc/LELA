@@ -66,7 +66,7 @@ void testLELASplicerVsIndexer(const char *file_name)
 
 int main (int argc, char **argv)
 {
-	char *fileName = NULL;
+	const char *fileName = "";
 	static Argument args[] = {
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName},
 		{ '\0' }

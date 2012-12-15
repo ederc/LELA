@@ -8,9 +8,6 @@
 #ifndef INDEXER_PARALLEL_H_
 #define INDEXER_PARALLEL_H_
 
-//#include "matrix-utils.h"
-//#include "../only-D/indexer.h"
-
 #include "consts-macros.h"
 
 #include "lela/util/debug.h"
