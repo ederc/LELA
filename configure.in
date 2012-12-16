@@ -189,4 +189,11 @@ tests/data/Makefile
 macros/Makefile
 doc/Makefile
 new-faugere-lachartre/Makefile
+EXPERIMENTAL_CODE/LEGACY_COMPLETE_VERSIONS/FG-multiline/Makefile
+EXPERIMENTAL_CODE/BLOCK_DATA_TYPES/FG-bloc/Makefile
+EXPERIMENTAL_CODE/BLOCK_DATA_TYPES/FG-bloc-contiguous/Makefile
+EXPERIMENTAL_CODE/BLOCK_DATA_TYPES/FG-bloc-contiguous-hybrid/Makefile
+EXPERIMENTAL_CODE/BLOCK_DATA_TYPES/FG-bloc-multiline/Makefile
+EXPERIMENTAL_CODE/BLOCK_DATA_TYPES/FG-bloc-multiline-hybrid/Makefile
+final_FAUGERE_LACHARTRE/Makefile
 ])

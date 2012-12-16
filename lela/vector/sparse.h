@@ -480,6 +480,7 @@ public:
 	inline size_type       max_size  () const      { return std::min (_idx.max_size (), _elt.max_size ());  }
 
 	inline void		reserve	 (size_t sz)   { _idx.reserve (sz); _elt.reserve (sz); }
+	inline size_type 		capacity ()   { return _idx.capacity (); }
 	inline void		free		 ()
 	{
 		_idx.clear ();
@@ -487,8 +488,8 @@ public:
 
 		IndexVector _idx_tmp;
 		ElementVector _elt_tmp;
-		_idx_tmp.swap(_idx);
-		_elt_tmp.swap(_elt);
+		_idx.swap(_idx_tmp);
+		_elt.swap(_elt_tmp);
 	}
 	
 	inline bool operator == (const SparseVector &v) const
