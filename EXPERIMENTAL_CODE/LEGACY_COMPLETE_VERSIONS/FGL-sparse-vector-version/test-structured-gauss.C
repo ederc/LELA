@@ -12,7 +12,7 @@
 
 #include "matrix-util.h"
 #include "structured-gauss-lib.h"
-#include "../util/support.h"
+#include "../../../util/support.h"
 
 #include "lela/util/commentator.h"
 #include "lela/ring/modular.h"
