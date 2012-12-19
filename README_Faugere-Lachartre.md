@@ -25,7 +25,7 @@ clang doesn't support OpenMP for now, gcc or another OpenMP compliant compiler m
 Invoking the test programs
 --------------------------
 
-This is an examples of how to invoke the test programs:
+These are examples of how to invoke the test programs:
 
 * `./test-FGL-seq - -f path/to/matrix/file` 		performs a sequential Gaussian elimination using the new method.
 * `./test-FGL-seq - -f path/to/matrix/file -r`		performs a sequential *reduced* Gaussian elimination using the new method.
