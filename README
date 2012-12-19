@@ -1,5 +1,3 @@
-(==> To test the new Faugere-Lachartre implementation, instructions are in: new-faugere-lachartre/README)
-
 Library for Exact Linear Algebra (LELA)
 =======================================
 
@@ -65,3 +63,10 @@ Some key differences between LELA and LinBox are the following:
    LinBox is licensed under the GNU Lesser General Public License
    (LGPL). This means that it is in general forbidden to use LELA in
    software with a license which is incompatible with the GPL.
+
+
+
+New Faugère-Lachartre implemntation
+-----------------------------------
+
+Refer to README_Faugere-Lachartre.md for information about the new implementation.
