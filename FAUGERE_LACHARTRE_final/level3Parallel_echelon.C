@@ -1,4 +1,13 @@
-
+/*
+ * level3Parallel_echelon.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
+ *
+ *  Created on: 30 juil. 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
+ *
+ * ------------------------------
+ * Performs parallel structured Gaussian elimination
+ */
 
 
 #ifndef ECHELON_C_

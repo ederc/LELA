@@ -1,8 +1,9 @@
 /*
  * level3-ops.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 30 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 

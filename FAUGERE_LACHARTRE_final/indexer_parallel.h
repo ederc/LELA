@@ -1,8 +1,9 @@
 /*
- * indexer.h
+ * indexer_parallel.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 6 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #ifndef INDEXER_PARALLEL_H_

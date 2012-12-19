@@ -1,8 +1,9 @@
 /*
- * echelon.h
+ * level3Parallel_echelon.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
- *  Created on: 4 août 2012
- *      Author: martani
+ *  Created on: 30 juil. 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #ifndef ECHELON_H_

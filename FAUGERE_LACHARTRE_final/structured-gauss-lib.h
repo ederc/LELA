@@ -1,10 +1,12 @@
 /*
  * structured-gauss-lib.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
- *  Created on: 30 mai 2012
- *      Author: martani (LIP6 / UPMC University Paris06)
+ *  Created on: 30 may 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  * 
- *  An implementation of structured Gaussian elimination
+ * ---------------------------------------
+ * An implementation of structured Gaussian elimination
  */
 
 #ifndef STRUCTURED_GAUSS_LIB_H_

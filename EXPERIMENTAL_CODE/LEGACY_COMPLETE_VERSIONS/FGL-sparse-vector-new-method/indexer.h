@@ -1,3 +1,12 @@
+/*
+ * indexer.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
+ *
+ *  Created on: 30 mai 2012
+ *      Author: martani (UPMC University Paris 06)
+ */
+ 
+
 #ifndef __INDEXER_H
 #define __INDEXER_H
 

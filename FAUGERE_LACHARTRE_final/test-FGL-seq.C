@@ -1,29 +1,21 @@
 /*
  * test-FGL-seq.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 30 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #include "consts-macros.h"
 #include "types.h"
 #include "matrix-utils.h"
 #include "level3-ops.h"
-
+#include "structured-gauss-lib.h"
 #include "indexer.h"
-
 
 #include "lela/matrix/sparse.h"
 #include "lela/util/commentator.h"
 #include "../util/support.h"
-
-#include "structured-gauss-lib.h"
-
-//#include "../only-D/indexer.h"
-//#include "../only-D/matrix-util.h"
-//#include "../only-D/matrix-op.h"
-//
-//#include "matrix-op-m.C"
 
 
 using namespace LELA;
@@ -64,21 +56,16 @@ commentator.start("ROUND 1", "ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-
 //	MatrixUtils::dumpMatrixAsPbmImage(sub_A, "sub_A.pbm");
 //	MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
 //	MatrixUtils::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
 //	MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
-
-
 
 	SHOW_MATRIX_INFO_BLOC(sub_A);
 	SHOW_MATRIX_INFO_BLOC(sub_B);
 	SHOW_MATRIX_INFO_BLOC(sub_C);
 	SHOW_MATRIX_INFO_BLOC(sub_D);
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
 
 	commentator.start("[Bloc] B = A^-1 B", "[B = A^-1 B]");
 		Level3Ops::reducePivotsByPivots(R, sub_A, sub_B);
@@ -87,7 +74,6 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_A.free(true);
 	MatrixUtils::show_mem_usage("[B = A^-1 B]"); report << endl;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B_reduced.pbm");
 
 	commentator.start("[Bloc] D = D - C*B", "[D = D - C*B]");
 		if(horizontal)
@@ -99,9 +85,6 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D_reduced.pbm");
-
-	//return true;
 
 	commentator.start("echelonize D", "[echelonize D]");
 		rank = Level3Ops::echelonize(R, sub_D, sub_D_multiline, free_memory_on_the_go);
@@ -109,7 +92,6 @@ commentator.start("ROUND 1", "ROUND 1");
 	MatrixUtils::show_mem_usage("[echelonize D]"); report << endl;
 	report << "Rank of D " << rank << endl;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_D_multiline, "sub_D_after_echelonize.pbm");
 
 	if(only_D)
 	{
@@ -125,10 +107,9 @@ commentator.start("ROUND 1", "ROUND 1");
 		MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
 
 		SHOW_MATRIX_INFO_SPARSE(A);
-
-		//MatrixUtils::dumpMatrixAsPbmImage(A, "A_echelon_old_method.pbm");
 	}
 commentator.stop("ROUND 1");
+
 
 	if(!only_D)
 	{
@@ -136,18 +117,20 @@ report << "------------------------------------------------" << endl;
 commentator.start("ROUND 2", "ROUND 2");
 
 	SequentialIndexer<typename Ring::Element, IndexType> inner_indexer;
+	SparseBlocMatrix<SparseMultilineBloc<typename Ring::Element, IndexType> > D1, D2, B1, B2;
+	
 
 	commentator.start("[MultiLineIndexer] constructing indexes");
 		inner_indexer.processMatrix(sub_D_multiline);
 	commentator.stop(MSG_DONE);
 	report << "Pivots found: " << inner_indexer.Npiv << endl << endl;
 
-	SparseBlocMatrix<SparseMultilineBloc<typename Ring::Element, IndexType> > D1, D2, B1, B2;
 
 	commentator.start("[Bloc] constructing submatrices B1, B1, D1, D2");
 		inner_indexer.constructSubMatrices(sub_B, sub_D_multiline, B1, B2, D1, D2, free_memory_on_the_go);
 	commentator.stop(MSG_DONE);
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
+
 
 	commentator.start("D2 = D1^-1 x D2");
 		Level3Ops::reducePivotsByPivots(R, D1, D2);
@@ -155,15 +138,18 @@ commentator.start("ROUND 2", "ROUND 2");
 	D1.free (true);
 	MatrixUtils::show_mem_usage("[D2 = D1^-1 x D2]"); report << endl;
 
+
 	commentator.start("B2 <- B2 - D2 D1");
 		Level3Ops::reduceNonPivotsByPivots(R, B1, D2, B2);
 	commentator.stop(MSG_DONE);
 	B1.free (true);
 	MatrixUtils::show_mem_usage("[D2 = D1^-1 x D2]"); report << endl;
 
+
 	commentator.start("[MultiLineIndexer] Reconstructing indexes");
 		outer_indexer.combineInnerIndexer(inner_indexer);
 	commentator.stop(MSG_DONE);
+
 
 	commentator.start("[Indexer] Reconstructing matrix");
 		outer_indexer.reconstructMatrix(A, B2, D2, free_memory_on_the_go);
@@ -171,14 +157,11 @@ commentator.start("ROUND 2", "ROUND 2");
 	MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
 	reduced = true;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(A, "A_rref_old_method.pbm");
-
 commentator.stop("ROUND 2");
 	}
 commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 
-	report << "True rank " << outer_indexer.Npiv + rank << endl;
-	
+	report << "True rank " << outer_indexer.Npiv + rank << endl;	
 	bool pass =true;
 
 	if(validate_results)
@@ -220,9 +203,9 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 	}
 
 	report << endl;
-
 	return pass;
 }
+
 
 template <typename Ring>
 bool testFaugereLachartre_new_method(const Ring& R,
@@ -230,17 +213,14 @@ bool testFaugereLachartre_new_method(const Ring& R,
 		bool only_D, bool free_memory_on_the_go)
 {
 	Context<Ring> ctx (R);
-
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
-
+	SparseMatrix<typename Ring::Element> M_orig;
 	size_t rank;
 	bool reduced = false;
-
+	
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 	report << "Index type " << __IndexType__ << endl;
-
-	SparseMatrix<typename Ring::Element> M_orig;
-
+	
 	if(validate_results)
 	{
 		M_orig = SparseMatrix<typename Ring::Element> (A.rowdim(), A.coldim());
@@ -249,8 +229,10 @@ bool testFaugereLachartre_new_method(const Ring& R,
 
 commentator.start("FGL BLOC NEW METHOD");
 commentator.start("ROUND 1");
+	
 	SparseBlocMatrix<SparseMultilineBloc<typename Ring::Element, IndexType> > sub_A, sub_B, sub_C, sub_D;
 	SparseMultilineMatrix<uint16> sub_D_multiline;
+
 
 	commentator.start("[Bloc] construting submatrices");
 		outer_indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, free_memory_on_the_go);
@@ -258,21 +240,19 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-
-// 	MatrixUtils::dumpMatrixAsPbmImage(sub_C_multiline, "sub_C_multiline.pbm");
-	
-	//MatrixUtils::copy(sub_C_multiline, sub_C);
-	
+		
 	SHOW_MATRIX_INFO_BLOC(sub_A);
 	SHOW_MATRIX_INFO_BLOC(sub_B);
 	SHOW_MATRIX_INFO_BLOC(sub_C);
 	SHOW_MATRIX_INFO_BLOC(sub_D);
 	
+	
 	commentator.start("[Bloc] C = MatrixOps::reduceC", "[reduceC]");
 		Level3Ops::reduceC(R, sub_A, sub_C);
 	commentator.stop("[reduceC]");
-	//SHOW_MATRIX_INFO_BLOC(sub_C);
+	SHOW_MATRIX_INFO_BLOC(sub_C);
 	MatrixUtils::show_mem_usage("[reduceC]"); report << endl;
+	
 	
 	commentator.start("[Bloc] D = D - C*B", "[D = D - C*B]");
 		Level3Ops::reduceNonPivotsByPivots(R, sub_C, sub_B, sub_D, false);
@@ -280,6 +260,7 @@ commentator.start("ROUND 1");
 	SHOW_MATRIX_INFO_BLOC(sub_D);
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
+
 
 	commentator.start("[Bloc] echelonize", "[echelonize D]");
 //		if(parallel)
@@ -291,11 +272,13 @@ commentator.start("ROUND 1");
 	report << "Rank of D " << rank << endl;
 	report << endl;
 
+
 	SequentialIndexer<typename Ring::Element, IndexType> inner_idxr;
 	commentator.start("[Bloc] Processing new matrix D");
 		inner_idxr.processMatrix(sub_D_multiline);
 	commentator.stop(MSG_DONE);
 	report << "Pivots found: " << inner_idxr.Npiv << endl << endl;
+
 
 	commentator.start("[Bloc] Combine inner indexer");
 		outer_indexer.combineInnerIndexer(inner_idxr, true);
@@ -390,7 +373,6 @@ commentator.stop("FGL BLOC NEW METHOD");
 	}
 
 	report << endl;
-
 	return pass;
 }
 
@@ -403,14 +385,12 @@ bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
-
+	SparseMatrix<typename Ring::Element> M_orig;
 	size_t rank;
 	bool reduced = false;
 
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 	report << "Index type " << __IndexType__ << endl;
-
-	SparseMatrix<typename Ring::Element> M_orig;
 
 	if(validate_results)
 	{
@@ -420,8 +400,10 @@ bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 
 commentator.start("FGL BLOC NEW METHOD");
 commentator.start("ROUND 1");
+	
 	SparseBlocMatrix<SparseMultilineBloc<typename Ring::Element, IndexType> > sub_A, sub_B, sub_C, sub_D;
 	SparseMultilineMatrix<uint16> sub_D_multiline, sub_C_multiline, sub_A_multiline;
+
 
 	commentator.start("[Bloc] construting submatrices");
 		outer_indexer.constructSubMatrices(A, sub_A_multiline, sub_B, sub_C_multiline, sub_D, free_memory_on_the_go);
@@ -429,14 +411,13 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-	//MatrixUtils::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
- 	//MatrixUtils::copy(sub_C_multiline, sub_C);
 
 	SHOW_MATRIX_INFO_BLOC(sub_B);
 	SHOW_MATRIX_INFO_BLOC(sub_D);
 	SHOW_MATRIX_INFO_MULTILINE(sub_A_multiline);
 	SHOW_MATRIX_INFO_MULTILINE(sub_C_multiline);
 	report << endl;
+
 
 	commentator.start("[Bloc] C = MatrixOps::reduceC", "[reduceC]");
 		Level3Ops::reduceC(R, sub_A_multiline, sub_C_multiline);
@@ -464,20 +445,10 @@ commentator.start("ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
-	//	commentator.start("[Bloc] echelonize", "[echelonize D]");
-//		rank = Level3Ops::echelonize(R, sub_D, sub_D_multiline, free_memory_on_the_go);
-//	commentator.stop("[echelonize D]");
-
+	
 	commentator.start("[Bloc] echelonize", "[echelonize D]");
 		rank = Level3Ops::echelonize(R, sub_D, sub_D_multiline, free_memory_on_the_go);
 	commentator.stop("[echelonize D]");
-
-
-//	if(parallel)
-//		MatrixUtils::dumpMatrixAsPbmImage(sub_D_multiline, "sub_d_m_parallel.pbm");
-//	else
-//		MatrixUtils::dumpMatrixAsPbmImage(sub_D_multiline, "sub_d_m_seq.pbm");
-
 	MatrixUtils::show_mem_usage("[echelonize D]"); report << endl;
 	report << "Rank of D " << rank << endl;
 	report << endl;
@@ -503,8 +474,7 @@ commentator.start("ROUND 1");
 			outer_indexer.reconstructMatrix(A, sub_A_multiline, sub_B, sub_D_multiline, free_memory_on_the_go);
 	commentator.stop("[Reconstructing matrix]");
 	MatrixUtils::show_mem_usage("[Reconstructing matrix]"); report << endl;
-
-	//MatrixUtils::dumpMatrixAsPbmImage(A, "A_echelon_new_method.pbm");
+	
 
 	report << "True rank " << outer_indexer.Npiv + rank << endl;
 	outer_indexer.freeMemory (); //not used anymore
@@ -522,20 +492,24 @@ commentator.start("ROUND 2");
 		SparseMatrix<typename Ring::Element> dummySparse;
 		SparseMultilineMatrix<typename Ring::Element> dummyMultiline;
 
+
 		commentator.start("[Indexer] constructing sub matrices 2");
 			idxr2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, free_memory_on_the_go);
 		commentator.stop(MSG_DONE);
 		MatrixUtils::show_mem_usage("[constructing sub matrices 2]"); report << endl;
+		
 
 		commentator.start("[Bloc] B1 = A1^-1 B1");
 			Level3Ops::reducePivotsByPivots(R, sub_A_prime, sub_B_prime);
 		commentator.stop(MSG_DONE);
 		sub_A_prime.free(true);
 		MatrixUtils::show_mem_usage("[B1 = A1^-1 B1]"); report << endl;
+		
 
 		SequentialIndexer<typename Ring::Element, IndexType>  inner_dummy_idxr;
 		inner_dummy_idxr.processMatrix(dummySparse);
 		idxr2.combineInnerIndexer(inner_dummy_idxr, true);
+		
 
 		commentator.start("[Bloc] Reconstructing final matrix");
 			idxr2.reconstructMatrix(A, sub_B_prime, free_memory_on_the_go);
@@ -543,12 +517,9 @@ commentator.start("ROUND 2");
 		MatrixUtils::show_mem_usage("[Reconstructing final matrix]"); report << endl;
 
 		reduced = true;
-
-		//MatrixUtils::dumpMatrixAsPbmImage(A, "A-rref.pbm");
-
+		
 commentator.stop("ROUND 2");
 	}
-
 commentator.stop("FGL BLOC NEW METHOD");
 
 	bool pass =true;
@@ -592,7 +563,6 @@ commentator.stop("FGL BLOC NEW METHOD");
 	}
 
 	report << endl;
-
 	return pass;
 }
 
@@ -603,7 +573,6 @@ commentator.stop("FGL BLOC NEW METHOD");
 int main(int argc, char **argv)
 {
 	const char *fileName = "";
-
 	bool pass = true;
 	bool new_method_Block_C = false;
 	bool validate_results = false;
@@ -638,7 +607,6 @@ int main(int argc, char **argv)
 	commentator.getMessageClass(PROGRESS_REPORT).setMaxDepth(3);
 
 	std::ostream &report = commentator.report(Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-
 	commentator.start("Faugère-Lachartre Bloc Version", "Faugère-Lachartre Bloc Version");
 
 	typedef uint16 modulus_type;

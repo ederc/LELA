@@ -1,9 +1,9 @@
 /*
  * matrix-op.h
- * Copyright 2012 Martani Fayssal (LIP6 / UPMC University Paris06)
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 30 mai 2012
- *      Author: martani (LIP6 / UPMC University Paris06)
+ *      Author: martani (UPMC University Paris 06)
  */
 
 #ifndef MATRIX_OP_H_

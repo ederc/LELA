@@ -1,8 +1,9 @@
 /*
  * level3Parallel.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
- *  Created on: 4 août 2012
- *      Author: martani
+ *  Created on: 4 august 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #ifndef LEVEL3PARALLEL_H_

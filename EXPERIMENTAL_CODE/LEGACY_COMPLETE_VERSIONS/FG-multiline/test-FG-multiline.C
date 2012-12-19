@@ -1,5 +1,6 @@
 /*
  * test-FG-multiline.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 14 juin 2012
  *      Author: martani
@@ -9,8 +10,6 @@
 
 #include "FG-types.h"
 #include "../FGL-sparse-vector-new-method/matrix-util.h"
-//#include "../only-D/matrix-op.h"
-//#include "../FGL-sparse-vector-new-method/indexer.h"
 #include "../FGL-sparse-vector-new-method/structured-gauss-lib.h"
 
 #include "multiline-indexer.h"

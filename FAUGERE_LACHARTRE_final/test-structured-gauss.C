@@ -1,9 +1,11 @@
 /*
  * test-structured-gauss.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 24 mai 2012
- *      Author: martani  (LIP6 / UPMC University Paris06)
+ *      Author: martani  (UPMC University Paris 06 / INRIA)
  * 
+ * ----------------------------------
  * Tests the structured Gaussian elmination method
  * run with; ./test-structured-gauss - -f path/to/matrix/file
  */
@@ -135,59 +137,19 @@ int main (int argc, char **argv)
 	report << endl;
 	SHOW_MATRIX_INFO_SPARSE(A);
 
-	//MatrixUtils::dumpMatrixAsPbmImage(A, "A.pbm");
-
 	MatrixUtils::show_mem_usage("Loading matrix");
 	report << endl;
-	/*commentator.start("Writing matrix to file");
-		report << "\t" << getOutputFileNameWithExtension(file_name, strdup("pbm/"), strdup("-orig.pbm")).c_str() << endl;
-		dumpMatrixAsPbmImage(A, getOutputFileNameWithExtension(file_name, strdup("pbm/"), strdup("-orig.pbm")).c_str());
-	commentator.stop(MSG_DONE);
-	report << endl;*/
 
 	if(nb_threads != 0)
 	{
 		test_structured_gauss_parallel(R, A, nb_threads);
-		//return 0;
 	}
-
-	//SparseMatrix<Ring::Element> C (A.rowdim (), A.coldim ()), D (A.rowdim (), A.coldim ());
-
-	//BLAS3::copy(ctx, A, C);
-	//BLAS3::copy(ctx, A, D);
 
 	test_structured_gauss_acc64(R, A);
 
-	//test_structured_gauss_standard(R, D);
-
-	//test_RREF_LELA(R, C);
-
-	/*if(BLAS3::equal(ctx, A, C))
-		report << "MATRIX RREF OK" << endl;
-	else
-		report << "MATRIX RREF WRONG" << endl;*/
-
-//	if(BLAS3::equal(ctx, D, C))
-//		report << "MATRIX RREF OK" << endl;
-//	else
-//		report << "MATRIX RREF WRONG" << endl;
-
-//	commentator.start("Structured Gauss Rref", "STRUCTURED GAUSS");
-//		rank = StructuredGauss::echelonize_reduced(R, A);
-//		report << "Rank " << rank << endl;
-//	commentator.stop(MSG_DONE, "STRUCTURED GAUSS");
 	report << endl;
 	SHOW_MATRIX_INFO_SPARSE(A);
 
 	MatrixUtils::show_mem_usage("STRUCTURED GAUSS");
-
-
-
-	/*commentator.start("Writing matrix to file");
-		report << "\t" << getOutputFileNameWithExtension(file_name, strdup("pbm/"), strdup("-structured_rref.pbm")).c_str() << endl;
-		dumpMatrixAsPbmImage(A, getOutputFileNameWithExtension(file_name, strdup("pbm/"), strdup("-structured_rref.pbm")).c_str());
-	commentator.stop(MSG_DONE);*/
-
-
 	return 0;
 }

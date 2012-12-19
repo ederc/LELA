@@ -1,5 +1,6 @@
 /*
- * matrix-op.C
+ * parallel.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 30 juin 2012
  *      Author: martani

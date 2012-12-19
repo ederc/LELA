@@ -1,8 +1,9 @@
 /*
  * types.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 4 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #ifndef TYPES_FG_BLOC_H_

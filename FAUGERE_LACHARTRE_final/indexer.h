@@ -1,9 +1,11 @@
 /*
  * indexer.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 6 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
+ 
 
 #ifndef INDEXER_H_
 #define INDEXER_H_

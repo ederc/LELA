@@ -1,3 +1,12 @@
+/*
+ * Allocator.h
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
+ *
+ * Created on: 1 august 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
+ * 
+ */
+
 #include <stdlib.h>
 #include <stddef.h>
 

@@ -1,8 +1,9 @@
 /*
- * matrix-util.C
+ * matrix-utils.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
  *  Created on: 4 juil. 2012
- *      Author: martani
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 

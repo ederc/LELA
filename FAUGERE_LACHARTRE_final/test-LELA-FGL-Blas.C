@@ -1,8 +1,9 @@
 /*
  * test-LELA-FGL-Blas.C
+ * Copyright 2012 Martani Fayssal (UPMC University Paris 06 / INRIA)
  *
- *  Created on: 24 août 2012
- *      Author: martani
+ *  Created on: 24 August 2012
+ *      Author: martani (UPMC University Paris 06 / INRIA)
  */
 
 #include "matrix-utils.h"
