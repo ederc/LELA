@@ -51,6 +51,7 @@ public:
 	static void normalizeRows(Ring& R, Matrix& A);
 
 
+	//New method
 	template <typename Matrix>
 	static void reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, const Matrix& C, Matrix& D);
 

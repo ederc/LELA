@@ -577,14 +577,7 @@ void MatrixOp::reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, co
 	typedef Modular<uint16> Ring;
 
 	typename Matrix::ConstRowIterator i_C;
-	//typename Matrix::ConstRowIterator i_A;
 	typename Matrix::RowIterator i_D;
-	//typename Matrix::Row::const_iterator row_it_C, row_it_C_end;
-	//typename Matrix::Row::const_iterator row_it_B, row_it_B_end;
-	//typename Matrix::Row::const_iterator row_it_A, row_it_A_end;
-
-	//typename Matrix::ConstRow *rowB;
-	//typename Matrix::ConstRow *rowA;
 
 	uint32 D_coldim = D.coldim ();
 	uint32 C_coldim = C.coldim ();
@@ -630,28 +623,9 @@ void MatrixOp::reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, co
 			copySparseVectorToDenseArray64(i_C->begin (), i_C->end (), tmpDenseArrayC);
 		TIMER_STOP_(copySparseVectorToDenseArray64C);
 
-		//row_it_C = i_C->begin ();
-		//row_it_C_end = i_C->end ();
-
-
-		//reduce i_C
-		/*row_it_A = i_A->begin ();
-		row_it_A_end = i_A->end ();
-
-		while(row_it_A != row_it_A_end)
-		{
-			tmpDenseArrayC[row_it_A->first] += Cv32 * row_it_A->second;
-		}
-		register uint32 x=0, sz = i_A->size ();
-		for(x=0; x<sz; ++x)
-			tmpDenseArrayC[(*rowB)[x].first] += Cv32 * (*rowB)[x].second;*/
-
 		register typename Ring::Element Cv;
 		register uint32 Cv32;
 		uint32 Cp;
-
-
-		//d1 = show_density(tmpDenseArrayC, C_coldim);
 
 		TIMER_START_(AxpyTotal);
 		for(uint32 j=i_C->begin()->first; j<C_coldim; ++j)
@@ -659,9 +633,9 @@ void MatrixOp::reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, co
 			if(tmpDenseArrayC[j] % R._modulus == 0)
 				continue;
 
-			//while(row_it_C != row_it_C_end)
-			Cp = j; // row_it_C->first;
-			//R.copy(Cv, row_it_C->second);
+
+			Cp = j;
+
 			R.copy(Cv, tmpDenseArrayC[j] % R._modulus);
 			R.negin(Cv);
 			Cv32 = Cv;
@@ -672,26 +646,11 @@ void MatrixOp::reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, co
 			TIMER_STOP_(AxpyC);
 
 			TIMER_START_(AxpyD);
-			//reduce C
+			//reduce D
 			axpy(Cv, B[Cp], tmpDenseArrayD);
 			TIMER_STOP_(AxpyD);
-			// D[i] <- D[i] - Cv * B[Cp]
-			/*rowB = &(B[Cp]);
-
-			//TIMER_START_(AxpyTimer);
-			register uint32 x=0, sz = B[Cp].size ();
-			for(x=0; x<sz; ++x)
-				tmpDenseArrayB[(*rowB)[x].first] += Cv32 * (*rowB)[x].second;*/
-
-			//TIMER_STOP_(AxpyTimer);
-
-			//++row_it_C;
 		}
 		TIMER_STOP_(AxpyTotal);
-
-		//d2 = show_density(tmpDenseArrayC, C_coldim);
-
-		//report << "d1: " << d1 << "%\td2: " << d2 << "%\n";
 
 		TIMER_START_(copyDenseArrayToSparseVector64);
 			copyDenseArrayToSparseVector64(R, tmpDenseArrayD, D_coldim, *i_D);
@@ -711,11 +670,6 @@ void MatrixOp::reduceCD(Modular<uint16>& R, const Matrix& A, const Matrix& B, co
 	TIMER_REPORT_(AxpyD);
 	TIMER_REPORT_(AxpyTotal);
 }
-
-
-
-
-
 
 
 template <typename Ring, typename Matrix>

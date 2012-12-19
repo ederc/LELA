@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir)
-AM_CXXFLAGS = -g -Wall -DDEBUG -O3 -funroll-loops
+AM_CXXFLAGS = -g -Wall -DDEBUG -O3 -funroll-loops -Wno-sign-compare
 
 BENCHMARK_CXXFLAGS = -O2
 
@@ -28,14 +28,14 @@ test_faugere_lachartre_SOURCES =		\
 		matrix-op.h			\
 		indexer.h			\
 		structured-gauss-lib.h		\
-		../../util/support.C
+		../../../util/support.C
 
 		
 test_structured_gauss_SOURCES =		\
 	test-structured-gauss.C 		\
 	structured-gauss-lib.h		\
 	matrix-util.C			\
-	../../util/support.C
+	../../../util/support.C
 
 
 test_splicer_indexer_SOURCES =		\
@@ -43,8 +43,8 @@ test_splicer_indexer_SOURCES =		\
 	matrix-util.h			\
 	indexer.h			\
 	LELA-FG-util.C			\
-	../../util/support.C
+	../../../util/support.C
 	
 	
 noinst_HEADERS =	\
-	../../util/support.h
+	../../../util/support.h

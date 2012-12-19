@@ -15,7 +15,7 @@
 #include "indexer.h"
 #include "structured-gauss-lib.h"
 
-#include "../../util/support.h"
+#include "../../../util/support.h"
 
 #include "lela/util/commentator.h"
 #include "lela/ring/modular.h"
@@ -57,7 +57,6 @@ bool testFaugereLachartre(const char *file_name, bool validate_results = false)
 	size_t rank;
 
 	std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
-
 
 	commentator.start("Loading matrix");
 		SparseMatrix<Ring::Element> A = MatrixUtil::loadF4Matrix(R, file_name);
@@ -168,59 +167,65 @@ commentator.start("FAUGERE LACHARTRE", "FAUGERE_LACHARTRE");
 	commentator.stop("OLD_METHOD");
 
 	//MatrixUtil::dumpMatrixAsPbmImage(A, "A.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(C, "C.pbm");
+	//MatrixUtil::dumpMatrixAsPbmImage(C, "C.pbm");
 
-	report << "----------------------------------------------------------------------------------" << endl;
-	report << "Computing reduced echelon form of the matrix using structured Gaussian elimination" << endl;
-
-	commentator.start("Structured rref Original matrix", "STRUCTURED_RREF");
-		StructuredGauss::echelonize_reduced(R, M_orig);
-		//elim.echelonize_reduced (M_orig, L, P, rank, det);
-	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
-
-	commentator.start("Structured rref C", "STRUCTURED_RREF");
-		StructuredGauss::echelonize_reduced(R, C);
-		//elim.echelonize_reduced (C, L, P, rank, det);
-	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
-
-	commentator.start("Structured rref A", "STRUCTURED_RREF");
-		StructuredGauss::echelonize_reduced(R, A);
-		//elim.echelonize_reduced (C, L, P, rank, det);
-	commentator.stop(MSG_DONE, "STRUCTURED_RREF");
-
-	report << endl;
-
-	//MatrixUtil::dumpMatrixAsPbmImage(A, "A_rref.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(C, "C_rref.pbm");
-	MatrixUtil::dumpMatrixAsPbmImage(M_orig, "M_rref.pbm");
-
-	report << endl;
-
-	if(BLAS3::equal(ctx, M_orig, C))
+	bool pass = true;
+	
+	if(validate_results)
 	{
-		report << "C - Result CORRECT" << std::endl;
+		report << "----------------------------------------------------------------------------------" << endl;
+		report << "Computing reduced echelon form of the matrix using structured Gaussian elimination" << endl;
+	
+		commentator.start("Structured rref Original matrix", "STRUCTURED_RREF");
+			StructuredGauss::echelonize_reduced(R, M_orig);
+			//elim.echelonize_reduced (M_orig, L, P, rank, det);
+		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+	
+		commentator.start("Structured rref C", "STRUCTURED_RREF");
+			StructuredGauss::echelonize_reduced(R, C);
+			//elim.echelonize_reduced (C, L, P, rank, det);
+		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+	
+		commentator.start("Structured rref A", "STRUCTURED_RREF");
+			StructuredGauss::echelonize_reduced(R, A);
+			//elim.echelonize_reduced (C, L, P, rank, det);
+		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
+	
 		report << endl;
-	}
-	else
-	{
-		report << "C - Result NOT OK" << std::endl;
+	
+		//MatrixUtil::dumpMatrixAsPbmImage(A, "A_rref.pbm");
+		//MatrixUtil::dumpMatrixAsPbmImage(C, "C_rref.pbm");
+		//MatrixUtil::dumpMatrixAsPbmImage(M_orig, "M_rref.pbm");
+	
 		report << endl;
+	
+		if(BLAS3::equal(ctx, M_orig, C))
+		{
+			report << "C - Result CORRECT" << std::endl;
+			report << endl;
+		}
+		else
+		{
+			report << "C - Result NOT OK" << std::endl;
+			report << endl;
+			pass = false;
+		}
+	
+		if(BLAS3::equal(ctx, M_orig, A))
+		{
+			report << "A - Result CORRECT" << std::endl;
+			report << endl;
+		}
+		else
+		{
+			report << "A - Result NOT OK" << std::endl;
+			report << endl;
+			pass = false;
+		}
 	}
+	return pass;
 
-	if(BLAS3::equal(ctx, M_orig, A))
-	{
-		report << "A - Result CORRECT" << std::endl;
-		report << endl;
-	}
-	else
-	{
-		report << "A - Result NOT OK" << std::endl;
-		report << endl;
-	}
-
-	return true;
-
-	MatrixUtil::freeMatrixMemory(sub_C);
+/*	MatrixUtil::freeMatrixMemory(sub_C);
 	MatrixUtil::show_mem_usage("D <- D - CB");
 //	showMatrixSizeAndDensity(sub_D, "sub_D");
 	
@@ -299,14 +304,6 @@ commentator.stop("FAUGERE LACHARTRE");
 		commentator.start("Structured rref", "STRUCTURED_RREF");
 			StructuredGauss::echelonize_reduced(R, C);
 		commentator.stop(MSG_DONE, "STRUCTURED_RREF");
-		/*GaussJordan<Ring>::Permutation P;
-		Elimination<Ring> elim (ctx);
-		size_t rank1;
-		Ring::Element det1;
-
-		commentator.start("elim.echelonize_reduced");
-		elim.echelonize_reduced (C, C, P, rank1, det1);
-		commentator.stop(MSG_DONE);*/
 
 		report << endl;
 	
@@ -326,7 +323,7 @@ commentator.stop("FAUGERE LACHARTRE");
 
 	}
 	
-	return true;
+	return true;*/
 }
 
 void testLelaFaugereLachartre(const char *file_name)
@@ -352,7 +349,7 @@ void testLelaFaugereLachartre(const char *file_name)
 
 int main (int argc, char **argv)
 {
-	char *fileName = NULL;
+	const char *fileName = "";
 	bool validate_results = false;
 	bool useLelaFG_Lachartre = false;
 
@@ -379,13 +376,8 @@ int main (int argc, char **argv)
 	{
 		testLelaFaugereLachartre(fileName);
 		pass = true;
-	}else if(validate_results == 0)
-		pass = testFaugereLachartre(fileName);
-	else
-		pass = testFaugereLachartre(fileName, true);
-
-	
-		
+	}else 
+		pass = testFaugereLachartre(fileName, validate_results);
 	
 	commentator.stop (MSG_STATUS (pass));
 
