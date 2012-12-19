@@ -8,19 +8,20 @@
 #include <iostream>
 
 #include "FG-types.h"
-/*#include "../new-faugere-lachartre/matrix-util.h"
-#include "../new-faugere-lachartre/matrix-op.h"
-#include "../new-faugere-lachartre/indexer.h"*/
-#include "../only-D/matrix-util.h"
-#include "../only-D/matrix-op.h"
-#include "../only-D/indexer.h"
-#include "../only-D/structured-gauss-lib.h"
+#include "../FGL-sparse-vector-new-method/matrix-util.h"
+//#include "../only-D/matrix-op.h"
+//#include "../FGL-sparse-vector-new-method/indexer.h"
+#include "../FGL-sparse-vector-new-method/structured-gauss-lib.h"
 
 #include "multiline-indexer.h"
 #include "matrix-util-m.C"
 #include "matrix-op-m.C"
 
-#include "../util/support.h"
+#include "../../../util/support.h"
+
+#include "lela/util/commentator.h"
+#include "lela/ring/modular.h"
+#include "lela/matrix/sparse.h"
 
 
 using namespace LELA;

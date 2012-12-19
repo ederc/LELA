@@ -8,9 +8,13 @@
 #ifndef MULTILINE_INDEX_H_
 #define MULTILINE_INDEX_H_
 
-//#include "../only-D/indexer.h"
+#include "lela/ring/modular.h"
+#include "lela/matrix/sparse.h"
+
+#include "../FGL-sparse-vector-new-method/indexer.h"
 
 using namespace LELA;
+using namespace std;
 
 class MultiLineIndexer {
 private:
