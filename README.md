@@ -69,4 +69,4 @@ Some key differences between LELA and LinBox are the following:
 New Faugère-Lachartre implemntation
 -----------------------------------
 
-Refer to README_Faugere-Lachartre.md for information about the new implementation.
+Refer to [README_Faugere-Lachartre.md](LELA/blob/master/README_Faugere-Lachartre.md) for information about the new implementation.
