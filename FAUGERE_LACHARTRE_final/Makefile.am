@@ -1,5 +1,5 @@
 INCLUDES=-I$(top_srcdir) -I$(top_builddir)
-AM_CXXFLAGS = -g -Wall -O3 -DDEBUG -Wno-sign-compare -DSHOW_PROGRESS_ -DDETAILED_PROFILE_TIMERS_ -DDEFAULT_BLOC_SIZE=256 -funroll-loops -finline-functions -msse2 -fopenmp
+AM_CXXFLAGS = -std=c++0x -g -Wall -O3 -DDEBUG -Wno-sign-compare -DSHOW_PROGRESS_ -DDETAILED_PROFILE_TIMERS_ -DDEFAULT_BLOC_SIZE=256 -funroll-loops -finline-functions -msse2 -fopenmp
 
 BENCHMARK_CXXFLAGS = -O2
 

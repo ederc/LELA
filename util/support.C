@@ -128,6 +128,11 @@ void parseArguments (int argc, char **argv, Argument *args, const char *freeArgs
 
 	va_start (arg_list, freeArgs);
 
+	//Make output to cout always
+	commentator.setReportStream (std::cout);
+	std::cout << "Writing report data to cout" << std::endl << std::endl;
+	std::cout.flush ();
+
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			if (argv[i][1] == 0) {

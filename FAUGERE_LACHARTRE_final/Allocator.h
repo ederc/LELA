@@ -7,6 +7,10 @@
  * 
  */
 
+#ifndef ALLOCATOR_H_
+#define ALLOCATOR_H_
+
+
 #include <stdlib.h>
 #include <stddef.h>
 
@@ -88,3 +92,21 @@ public:
         free(p);
     };
 };
+
+
+template <class T, class U, int Alignment>
+bool operator==(const aligned_allocator<T, Alignment>& a,
+           const aligned_allocator<U, Alignment>& b)
+{
+	return true;
+}
+
+template <class T, class U, int Alignment>
+bool operator!=(const aligned_allocator<T, Alignment>& a,
+           const aligned_allocator<U, Alignment>& b)
+{
+	return !(a == b);
+}
+
+
+#endif 	//ALLOCATOR_H
