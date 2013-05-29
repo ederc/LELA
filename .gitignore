@@ -2,6 +2,7 @@ configure
 config.guess
 config.sub
 ltmain.sh
+install.sh
 aclocal.m4
 missing
 Makefile.in
@@ -9,7 +10,10 @@ Makefile
 *.orig
 *~
 *.o
+*.swp
+*.swo
 *.lo
+*.pbm
 .libs
 _configs.sed
 autom4te.cache/
@@ -103,6 +107,9 @@ tests/test-gauss-jordan
 tests/test-splicer
 tests/test-faugere-lachartre
 tests/benchmark-blas
+test-FGL-*
+tags
+test-driver
 doc/tutorial.html
 doc/reference-*
 doc/reference.xml
