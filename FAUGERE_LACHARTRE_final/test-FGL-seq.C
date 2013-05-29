@@ -25,11 +25,10 @@ template <typename Ring>
 bool testFaugereLachartre_old_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
 		bool only_D, bool free_memory_on_the_go,
-		bool horizontal)
+		bool horizontal, char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
-
 	uint32 rank;
 	bool reduced = false;
 
@@ -47,6 +46,13 @@ bool testFaugereLachartre_old_method(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
+  if (picFile != NULL) {
+    char origA[50];
+    strcpy(origA, picFile);
+    strcat(origA, "-oldMethod-orig-matrix.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(A, origA);
+  }
+
 commentator.start("FG_LACHARTRE", "FG_LACHARTRE");
 commentator.start("ROUND 1", "ROUND 1");
 
@@ -56,10 +62,21 @@ commentator.start("ROUND 1", "ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-//	MatrixUtils::dumpMatrixAsPbmImage(sub_A, "sub_A.pbm");
-//	MatrixUtils::dumpMatrixAsPbmImage(sub_B, "sub_B.pbm");
-//	MatrixUtils::dumpMatrixAsPbmImage(sub_C, "sub_C.pbm");
-//	MatrixUtils::dumpMatrixAsPbmImage(sub_D, "sub_D.pbm");
+  if (picFile != NULL) {
+    char subA[50], subB[50], subC[50], subD[50];
+    strcpy(subA, picFile);
+    strcat(subA, "-oldMethod-sub-A.pbm");
+    strcpy(subB, picFile);
+    strcat(subB, "-oldMethod-sub-B.pbm");
+    strcpy(subC, picFile);
+    strcat(subC, "-oldMethod-sub-C.pbm");
+    strcpy(subD, picFile);
+    strcat(subD, "-oldMethod-sub-D.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_A, subA);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_B, subB);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_C, subC);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, subD);
+  }
 
 	SHOW_MATRIX_INFO_BLOC(sub_A);
 	SHOW_MATRIX_INFO_BLOC(sub_B);
@@ -85,6 +102,12 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
+  if (picFile != NULL) {
+    char beforeD[50];
+    strcpy(beforeD, picFile);
+    strcat(beforeD, "-oldMethod-D-before-echelon.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, beforeD);
+  }
 
 	commentator.start("echelonize D", "[echelonize D]");
 		rank = Level3Ops::echelonize(R, sub_D, sub_D_multiline, free_memory_on_the_go);
@@ -210,7 +233,7 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 template <typename Ring>
 bool testFaugereLachartre_new_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
-		bool only_D, bool free_memory_on_the_go)
+		bool only_D, bool free_memory_on_the_go, char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -227,6 +250,13 @@ bool testFaugereLachartre_new_method(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
+  if (picFile != NULL) {
+    char origA[50];
+    strcpy(origA, picFile);
+    strcat(origA, "-multilineMethod-orig-matrix.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(A, origA);
+  }
+
 commentator.start("FGL BLOC NEW METHOD");
 commentator.start("ROUND 1");
 	
@@ -240,6 +270,21 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
+  if (picFile != NULL) {
+    char subA[50], subB[50], subC[50], subD[50];
+    strcpy(subA, picFile);
+    strcat(subA, "-newMethod-sub-A.pbm");
+    strcpy(subB, picFile);
+    strcat(subB, "-newMethod-sub-B.pbm");
+    strcpy(subC, picFile);
+    strcat(subC, "-newMethod-sub-C.pbm");
+    strcpy(subD, picFile);
+    strcat(subD, "-newMethod-sub-D.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_A, subA);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_B, subB);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_C, subC);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, subD);
+  }
 		
 	SHOW_MATRIX_INFO_BLOC(sub_A);
 	SHOW_MATRIX_INFO_BLOC(sub_B);
@@ -261,6 +306,12 @@ commentator.start("ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
+  if (picFile != NULL) {
+    char beforeD[50];
+    strcpy(beforeD, picFile);
+    strcat(beforeD, "-newMethod-D-before-echelon.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, beforeD);
+  }
 
 	commentator.start("[Bloc] echelonize", "[echelonize D]");
 //		if(parallel)
@@ -381,7 +432,7 @@ template <typename Ring>
 bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 						SparseMatrix<typename Ring::Element>& A, bool validate_results, bool only_D,
 						bool free_memory_on_the_go, bool horizontal,
-						bool reconstruct_old)
+						bool reconstruct_old, char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -398,6 +449,13 @@ bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
+  if (picFile != NULL) {
+    char origA[50];
+    strcpy(origA, picFile);
+    strcat(origA, "-multilineMethod-orig-matrix.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(A, origA);
+  }
+
 commentator.start("FGL BLOC NEW METHOD");
 commentator.start("ROUND 1");
 	
@@ -411,6 +469,21 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
+  if (picFile != NULL) {
+    char subA[50], subB[50], subC[50], subD[50];
+    strcpy(subA, picFile);
+    strcat(subA, "-multilineMethod-sub-A.pbm");
+    strcpy(subB, picFile);
+    strcat(subB, "-multilineMethod-sub-B.pbm");
+    strcpy(subC, picFile);
+    strcat(subC, "-multilineMethod-sub-C.pbm");
+    strcpy(subD, picFile);
+    strcat(subD, "-multilineMethod-sub-D.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_A, subA);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_B, subB);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_C, subC);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, subD);
+  }
 
 	SHOW_MATRIX_INFO_BLOC(sub_B);
 	SHOW_MATRIX_INFO_BLOC(sub_D);
@@ -445,6 +518,12 @@ commentator.start("ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
+  if (picFile != NULL) {
+    char beforeD[50];
+    strcpy(beforeD, picFile);
+    strcat(beforeD, "-multilineMethod-D-before-echelon.pbm");
+    MatrixUtils::dumpMatrixAsPbmImage(sub_D, beforeD);
+  }
 	
 	commentator.start("[Bloc] echelonize", "[echelonize D]");
 		rank = Level3Ops::echelonize(R, sub_D, sub_D_multiline, free_memory_on_the_go);
@@ -573,6 +652,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 int main(int argc, char **argv)
 {
 	const char *fileName = "";
+	char *picFile = NULL;
 	bool pass = true;
 	bool new_method_Block_C = false;
 	bool validate_results = false;
@@ -585,6 +665,7 @@ int main(int argc, char **argv)
 	static Argument args[] =
 	{
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName },
+		{ 'p', "-p picFile", "picFile is the prefix of the pbm files ", TYPE_STRING, &picFile },
 		{ 'r', "-r", "Compute the REDUCED row echelon form (default: only an echelon form)", TYPE_NONE, &compute_Rref },
 		{ 's', "-s", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
 		{ 'o', "-o", "Use the standard Faugère-Lachartre (the new method is the default)", TYPE_NONE, &use_standard_method },
@@ -626,15 +707,15 @@ int main(int argc, char **argv)
 	MatrixUtils::show_mem_usage("Loading matrix");
 
 	report << endl;
-
+  
 	if(!use_standard_method)
 		pass = testFaugereLachartre_new_method_multiline_C(R, A, validate_results, !compute_Rref, free_mem, horizontal,
-				reconstruct_old);
+				reconstruct_old, picFile);
 
 	else if (new_method_Block_C)
-			pass = testFaugereLachartre_new_method(R, A, validate_results, !compute_Rref, free_mem);
+			pass = testFaugereLachartre_new_method(R, A, validate_results, !compute_Rref, free_mem, picFile);
 	else if (use_standard_method)
-			pass = testFaugereLachartre_old_method(R, A, validate_results, !compute_Rref, free_mem, horizontal);
+			pass = testFaugereLachartre_old_method(R, A, validate_results, !compute_Rref, free_mem, horizontal, picFile);
 
 	SHOW_MATRIX_INFO_SPARSE(A);
 	MatrixUtils::show_mem_usage("[In main]"); report << endl;
