@@ -1,8 +1,10 @@
+README
 configure
 config.guess
 config.sub
 ltmain.sh
 install.sh
+install-sh
 aclocal.m4
 missing
 Makefile.in
