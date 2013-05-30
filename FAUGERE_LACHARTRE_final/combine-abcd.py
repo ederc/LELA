@@ -32,7 +32,7 @@ if (os.path.isfile(args.name+'-oldMethod-sub-A.pbm') and
   os.system('pnmcat -lr '+args.name+'-oldMethod-sub-C.pbm '+\
       args.name+'-oldMethod-sub-D.pbm > sub-CD.pbm')
   os.system('pnmcat -tb sub-AB.pbm sub-CD.pbm >\
-    '+args.name+'-oldMethdod-sub-ABCD.pbm')
+    '+args.name+'-oldMethod-sub-ABCD.pbm')
   os.system('rm -f sub-AB.pbm sub-CD.pbm')
 
 #new method
@@ -45,7 +45,7 @@ if (os.path.isfile(args.name+'-newMethod-sub-A.pbm') and
   os.system('pnmcat -lr '+args.name+'-newMethod-sub-C.pbm '+\
       args.name+'-newMethod-sub-D.pbm > sub-CD.pbm')
   os.system('pnmcat -tb sub-AB.pbm sub-CD.pbm >\
-    '+args.name+'-newMethdod-sub-ABCD.pbm')
+    '+args.name+'-newMethod-sub-ABCD.pbm')
   os.system('rm -f sub-AB.pbm sub-CD.pbm')
 
 #multiline method
@@ -58,5 +58,5 @@ if (os.path.isfile(args.name+'-multilineMethod-sub-A.pbm') and
   os.system('pnmcat -lr '+args.name+'-multilineMethod-sub-C.pbm '+\
       args.name+'-multilineMethod-sub-D.pbm > sub-CD.pbm')
   os.system('pnmcat -tb sub-AB.pbm sub-CD.pbm >\
-    '+args.name+'-multilineMethdod-sub-ABCD.pbm')
+    '+args.name+'-multilineMethod-sub-ABCD.pbm')
   os.system('rm -f sub-AB.pbm sub-CD.pbm')
