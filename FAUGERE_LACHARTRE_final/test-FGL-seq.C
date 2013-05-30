@@ -46,7 +46,7 @@ bool testFaugereLachartre_old_method(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char origA[50];
     strcpy(origA, picFile);
     strcat(origA, "-oldMethod-orig-matrix.pbm");
@@ -62,7 +62,7 @@ commentator.start("ROUND 1", "ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char subA[50], subB[50], subC[50], subD[50];
     strcpy(subA, picFile);
     strcat(subA, "-oldMethod-sub-A.pbm");
@@ -102,7 +102,7 @@ commentator.start("ROUND 1", "ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char beforeD[50];
     strcpy(beforeD, picFile);
     strcat(beforeD, "-oldMethod-D-before-echelon.pbm");
@@ -250,7 +250,7 @@ bool testFaugereLachartre_new_method(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char origA[50];
     strcpy(origA, picFile);
     strcat(origA, "-multilineMethod-orig-matrix.pbm");
@@ -270,7 +270,7 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char subA[50], subB[50], subC[50], subD[50];
     strcpy(subA, picFile);
     strcat(subA, "-newMethod-sub-A.pbm");
@@ -306,7 +306,7 @@ commentator.start("ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char beforeD[50];
     strcpy(beforeD, picFile);
     strcat(beforeD, "-newMethod-D-before-echelon.pbm");
@@ -449,7 +449,7 @@ bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 		BLAS3::copy(ctx, A, M_orig);
 	}
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char origA[50];
     strcpy(origA, picFile);
     strcat(origA, "-multilineMethod-orig-matrix.pbm");
@@ -469,7 +469,7 @@ commentator.start("ROUND 1");
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char subA[50], subB[50], subC[50], subD[50];
     strcpy(subA, picFile);
     strcat(subA, "-multilineMethod-sub-A.pbm");
@@ -518,7 +518,7 @@ commentator.start("ROUND 1");
 	sub_C.free(true);
 	MatrixUtils::show_mem_usage("[D = D - C*B]"); report << endl;
 
-  if (picFile != NULL) {
+  if (strcmp(picFile,"")) {
     char beforeD[50];
     strcpy(beforeD, picFile);
     strcat(beforeD, "-multilineMethod-D-before-echelon.pbm");
