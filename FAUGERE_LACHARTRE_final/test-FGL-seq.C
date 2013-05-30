@@ -25,7 +25,7 @@ template <typename Ring>
 bool testFaugereLachartre_old_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
 		bool only_D, bool free_memory_on_the_go,
-		bool horizontal, char *picFile)
+		bool horizontal, const char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -233,7 +233,7 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 template <typename Ring>
 bool testFaugereLachartre_new_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
-		bool only_D, bool free_memory_on_the_go, char *picFile)
+		bool only_D, bool free_memory_on_the_go, const char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -432,7 +432,7 @@ template <typename Ring>
 bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 						SparseMatrix<typename Ring::Element>& A, bool validate_results, bool only_D,
 						bool free_memory_on_the_go, bool horizontal,
-						bool reconstruct_old, char *picFile)
+						bool reconstruct_old, const char *picFile)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -479,9 +479,9 @@ commentator.start("ROUND 1");
     strcat(subC, "-multilineMethod-sub-C.pbm");
     strcpy(subD, picFile);
     strcat(subD, "-multilineMethod-sub-D.pbm");
-    MatrixUtils::dumpMatrixAsPbmImage(sub_A, subA);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_A_multiline, subA);
     MatrixUtils::dumpMatrixAsPbmImage(sub_B, subB);
-    MatrixUtils::dumpMatrixAsPbmImage(sub_C, subC);
+    MatrixUtils::dumpMatrixAsPbmImage(sub_C_multiline, subC);
     MatrixUtils::dumpMatrixAsPbmImage(sub_D, subD);
   }
 
@@ -652,7 +652,7 @@ commentator.stop("FGL BLOC NEW METHOD");
 int main(int argc, char **argv)
 {
 	const char *fileName = "";
-	char *picFile = NULL;
+	const char *picFile = "";
 	bool pass = true;
 	bool new_method_Block_C = false;
 	bool validate_results = false;
@@ -665,7 +665,7 @@ int main(int argc, char **argv)
 	static Argument args[] =
 	{
 		{ 'f', "-f File", "The file name where the matrix is stored", TYPE_STRING, &fileName },
-		{ 'p', "-p picFile", "picFile is the prefix of the pbm files ", TYPE_STRING, &picFile },
+		{ 'p', "-p picFile", "picFile is the prefix of the pbm files", TYPE_STRING, &picFile },
 		{ 'r', "-r", "Compute the REDUCED row echelon form (default: only an echelon form)", TYPE_NONE, &compute_Rref },
 		{ 's', "-s", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
 		{ 'o', "-o", "Use the standard Faugère-Lachartre (the new method is the default)", TYPE_NONE, &use_standard_method },
