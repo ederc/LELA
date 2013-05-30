@@ -168,7 +168,9 @@ public:
 	 * Identifies the list of pivot/non pivot rows, pivot/non pivot columns and their reverse maps
 	 * (reverse map is the correspondance from indexes in sub matrices to the original matrix)
 	 */
-	void processMatrix(const SparseMatrix<Element>& M)
+
+  // chooses the pivot rows to be as sparse as possible
+	void processMatrixSparse(const SparseMatrix<Element>& M)
 	{
 		this->coldim = M.coldim ();
 		this->rowdim = M.rowdim ();
@@ -241,7 +243,84 @@ public:
 
 		_index_maps_constructed = true;
 	}
+  
+  // chooses the pivot rows to be as dense as possible
+	void processMatrixDense(const SparseMatrix<Element>& M)
+	{
+		this->coldim = M.coldim ();
+		this->rowdim = M.rowdim ();
 
+		typename SparseMatrix<Element>::ConstRowIterator i_M;
+		uint32 curr_row_idx = 0, entry;
+
+		initArrays(this->rowdim, this->coldim);
+
+		Npiv = 0;
+
+		//Sweeps the rows to identify the row pivots and column pivots
+		for (i_M = M.rowBegin (); i_M != M.rowEnd (); ++i_M)
+		{
+			if(!i_M->empty ())
+			{
+				entry = i_M->front ().first;
+				if(pivot_rows_idxs_by_entry[entry] == MINUS_ONE)
+				{
+					pivot_rows_idxs_by_entry[entry] = curr_row_idx;
+					Npiv++;
+				}
+				else	//choose the least sparse row //ELGAB Sylvain
+				{
+					//check if the pivot is less dense. replace it with this one
+					if(M[pivot_rows_idxs_by_entry[entry]].size () < i_M->size ())
+					{
+						non_pivot_rows_idxs[pivot_rows_idxs_by_entry[entry]] = pivot_rows_idxs_by_entry[entry];
+						pivot_rows_idxs_by_entry[entry] = curr_row_idx;
+					}
+					else
+						non_pivot_rows_idxs[curr_row_idx] = curr_row_idx;
+				}
+			}
+			else
+				non_pivot_rows_idxs[curr_row_idx] = curr_row_idx;
+
+			++curr_row_idx;
+		}
+
+		//construct the column pivots (non column pivots) map and its reverse map
+		uint32 piv_col_idx = 0, non_piv_col_idx = 0;
+		for(uint32 i = 0; i < this->coldim; ++i){
+			if(pivot_rows_idxs_by_entry[i] != MINUS_ONE)
+			{
+				pivot_columns_map[i] = piv_col_idx;
+				pivot_columns_rev_map[piv_col_idx] = i;
+
+				piv_col_idx++;
+			}
+			else
+			{
+				non_pivot_columns_map[i] = non_piv_col_idx;
+				non_pivot_columns_rev_map[non_piv_col_idx] = i;
+
+				non_piv_col_idx++;
+			}
+		}
+
+		/*lela_check(Npiv == piv_col_idx);
+		lela_check(this->coldim - Npiv == non_piv_col_idx);
+
+		for(uint32 i = 0; i < this->coldim; ++i){
+			lela_check((pivot_columns_map[i] < Npiv) || (pivot_columns_map[i] == MINUS_ONE));
+		}
+
+		for(uint32 i = 0; i < this->coldim; ++i){
+			lela_check((non_pivot_columns_map[i] < (this->coldim - Npiv))  || (non_pivot_columns_map[i] == MINUS_ONE));
+		}*/
+
+		_index_maps_constructed = true;
+	}
+  
+  // NOTE: There is no choice for the sparsest pivot row in the multiline
+  // implementation!
 	void processMatrix(SparseMultilineMatrix<Element>& M)
 	{
 		this->coldim = M.coldim ();
@@ -640,7 +719,7 @@ public:
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& C,
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
-			bool destruct_original_matrix)
+			bool destruct_original_matrix, bool dense_pivot)
 	{
 		//std::ostream &report = commentator.report (Commentator::LEVEL_NORMAL, INTERNAL_DESCRIPTION);
 
@@ -653,7 +732,10 @@ public:
 					<< std::endl;
 
 			//throw std::runtime_error ("Indexes not constructed yet! call Indexer.processMatrix() first");
-			processMatrix(M);
+      if (dense_pivot)
+			  processMatrixDense(M);
+      else
+			  processMatrixSparse(M);
 
 			A = Matrix(Npiv, Npiv,
 					Matrix::ArrangementDownTop_RightLeft,
@@ -1009,6 +1091,7 @@ public:
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
 			bool destruct_original_matrix)
 	{
+    cout << "old method" << endl;
 		typedef SparseBlocMatrix<SparseMultilineBloc<uint16, Index> > Matrix;
 
 		if (!_index_maps_constructed)
@@ -1146,7 +1229,7 @@ public:
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& B,
 			SparseMultilineMatrix<Element>& C,
 			SparseBlocMatrix<SparseMultilineBloc<Element, Index> >& D,
-			bool destruct_original_matrix)
+			bool destruct_original_matrix, bool dense_pivot)
 	{
 		typedef SparseBlocMatrix<SparseMultilineBloc<uint16, Index> > Matrix;
 
@@ -1157,7 +1240,10 @@ public:
 					<< std::endl;
 
 			//throw std::runtime_error ("Indexes not constructed yet! call Indexer.processMatrix() first");
-			processMatrix(M);
+      if (dense_pivot)
+			  processMatrixDense(M);
+      else
+			  processMatrixSparse(M);
 
 			A = SparseMultilineMatrix<Element> (Npiv, Npiv);
 

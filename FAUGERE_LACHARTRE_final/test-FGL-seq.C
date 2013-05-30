@@ -25,7 +25,7 @@ template <typename Ring>
 bool testFaugereLachartre_old_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
 		bool only_D, bool free_memory_on_the_go,
-		bool horizontal, const char *picFile)
+		bool horizontal, const char *picFile, bool dense_pivot)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -57,7 +57,7 @@ commentator.start("FG_LACHARTRE", "FG_LACHARTRE");
 commentator.start("ROUND 1", "ROUND 1");
 
 	commentator.start("[Bloc] construting submatrices");
-		outer_indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, free_memory_on_the_go);
+		outer_indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, free_memory_on_the_go, dense_pivot);
 	commentator.stop(MSG_DONE);
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
@@ -119,7 +119,7 @@ commentator.start("ROUND 1", "ROUND 1");
 	if(only_D)
 	{
 		SequentialIndexer<typename Ring::Element, IndexType> inner_idxr;
-		inner_idxr.processMatrix(sub_D_multiline);
+		  inner_idxr.processMatrix(sub_D_multiline);
 		outer_indexer.combineInnerIndexer(inner_idxr, true);
 
 		MatrixUtils::show_mem_usage("[After processing]"); report << endl;
@@ -233,7 +233,7 @@ commentator.stop("FG_LACHARTRE", "FG_LACHARTRE");
 template <typename Ring>
 bool testFaugereLachartre_new_method(const Ring& R,
 		SparseMatrix<typename Ring::Element>& A, bool validate_results,
-		bool only_D, bool free_memory_on_the_go, const char *picFile)
+		bool only_D, bool free_memory_on_the_go, const char *picFile, bool dense_pivot)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -265,7 +265,7 @@ commentator.start("ROUND 1");
 
 
 	commentator.start("[Bloc] construting submatrices");
-		outer_indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, free_memory_on_the_go);
+		outer_indexer.constructSubMatrices(A, sub_A, sub_B, sub_C, sub_D, free_memory_on_the_go, dense_pivot);
 	commentator.stop(MSG_DONE);
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
@@ -357,7 +357,7 @@ commentator.start("ROUND 2");
 		SparseMultilineMatrix<typename Ring::Element> dummyMultiline;
 
 		commentator.start("[Indexer] constructing sub matrices 2");
-			idxr2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, free_memory_on_the_go);
+			idxr2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, free_memory_on_the_go, dense_pivot);
 		commentator.stop(MSG_DONE);
 		MatrixUtils::show_mem_usage("[constructing sub matrices 2]"); report << endl;
 
@@ -368,7 +368,7 @@ commentator.start("ROUND 2");
 		MatrixUtils::show_mem_usage("[B1 = A1^-1 B1]"); report << endl;
 
 		SequentialIndexer<typename Ring::Element, IndexType> inner_dummy_idxr;
-		inner_dummy_idxr.processMatrix(dummySparse);
+		inner_dummy_idxr.processMatrixSparse(dummySparse);
 		idxr2.combineInnerIndexer(inner_dummy_idxr, true);
 
 		commentator.start("[Bloc] Reconstructing final matrix");
@@ -432,7 +432,7 @@ template <typename Ring>
 bool testFaugereLachartre_new_method_multiline_C(const Ring& R,
 						SparseMatrix<typename Ring::Element>& A, bool validate_results, bool only_D,
 						bool free_memory_on_the_go, bool horizontal,
-						bool reconstruct_old, const char *picFile)
+						bool reconstruct_old, const char *picFile, bool dense_pivot)
 {
 	Context<Ring> ctx (R);
 	SequentialIndexer<typename Ring::Element, IndexType> outer_indexer;
@@ -464,7 +464,7 @@ commentator.start("ROUND 1");
 
 
 	commentator.start("[Bloc] construting submatrices");
-		outer_indexer.constructSubMatrices(A, sub_A_multiline, sub_B, sub_C_multiline, sub_D, free_memory_on_the_go);
+		outer_indexer.constructSubMatrices(A, sub_A_multiline, sub_B, sub_C_multiline, sub_D, free_memory_on_the_go, dense_pivot);
 	commentator.stop(MSG_DONE);
 	MatrixUtils::show_mem_usage("[construting submatrices]"); report << endl;
 	report << "Pivots found: " << outer_indexer.Npiv << endl << endl;
@@ -573,7 +573,7 @@ commentator.start("ROUND 2");
 
 
 		commentator.start("[Indexer] constructing sub matrices 2");
-			idxr2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, free_memory_on_the_go);
+			idxr2.constructSubMatrices(A, sub_A_prime, sub_B_prime, sub_C_prime, sub_D_prime, free_memory_on_the_go, dense_pivot);
 		commentator.stop(MSG_DONE);
 		MatrixUtils::show_mem_usage("[constructing sub matrices 2]"); report << endl;
 		
@@ -586,7 +586,7 @@ commentator.start("ROUND 2");
 		
 
 		SequentialIndexer<typename Ring::Element, IndexType>  inner_dummy_idxr;
-		inner_dummy_idxr.processMatrix(dummySparse);
+		inner_dummy_idxr.processMatrixSparse(dummySparse);
 		idxr2.combineInnerIndexer(inner_dummy_idxr, true);
 		
 
@@ -660,6 +660,7 @@ int main(int argc, char **argv)
 	bool compute_Rref = false;
 	bool use_standard_method = false;
 	bool horizontal = false;
+	bool dense_pivot = false;
 	bool reconstruct_old = false;
 
 	static Argument args[] =
@@ -669,6 +670,7 @@ int main(int argc, char **argv)
 		{ 'r', "-r", "Compute the REDUCED row echelon form (default: only an echelon form)", TYPE_NONE, &compute_Rref },
 		{ 's', "-s", "Validate the results by comparing them to structured Gauss", TYPE_NONE, &validate_results },
 		{ 'o', "-o", "Use the standard Faugère-Lachartre (the new method is the default)", TYPE_NONE, &use_standard_method },
+		{ 'd', "-d", "Chooses dense pivot rows (default: sparse pivot rows)", TYPE_NONE, &dense_pivot },
 
 
 		{ 'n', "-n", "[DEBUG] Use the new method (computation on C by block)", TYPE_NONE, &new_method_Block_C },
@@ -710,12 +712,12 @@ int main(int argc, char **argv)
   
 	if(!use_standard_method)
 		pass = testFaugereLachartre_new_method_multiline_C(R, A, validate_results, !compute_Rref, free_mem, horizontal,
-				reconstruct_old, picFile);
+				reconstruct_old, picFile, dense_pivot);
 
 	else if (new_method_Block_C)
-			pass = testFaugereLachartre_new_method(R, A, validate_results, !compute_Rref, free_mem, picFile);
+			pass = testFaugereLachartre_new_method(R, A, validate_results, !compute_Rref, free_mem, picFile, dense_pivot);
 	else if (use_standard_method)
-			pass = testFaugereLachartre_old_method(R, A, validate_results, !compute_Rref, free_mem, horizontal, picFile);
+			pass = testFaugereLachartre_old_method(R, A, validate_results, !compute_Rref, free_mem, horizontal, picFile, dense_pivot);
 
 	SHOW_MATRIX_INFO_SPARSE(A);
 	MatrixUtils::show_mem_usage("[In main]"); report << endl;
